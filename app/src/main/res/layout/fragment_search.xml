@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SearchFragment">
+
+    <RelativeLayout
+        android:id="@+id/layoutError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:context=".HomeFragment">
+
+        <ImageView
+            android:id="@+id/imgAlert"
+            android:layout_width="match_parent"
+            android:layout_height="260dp"
+            android:contentDescription="@android:string/VideoView_error_text_unknown"
+            android:foregroundGravity="center_vertical|center"
+            android:padding="20dp"
+            android:src="@drawable/ic_error_outline_grey" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/imgAlert"
+            android:width="15dp"
+            android:contentDescription="@android:string/VideoView_error_text_unknown"
+            android:gravity="center"
+            android:text="@string/error_404"
+            android:textSize="24sp" />
+    </RelativeLayout>
+</FrameLayout>
