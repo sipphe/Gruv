@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProfileFragment">
+    tools:context=".MessagesFragment">
 
     <RelativeLayout
         android:id="@+id/layoutError"
@@ -21,7 +21,7 @@
             android:contentDescription="@android:string/VideoView_error_text_unknown"
             android:foregroundGravity="center_vertical|center"
             android:padding="20dp"
-            android:src="@drawable/ic_person_black_24dp" />
+            android:src="@drawable/ic_textsms_opaque_24dp" />
 
         <TextView
             android:id="@+id/textView"

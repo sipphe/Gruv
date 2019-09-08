@@ -17,7 +17,7 @@
         android:title="@string/title_notifications"/>
 
     <item
-        android:id="@+id/navigation_profile"
-        android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="@string/title_profile"/>
+        android:id="@+id/navigation_messages"
+        android:icon="@drawable/ic_textsms_black_24dp"
+        android:title="@string/title_messages"/>
 </menu>
