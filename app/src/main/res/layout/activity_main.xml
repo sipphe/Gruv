@@ -37,7 +37,7 @@
 
         <include
             layout="@layout/content_main"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toTopOf="@+id/nav_view"
             app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
@@ -59,7 +59,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="@dimen/drawerMargin"
         android:fitsSystemWindows="true"
         android:visibility="invisible"
         app:headerLayout="@layout/nav_header_main"

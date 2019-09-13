@@ -1,5 +1,6 @@
 package com.gruv;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -16,7 +17,6 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     FragmentManager fragManager = getSupportFragmentManager();
@@ -28,12 +28,19 @@ public class MainActivity extends AppCompatActivity {
     Fragment fragNotification = new NotificationFragment();
     SearchFragment fragSearch = new SearchFragment();
     Fragment active = fragHome;
+    Boolean signedIn = false;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (signedIn == false) {
+            Intent myIntent = new Intent(this, LandingActivity.class);
+            startActivity(myIntent);
+
+
+        }
 
 
         toolbar = findViewById(R.id.main_app_toolbar);
@@ -41,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawerLayout);
 
         setSupportActionBar(toolbar);
-
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);

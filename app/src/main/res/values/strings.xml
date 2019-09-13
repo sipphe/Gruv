@@ -17,4 +17,21 @@
     <string name="menu_saved">Saved</string>
     <string name="menu_profile">Profile</string>
 
+    <string name="descriptor_logo_text">Gruv Logo</string>
+    <string name="landing_sign_in">sign in using:</string>
+    <string name="landing_email">email</string>
+    <string name="landing_or">or</string>
+    <string name="descriptor_google">Sign in via google</string>
+    <string name="descriptor_fb">Sign in via facebook</string>
+    <string name="descriptor_twitter">Sign in via twitter</string>
+    <string name="landing_register"><u>don\'t have an account? create one</u></string>
+
+    <string name="email_input">email</string>
+    <string name="password_input">password</string>
+    <string name="sign_in_button">sign in</string>
+    <string name="name_input">name</string>
+    <string name="username_input">username</string>
+    <string name="confirm_password_input">confirm password</string>
+    <string name="register_button">create account</string>
+
 </resources>
