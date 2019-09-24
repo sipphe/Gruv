@@ -9,7 +9,7 @@
     <dimen name="zero">0dp</dimen>
     <dimen name="drawerMargin">8dp</dimen>
     <dimen name="includePadding">1dp</dimen>
-    <dimen name="text_size">13sp</dimen>
+    <dimen name="text_size">12sp</dimen>
 
 
 </resources>

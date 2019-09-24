@@ -1,21 +1,18 @@
 package com.gruv.com.gruv.navigation;
 
 import android.view.View;
-import android.widget.Toast;
-import android.widget.Toolbar;
 
-import com.gruv.MainActivity;
-import com.gruv.R;
+import com.gruv.LandingActivity;
 
-public class Navigation extends MainActivity {
+public class Navigation extends LandingActivity {
 
     public Navigation() {
     }
 
-    public void openDrawer() {
 
-    }
-    public void drawer() {
-
+    public static void showProgress(int seconds) {
+        layoutProgress.setVisibility(View.VISIBLE);
+        //TimeUnit.MINUTES.sleep(seconds);
+        layoutProgress.setVisibility(View.GONE);
     }
 }

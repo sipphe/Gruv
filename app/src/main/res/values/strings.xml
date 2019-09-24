@@ -33,5 +33,9 @@
     <string name="username_input">username</string>
     <string name="confirm_password_input">confirm password</string>
     <string name="register_button">create account</string>
+    <string name="forgot_password"><u>forgot password</u></string>
+    <string name="reset">reset password</string>
+    <string name="next_button">next</string>
+    <string name="verify_code">verification code</string>
 
 </resources>
