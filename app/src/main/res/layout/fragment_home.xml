@@ -42,7 +42,9 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -138,19 +140,35 @@
                             android:text="Event Title"
                             android:textColor="@color/white"
                             android:textSize="18sp"
-                            app:layout_constraintBottom_toTopOf="@+id/textViewEventAuthor2"
+                            app:layout_constraintBottom_toTopOf="@+id/layoutAuthor2"
                             app:layout_constraintStart_toStartOf="parent" />
 
-                        <TextView
-                            android:id="@+id/textViewEventAuthor2"
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/layoutAuthor2"
                             android:layout_width="wrap_content"
-                            android:layout_height="28dp"
-                            android:layout_marginStart="40dp"
-                            android:text="by Author"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/text_size"
+                            android:layout_height="wrap_content"
                             app:layout_constraintBottom_toTopOf="@+id/eventDescription2"
-                            app:layout_constraintStart_toStartOf="parent" />
+                            app:layout_constraintStart_toStartOf="parent">
+
+                            <TextView
+                                android:id="@+id/textViewEventAuthor2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="28dp"
+                                android:layout_marginStart="40dp"
+                                android:text="by Author"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/text_size"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"/>
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/profile_pic5"
+                                app:layout_constraintEnd_toStartOf="@+id/textViewEventAuthor2"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"/>
+                        </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <TextView
                             android:id="@+id/eventDescription2"
@@ -239,6 +257,8 @@
                         app:layout_constraintVertical_bias="0.0"
                         tools:layout_editor_absoluteX="0dp">
 
+
+
                         <ImageView
                             android:id="@+id/imageLike3"
                             android:layout_width="34dp"
@@ -282,6 +302,7 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/imageLike3" />
 
+
                         <TextView
                             android:id="@+id/textViewEventTitle3"
                             android:layout_width="wrap_content"
@@ -289,19 +310,35 @@
                             android:text="Event Title"
                             android:textColor="@color/white"
                             android:textSize="18sp"
-                            app:layout_constraintBottom_toTopOf="@+id/textViewEventAuthor3"
+                            app:layout_constraintBottom_toTopOf="@+id/layoutAuthor3"
                             app:layout_constraintStart_toStartOf="parent" />
 
-                        <TextView
-                            android:id="@+id/textViewEventAuthor3"
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/layoutAuthor3"
                             android:layout_width="wrap_content"
-                            android:layout_height="28dp"
-                            android:layout_marginStart="40dp"
-                            android:text="by Author"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/text_size"
+                            android:layout_height="wrap_content"
                             app:layout_constraintBottom_toTopOf="@+id/eventDescription3"
-                            app:layout_constraintStart_toStartOf="parent" />
+                            app:layout_constraintStart_toStartOf="parent">
+
+                            <TextView
+                                android:id="@+id/textViewEventAuthor3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="28dp"
+                                android:layout_marginStart="40dp"
+                                android:text="by Author"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/text_size"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"/>
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/profile_pic4"
+                                app:layout_constraintEnd_toStartOf="@+id/textViewEventAuthor3"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"/>
+                        </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <TextView
                             android:id="@+id/eventDescription3"
@@ -441,19 +478,36 @@
                             android:text="Event Title"
                             android:textColor="@color/white"
                             android:textSize="18sp"
-                            app:layout_constraintBottom_toTopOf="@+id/textViewEventAuthor4"
+                            app:layout_constraintBottom_toTopOf="@+id/layoutAuthor4"
                             app:layout_constraintStart_toStartOf="parent" />
 
-                        <TextView
-                            android:id="@+id/textViewEventAuthor4"
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/layoutAuthor4"
                             android:layout_width="wrap_content"
-                            android:layout_height="28dp"
-                            android:layout_marginStart="20dp"
-                            android:text="by Author"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/text_size"
+                            android:layout_height="wrap_content"
                             app:layout_constraintBottom_toTopOf="@+id/eventDescription4"
-                            app:layout_constraintStart_toStartOf="parent" />
+                            app:layout_constraintStart_toStartOf="parent">
+
+                            <TextView
+                                android:id="@+id/textViewEventAuthor4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="28dp"
+                                android:layout_marginStart="40dp"
+                                android:text="by Author"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/text_size"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"/>
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/profile_pic5"
+                                app:layout_constraintEnd_toStartOf="@+id/textViewEventAuthor4"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"/>
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
                         <TextView
                             android:id="@+id/eventDescription4"
@@ -528,7 +582,7 @@
                         android:contentDescription="Post picture"
                         android:cropToPadding="true"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/party_2" />
+                        android:src="@drawable/party_4" />
 
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -592,19 +646,37 @@
                             android:text="Event Title"
                             android:textColor="@color/white"
                             android:textSize="18sp"
-                            app:layout_constraintBottom_toTopOf="@+id/textViewEventAuthor1"
+                            app:layout_constraintBottom_toTopOf="@+id/layoutAuthor1"
                             app:layout_constraintStart_toStartOf="parent" />
 
-                        <TextView
-                            android:id="@+id/textViewEventAuthor1"
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/layoutAuthor1"
                             android:layout_width="wrap_content"
-                            android:layout_height="28dp"
-                            android:layout_marginStart="20dp"
-                            android:text="by Author"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/text_size"
+                            android:layout_height="wrap_content"
                             app:layout_constraintBottom_toTopOf="@+id/eventDescription1"
-                            app:layout_constraintStart_toStartOf="parent" />
+                            app:layout_constraintStart_toStartOf="parent">
+
+                            <TextView
+                                android:id="@+id/textViewEventAuthor1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="28dp"
+                                android:layout_marginStart="40dp"
+                                android:text="by Author"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/text_size"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"/>
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_marginBottom="25dp"
+                                android:src="@drawable/profile_pic6"
+                                app:layout_constraintEnd_toStartOf="@+id/textViewEventAuthor1"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintVertical_bias="0.0"
+                                app:layout_constraintTop_toTopOf="parent"/>
+                        </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <TextView
                             android:id="@+id/eventDescription1"
@@ -629,7 +701,7 @@
                                 android:id="@+id/textViewDay1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="23"
+                                android:text="14"
                                 android:textColor="@color/white"
                                 android:textSize="30dp"
                                 app:layout_constraintEnd_toEndOf="parent"
@@ -641,7 +713,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:padding="@dimen/zero"
-                                android:text="AUG"
+                                android:text="NOV"
                                 android:textColor="@color/white"
                                 android:textSize="15dp"
                                 app:layout_constraintEnd_toEndOf="parent"

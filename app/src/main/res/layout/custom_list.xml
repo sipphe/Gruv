@@ -14,23 +14,23 @@
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="300dp"
-            android:layout_height="40dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="30dp"
             android:gravity="start"
             android:orientation="horizontal"
+            android:padding="2dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.351"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textEventStartTime"
             app:layout_constraintVertical_bias="0.17">
 
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imageViewProfilePic"
-                android:layout_width="40dp"
+                android:layout_width="30dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentTop="true"
-                android:src="@drawable/profile_pic3"></ImageView>
+                android:src="@drawable/profile_pic3" />
         </LinearLayout>
 
         <TextView
@@ -55,7 +55,7 @@
             android:layout_marginTop="16dp"
             android:text="Back To The Beach"
             android:textColor="@color/black"
-            android:textSize="18sp"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

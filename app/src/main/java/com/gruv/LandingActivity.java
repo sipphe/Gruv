@@ -1,6 +1,5 @@
 package com.gruv;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 
@@ -10,7 +9,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.gruv.com.gruv.navigation.Navigation;
+import com.gruv.navigation.Navigation;
 
 public class LandingActivity extends AppCompatActivity {
     protected static ConstraintLayout layoutLoginStart, layoutLoginEmail, layoutRegister, layoutForgotPassword, layoutEnterVerifyCode, layoutProgress, layoutResetPassword;

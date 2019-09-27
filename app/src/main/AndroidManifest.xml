@@ -30,6 +30,11 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
         </activity>
+        <activity android:name=".ChatActivity"
+            android:label="messages"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>

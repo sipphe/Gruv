@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         tools:context=".HomeFragment"
-        tools:visibility="visible">
+        tools:visibility="invisible">
 
         <ImageView
             android:id="@+id/imgAlert"
@@ -34,4 +34,26 @@
             android:text="@string/error_404_2"
             android:textSize="24sp" />
     </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:paddingTop="55dp"
+            android:paddingBottom="50dp"
+            android:fillViewport="true">
+
+            <ListView
+                android:id="@+id/text_list"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                />
+        </LinearLayout>
+    </ScrollView>
 </FrameLayout>
