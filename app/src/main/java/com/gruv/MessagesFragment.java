@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
@@ -40,12 +40,12 @@ public class MessagesFragment extends Fragment {
         RelativeLayout layoutError = (RelativeLayout)getView().findViewById(R.id.layoutError);
         layoutError.setVisibility(View.GONE);
 
-        String[] senderName = {"Thabo", "Lyle", "JT", "Tshego", "Kgosi"};
+        final String[] senderName = {"Thabo", "Lyle", "JT", "Tshego", "Kgosi"};
 
-        String[] messagePreview = {"See you there", "Cool", "It starts early so we can't take long", "Ok ", "Tonight?"};
+        final String[] messagePreview = {"See you there", "Cool", "It starts early so we can't take long", "Ok ", "Tonight?"};
 
         String[] messageTime = {"11:30", "9:30", "12h", "10h", "1d"};
-        Integer[] imgid = {
+        final Integer[] imgid = {
                 R.drawable.profile_pic4, R.drawable.profile_pic5,
                 R.drawable.profile_pic6, R.drawable.profile_pic5,
                 R.drawable.profile_pic4,
@@ -59,8 +59,11 @@ public class MessagesFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Object o = list.getItemAtPosition(position);
                 Intent intentChat = new Intent(getActivity(), ChatActivity.class);
+                TextView textSendersName = (TextView)getView().findViewById(R.id.textSendersName) ;
+                intentChat.putExtra("sendersName", senderName[position]);
+                intentChat.putExtra("pic", imgid[position]);
+                intentChat.putExtra("messageText", messagePreview[position]);
                 startActivity(intentChat);
-                Toast.makeText(getContext(), "myPos "+position , Toast.LENGTH_LONG).show();
             }
         });
     }

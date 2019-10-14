@@ -26,4 +26,16 @@ public class Author implements IUser {
     public String getAvatar() {
         return avatar;
     }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
 }
