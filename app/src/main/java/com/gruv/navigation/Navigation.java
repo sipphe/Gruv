@@ -1,4 +1,4 @@
-package com.gruv.com.gruv.navigation;
+package com.gruv.navigation;
 
 import android.view.View;
 

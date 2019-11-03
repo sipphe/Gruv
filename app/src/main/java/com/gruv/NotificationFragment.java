@@ -34,31 +34,19 @@ public class NotificationFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState){
+    public void onViewCreated(View view, Bundle savedInstanceState) {
 
-        String[] mainTitle ={
-                "The Ivyson Tour","Back To The Beach",
-                "Deep Brew Sundaze","The Night Show at Meercury",
-                "Sneaker Exchange"
-        };
+        String[] mainTitle = {"The Ivyson Tour", "Back To The Beach", "Deep Brew Sundaze", "The Night Show at Meercury", "Sneaker Exchange"};
 
-        String[] startingTime ={
-                "starting in 4 hours","starting tomorrow at 18:00 ",
-                "starting on Thursday at 16:30","starting in a week",
-                "starting in a week and 2 days"
-        };
+        String[] startingTime = {"starting in 4 hours", "starting tomorrow at 18:00 ", "starting on Thursday at 16:30", "starting in a week", "starting in a week and 2 days"};
 
-        String[] tagAlongers ={
-                "Karabo and 10 others are going","Thabo and one other is going",
-                "Jane is going"," ",
-                "Boiphelo and 2 others are going"
+        String[] tagAlongers = {"Karabo and 10 others are going", "Thabo and one other is going", "Jane is going", " ", "Boiphelo and 2 others are going"};
+        Integer[] imgid = {
+                R.drawable.profile_pic4, R.drawable.profile_pic5,
+                R.drawable.profile_pic6, R.drawable.profile_pic5,
+                R.drawable.profile_pic4,
         };
-        Integer[] imgid={
-                R.drawable.profile_pic,R.drawable.profile_pic2,
-                R.drawable.profile_pic3,R.drawable.profile_pic2,
-                R.drawable.profile_pic3,
-        };
-        MyListAdapter adapter = new MyListAdapter((Activity) super.getContext(), mainTitle, startingTime, tagAlongers,imgid);
+        MyListAdapter adapter = new MyListAdapter((Activity) super.getContext(), mainTitle, startingTime, tagAlongers, imgid);
         list = getActivity().findViewById(R.id.notif_list);
         list.setAdapter(adapter);
     }
