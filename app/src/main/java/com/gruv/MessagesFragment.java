@@ -12,6 +12,9 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 
@@ -31,7 +34,6 @@ public class MessagesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_messages, container, false);
     }
@@ -39,6 +41,9 @@ public class MessagesFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         RelativeLayout layoutError = (RelativeLayout)getView().findViewById(R.id.layoutError);
         layoutError.setVisibility(View.GONE);
+        Toolbar toolbar = getActivity().findViewById(R.id.main_app_toolbar);
+        DrawerLayout drawerLayout = getActivity().findViewById(R.id.drawerLayout);
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.app_name, R.string.app_name);
 
         final String[] senderName = {"Thabo", "Lyle", "JT", "Tshego", "Kgosi"};
 

@@ -42,8 +42,6 @@ public class MyListAdapter extends ArrayAdapter<String> {
         ImageView imgProfilePic = (ImageView)rowView.findViewById(R.id.imageViewProfilePic);
 
         Bitmap bm = BitmapFactory.decodeResource(rowView.getResources(),R.drawable.profile_pic);
-        RoundImage roundImage = new RoundImage(bm);
-        imgProfilePic.setImageDrawable(roundImage);
 
         titleText.setText(mainTitle[position]);
         imgProfilePic.setImageResource(imgid[position]);

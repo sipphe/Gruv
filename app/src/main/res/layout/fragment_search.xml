@@ -5,30 +5,67 @@
     android:layout_height="match_parent"
     tools:context=".SearchFragment">
 
-    <RelativeLayout
-        android:id="@+id/layoutError"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:context=".HomeFragment">
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:elevation="5dp">
 
-        <ImageView
-            android:id="@+id/imgAlert"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/searchViewBar"
             android:layout_width="match_parent"
-            android:layout_height="260dp"
-            android:contentDescription="@android:string/VideoView_error_text_unknown"
-            android:foregroundGravity="center_vertical|center"
-            android:padding="20dp"
-            android:src="@drawable/ic_error_outline_grey" />
+            android:layout_height="?attr/actionBarSize"
+            android:navigationIcon="@drawable/ic_menu_white_24dp">
 
-        <TextView
-            android:id="@+id/textView"
+            <androidx.appcompat.widget.SearchView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/topNbottomPadding">
+
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/layoutListMap"
             android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include layout="@layout/content_maps" />
+
+            <include layout="@layout/content_list_search" />
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <RelativeLayout
+            android:id="@+id/layoutError"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/imgAlert"
-            android:width="15dp"
-            android:contentDescription="@android:string/VideoView_error_text_unknown"
-            android:gravity="center"
-            android:text="@string/error_404"
-            android:textSize="24sp" />
-    </RelativeLayout>
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/imgAlert"
+                android:layout_width="match_parent"
+                android:layout_height="260dp"
+                android:contentDescription="@android:string/VideoView_error_text_unknown"
+                android:foregroundGravity="center_vertical|center"
+                android:padding="20dp"
+                android:src="@drawable/ic_error_outline_grey" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/imgAlert"
+                android:width="15dp"
+                android:contentDescription="@android:string/VideoView_error_text_unknown"
+                android:gravity="center"
+                android:text="@string/error_404"
+                android:textSize="24sp" />
+        </RelativeLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </FrameLayout>

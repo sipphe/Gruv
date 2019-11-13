@@ -1,4 +1,4 @@
-package com.gruv.chat;
+package com.gruv.models;
 
 import com.stfalcon.chatkit.commons.models.IMessage;
 

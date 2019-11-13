@@ -17,8 +17,6 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
-import com.gruv.com.gruv.MyListAdapter;
-
 public class MainActivity extends AppCompatActivity {
     FragmentManager fragManager = getSupportFragmentManager();
     Toolbar toolbar;
@@ -100,18 +98,33 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_home:
                     fragManager.beginTransaction().hide(active).show(fragHome).commit();
                     active = fragHome;
+                    toolbar = findViewById(R.id.main_app_toolbar);
+                    setSupportActionBar(toolbar);
+                    addToolbar(toolbar);
+                    getSupportActionBar().show();
                     return true;
                 case R.id.navigation_search:
                     fragManager.beginTransaction().hide(active).show(fragSearch).commit();
                     active = fragSearch;
+                    toolbar = findViewById(R.id.searchViewBar);
+                    setSupportActionBar(toolbar);
+                    addToolbar(toolbar);
                     return true;
                 case R.id.navigation_notifications:
                     fragManager.beginTransaction().hide(active).show(fragNotification).commit();
                     active = fragNotification;
+                    toolbar = findViewById(R.id.main_app_toolbar);
+                    setSupportActionBar(toolbar);
+                    addToolbar(toolbar);
+                    getSupportActionBar().show();
                     return true;
                 case R.id.navigation_messages:
                     fragManager.beginTransaction().hide(active).show(fragMessages).commit();
                     active = fragMessages;
+                    toolbar = findViewById(R.id.main_app_toolbar);
+                    setSupportActionBar(toolbar);
+                    addToolbar(toolbar);
+                    getSupportActionBar().show();
                     return true;
             }
             return false;
@@ -122,6 +135,13 @@ public class MainActivity extends AppCompatActivity {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawers();
         }
+    }
+
+    public void addToolbar(Toolbar toelbar) {
+        ActionBarDrawerToggle actionBarDrawerToggl = new ActionBarDrawerToggle(this, drawerLayout, toelbar, R.string.app_name, R.string.app_name);
+        drawerLayout.addDrawerListener(actionBarDrawerToggl);
+        actionBarDrawerToggl.syncState();
+        toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
     }
 
     @Override

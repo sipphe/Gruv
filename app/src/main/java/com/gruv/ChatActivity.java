@@ -7,13 +7,14 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.gruv.chat.Author;
-import com.gruv.chat.Message;
+import com.gruv.models.Author;
+import com.gruv.models.Message;
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -23,9 +24,11 @@ public class ChatActivity extends AppCompatActivity {
     Intent myIntent;
     String title;
     Boolean success;
-    Author receive = new Author("1234", null, null), send = new Author("1235", "Sipho", null);
+    Author receive = new Author("1234", null, null, null), send = new Author("1235", "Sipho", null, null);
     MessagesListAdapter<Message> adapter;
-    Message receivedMessage = new Message("1234", null, receive, new Date(2019, 10,10,9,32));
+    Calendar cal = Calendar.getInstance();
+    Date date;
+    Message receivedMessage;
     Message sentMessage;
     List<Message> message = new ArrayList<>(), message2 = new ArrayList<>();
     MessageInput inputMessage;
@@ -38,6 +41,9 @@ public class ChatActivity extends AppCompatActivity {
         myIntent = getIntent();
         receive.setName(myIntent.getExtras().getString("sendersName"));
 
+        cal.set(2019, 10, 10, 9, 32);
+        date = cal.getTime();
+        receivedMessage = new Message("1234", null, receive, date);
         success = setTitleBar();
         MessagesList chatList = (MessagesList) findViewById(R.id.messages_list);
 

@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import com.gruv.com.gruv.MyListAdapter;
@@ -35,6 +38,9 @@ public class NotificationFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        Toolbar toolbar = getActivity().findViewById(R.id.main_app_toolbar);
+        DrawerLayout drawerLayout = getActivity().findViewById(R.id.drawerLayout);
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.title_notifications, R.string.title_notifications);
 
         String[] mainTitle = {"The Ivyson Tour", "Back To The Beach", "Deep Brew Sundaze", "The Night Show at Meercury", "Sneaker Exchange"};
 

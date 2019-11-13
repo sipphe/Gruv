@@ -1,6 +1,5 @@
 package com.gruv;
 
-
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -12,14 +11,9 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -34,58 +28,32 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class SearchFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-    private GoogleApiClient googleApiClient;
-    private Location lastLocation;
-    private Marker currLocationMarker;
-    private LocationRequest locationRequest;
-    private GoogleMap map;
-    private FragmentActivity fragmentActivity = new FragmentActivity();
-    private BottomSheetBehavior sheetBehavior;
-    private ConstraintLayout bottom_sheet;
-    private int peekHeight = 700;
-
-    public SearchFragment() {
-        // Required empty public constructor
-    }
-
+    GoogleApiClient mGoogleApiClient;
+    Location mLastLocation;
+    Marker mCurrLocationMarker;
+    LocationRequest mLocationRequest;
+    LocationListener mLocationListener;
+    private GoogleMap mMap;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-
-        return inflater.inflate(R.layout.fragment_search, container, false);
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.content_maps);
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 
         mapFragment.getMapAsync(this);
-
-
-        bottom_sheet = getActivity().findViewById(R.id.bottom_sheet);
-        sheetBehavior = BottomSheetBehavior.from(bottom_sheet);
-        sheetBehavior.setPeekHeight(peekHeight);
-        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
-
     }
 
 
@@ -100,41 +68,40 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        map = googleMap;
-        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        map.getUiSettings().setZoomControlsEnabled(true);
-        map.getUiSettings().setZoomGesturesEnabled(true);
-        map.getUiSettings().setCompassEnabled(true);
-        map.getUiSettings().setMapToolbarEnabled(true);
+        mMap = googleMap;
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setZoomGesturesEnabled(true);
+        mMap.getUiSettings().setCompassEnabled(true);
         //Initialize Google Play Services
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(getActivity(),
+            if (ContextCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
                 buildGoogleApiClient();
-                map.setMyLocationEnabled(true);
+                mMap.setMyLocationEnabled(true);
             }
         } else {
             buildGoogleApiClient();
-            map.setMyLocationEnabled(true);
+            mMap.setMyLocationEnabled(true);
         }
-        map.setPadding(0, 0, 0, peekHeight + 20);
     }
 
     protected synchronized void buildGoogleApiClient() {
-        googleApiClient = new GoogleApiClient.Builder(getActivity())
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API).build();
-        googleApiClient.connect();
+        mGoogleApiClient.connect();
     }
 
     @Override
     public void onConnected(Bundle bundle) {
-        locationRequest = new LocationRequest();
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        mLocationRequest = new LocationRequest();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-            LocationServices.getFusedLocationProviderClient(getActivity());
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,
+                    mLocationRequest, (com.google.android.gms.location.LocationListener) this);
 
         }
     }
@@ -150,17 +117,21 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
 
     @Override
     public void onLocationChanged(Location location) {
-        lastLocation = location;
-        if (currLocationMarker != null) {
-            currLocationMarker.remove();
+        mLastLocation = location;
+        if (mCurrLocationMarker != null) {
+            mCurrLocationMarker.remove();
         }
-        //Showing Current Location Marker on Map
+//Showing Current Location Marker on Map
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
-        LocationManager locationManager = (LocationManager) fragmentActivity.getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager)
+                getSystemService(Context.LOCATION_SERVICE);
         String provider = locationManager.getBestProvider(new Criteria(), true);
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         Location locations = locationManager.getLastKnownLocation(provider);
@@ -168,7 +139,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
         if (null != locations && null != providerList && providerList.size() > 0) {
             double longitude = locations.getLongitude();
             double latitude = locations.getLatitude();
-            Geocoder geocoder = new Geocoder(getActivity(),
+            Geocoder geocoder = new Geocoder(getApplicationContext(),
                     Locale.getDefault());
             try {
                 List<Address> listAddresses = geocoder.getFromLocation(latitude,
@@ -185,14 +156,14 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
             }
         }
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-        currLocationMarker = map.addMarker(markerOptions);
-        map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        map.animateCamera(CameraUpdateFactory.zoomTo(11));
-        if (googleApiClient != null) {
-            LocationServices.getFusedLocationProviderClient(getActivity());
+        mCurrLocationMarker = mMap.addMarker(markerOptions);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+        if (mGoogleApiClient != null) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient,
+                    (com.google.android.gms.location.LocationListener) this);
         }
     }
-
 
     @Override
     public void onProviderDisabled(String s) {
@@ -210,17 +181,17 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
     }
 
     public boolean checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(getActivity(),
+        if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
-                ActivityCompat.requestPermissions(getActivity(),
+                ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         MY_PERMISSIONS_REQUEST_LOCATION);
             } else {
-                ActivityCompat.requestPermissions(getActivity(),
+                ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         MY_PERMISSIONS_REQUEST_LOCATION);
             }
