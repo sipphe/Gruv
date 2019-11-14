@@ -50,9 +50,9 @@
             android:layout_marginRight="20dp"
             android:layout_marginBottom="90dp"
             android:clickable="true"
+            app:elevation="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/progress" />
+            app:layout_constraintEnd_toEndOf="parent" />
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/nav_view"
             android:layout_width="match_parent"

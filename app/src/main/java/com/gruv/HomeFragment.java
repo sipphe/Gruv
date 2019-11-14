@@ -67,8 +67,7 @@ public class HomeFragment extends Fragment {
             Author eventAuthor = new Author("1234", "Night Show", null, R.drawable.profile_pic6);
             event = new Event("123", "Night Show at Mercury", eventAuthor, LocalDate.of(2019, Month.MAY, 3), "Night Show at Mercury has a jam packed line-up", null, null, R.drawable.party_4);
             addPost(event);
-            addPost(event);
-            addPost(event);
+
 
             adapter = new NewsFeedAdapter(getActivity(), eventTitle, author, description, countLikes, countComments, day, month, imageIDPostPic, imageIDProfilePic);
             listView.setAdapter(adapter);
