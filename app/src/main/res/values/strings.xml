@@ -40,4 +40,25 @@
 
     <string name="hint_enter_a_message">Enter a message...</string>
     <string name="title_activity_maps">Map</string>
+    <string name="sign_out">sign_out</string>
+    <string name="desc_firebase_lockup">firebase_content_description</string>
+    <string name="facebook_title_text">facebook_title</string>
+    <string name="signed_out">signed_out</string>
+    <string name="loading">loading</string>
+    <string name="facebook_status_fmt"><![CDATA[<string name=\"facebook_status_fmt\">Facebook User: %s</string>]]></string>
+    <string name="firebase_status_fmt"><![CDATA[<string name=\"firebase_status_fmt\">Firebase UID: %s</string>]]></string>
+
+    <string name="generic_title_text">OAuth Sign In</string>
+    <string name="generic_signin_fmt">Sign In with %s</string>
+    <string name="generic_status_fmt">User: %s (%s)</string>
+    <string name="generic_label_provider">Provider:</string>
+
+    <string name="id_fmt">User ID: %s</string>
+    <string name="email_fmt">Email: %s</string>
+
+    <string name="custom_auth_signin_status_user">User ID: %s</string>
+    <string name="custom_auth_signin_status_failed">Error: sign in failed</string>
+
+    <string name="error_sign_in_failed">Sign in failed, see logs for details.</string>
+    <string name="sign_in">sign in</string>
 </resources>
