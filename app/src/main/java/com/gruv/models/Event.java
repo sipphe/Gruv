@@ -1,6 +1,7 @@
 package com.gruv.models;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Event {
@@ -8,14 +9,14 @@ public class Event {
     private String eventId, eventName, eventDescription;
     private Author author;
     private LocalDate eventDate;
-    private List<Comment> comments;
-    private List<String> likes;
+    private ArrayList<Comment> comments;
+    private ArrayList<String> likes;
     private Integer imagePostId;
 
     public Event() {
     }
 
-    public Event(String eventId, String eventName, Author author, LocalDate eventDate, String eventDescription, List<Comment> comments, List<String> likes, Integer imagePostId) {
+    public Event(String eventId, String eventName, Author author, LocalDate eventDate, String eventDescription, ArrayList<Comment> comments, List<String> likes, Integer imagePostId) {
         this.eventId = eventId;
         this.eventName = eventName;
         this.author = author;
@@ -69,7 +70,7 @@ public class Event {
         return comments;
     }
 
-    public void setComments(List<Comment> comments) {
+    public void setComments(ArrayList<Comment> comments) {
         this.comments = comments;
     }
 
@@ -81,7 +82,7 @@ public class Event {
         return likes;
     }
 
-    public void setLikes(List<String> likes) {
+    public void setLikes(ArrayList<String> likes) {
         this.likes = likes;
     }
 

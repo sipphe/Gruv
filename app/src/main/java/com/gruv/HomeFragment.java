@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.gruv.com.gruv.NewsFeedAdapter;
 import com.gruv.models.Author;
+import com.gruv.models.Comment;
 import com.gruv.models.Event;
 
 import java.time.LocalDate;
@@ -29,19 +30,19 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class HomeFragment extends Fragment {
-    List<String> eventTitle = new ArrayList<>();
-    List<String> author = new ArrayList<>();
-    List<String> description = new ArrayList<>();
-    List<Integer> countLikes = new ArrayList<>();
-    List<Integer> countComments = new ArrayList<>();
-    List<Integer> day = new ArrayList<>();
-    List<String> month = new ArrayList<>();
-    List<Integer> imageIDPostPic = new ArrayList<>();
-    List<Integer> imageIDProfilePic = new ArrayList<>();
-    Event event;
-    NewsFeedAdapter adapter;
-    ListView listView;
-    ScrollView scrollView;
+    private List<String> eventTitle = new ArrayList<>();
+    private List<String> author = new ArrayList<>();
+    private List<String> description = new ArrayList<>();
+    private List<Integer> countLikes = new ArrayList<>();
+    private List<Integer> countComments = new ArrayList<>();
+    private List<Integer> day = new ArrayList<>();
+    private List<String> month = new ArrayList<>();
+    private List<Integer> imageIDPostPic = new ArrayList<>();
+    private List<Integer> imageIDProfilePic = new ArrayList<>();
+    private Event event, event2;
+    private NewsFeedAdapter adapter;
+    private ListView listView;
+    private ScrollView scrollView;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -84,7 +85,12 @@ public class HomeFragment extends Fragment {
                 int top = (v == null) ? 0 : (v.getTop() - listView.getPaddingTop());
 
                 // add new post
-                addPost(event);
+                Comment comment = new Comment("123", "124", "Lit!", new Author("1", "Night Show", null, R.drawable.profile_pic4));
+                ArrayList<Comment> list = new ArrayList<Comment>();
+                list.add(comment);
+                list.add(comment);
+                event2 = new Event("124", "Another Show at Mercury", new Author("1", "Night Show", null, R.drawable.profile_pic4), LocalDate.of(2019, Month.FEBRUARY, 14), "Night Show at Mercury has a jam packed line-up",list, null, R.drawable.party_3);
+                addPost(event2);
 
                 adapter = new NewsFeedAdapter(getActivity(), eventTitle, author, description, countLikes, countComments, day, month, imageIDPostPic, imageIDProfilePic);
 
@@ -98,27 +104,49 @@ public class HomeFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void addPost(Event event) {
-        eventTitle.add(event.getEventName());
-        author.add(event.getAuthor().getName());
-        description.add(event.getEventDescription());
-        if (event.getComments() == null || event.getComments().isEmpty())
-            countComments.add(0);
-        else
-            countComments.add(event.getComments().size());
 
-        if (event.getLikes() == null || event.getLikes().isEmpty())
-            countLikes.add(0);
-        else
-            countLikes.add(event.getComments().size());
+        Integer size = eventTitle.size();
+        if (size >= 1) {
+            eventTitle.add(0, event.getEventName());
+            author.add(0, event.getAuthor().getName());
+            description.add(0, event.getEventDescription());
 
-        day.add(event.getEventDate().getDayOfMonth());
-        month.add(event.getEventDate().getMonth().toString().substring(0, 3).toUpperCase());
-        imageIDProfilePic.add(event.getAuthor().getProfilePictureId());
-        imageIDPostPic.add(event.getImagePostId());
+            if (event.getComments() == null || event.getComments().isEmpty()) {
+                countComments.add(0, 0);
+            } else {
+                countComments.add(0, event.getComments().size());
+            }
+            if (event.getLikes() == null || event.getLikes().isEmpty()) {
+                countLikes.add(0, 0);
+            } else {
+                countLikes.add(0, event.getLikes().size());
+            }
 
+            day.add(0, event.getEventDate().getDayOfMonth());
+            month.add(0, event.getEventDate().getMonth().toString().substring(0, 3).toUpperCase());
+            imageIDProfilePic.add(0, event.getAuthor().getProfilePictureId());
+            imageIDPostPic.add(0, event.getImagePostId());
+        } else {
+            eventTitle.add(event.getEventName());
+            author.add(event.getAuthor().getName());
+            description.add(event.getEventDescription());
+            if (event.getComments() == null || event.getComments().isEmpty())
+                countComments.add(0);
+            else
+                countComments.add(event.getComments().size());
 
+            if (event.getLikes() == null || event.getLikes().isEmpty())
+                countLikes.add(0);
+            else
+                countLikes.add(event.getComments().size());
+
+            day.add(event.getEventDate().getDayOfMonth());
+            month.add(event.getEventDate().getMonth().toString().substring(0, 3).toUpperCase());
+            imageIDProfilePic.add(event.getAuthor().getProfilePictureId());
+            imageIDPostPic.add(event.getImagePostId());
+
+        }
     }
-
 
 }
 
