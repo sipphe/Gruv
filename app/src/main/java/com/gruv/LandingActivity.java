@@ -6,17 +6,15 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.facebook.CallbackManager;
-
 import com.gruv.navigation.Navigation;
 
 public class LandingActivity extends AppCompatActivity {
@@ -33,27 +31,28 @@ public class LandingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing);
-        layoutLoginStart = (ConstraintLayout) findViewById(R.id.constraintLayoutLoginStart);
-        layoutLoginEmail = (ConstraintLayout) findViewById(R.id.constraintLayoutLogin);
-        layoutRegister = (ConstraintLayout) findViewById(R.id.constraintLayoutRegister);
-        layoutForgotPassword = (ConstraintLayout) findViewById(R.id.constraintLayoutForgotPassword);
-        layoutEnterVerifyCode = (ConstraintLayout) findViewById(R.id.constraintLayoutEnterVerifyCode);
-        layoutResetPassword = (ConstraintLayout)findViewById(R.id.constraintLayoutResetPassword);
-        layoutProgress = (ConstraintLayout) findViewById(R.id.constraintLayoutProgressBar);
+        layoutLoginStart = findViewById(R.id.constraintLayoutLoginStart);
+        layoutLoginEmail = findViewById(R.id.constraintLayoutLogin);
+        layoutRegister = findViewById(R.id.constraintLayoutRegister);
+        layoutForgotPassword = findViewById(R.id.constraintLayoutForgotPassword);
+        layoutEnterVerifyCode = findViewById(R.id.constraintLayoutEnterVerifyCode);
+        layoutResetPassword = findViewById(R.id.constraintLayoutResetPassword);
+        layoutProgress = findViewById(R.id.constraintLayoutProgressBar);
 
 
         //login : social
-        imageFacebook = (ImageView) findViewById(R.id.imageFacebook);
+        imageFacebook = findViewById(R.id.imageFacebook);
 
-
-        TextView textSignUp = (TextView) findViewById(R.id.textViewSignUp);
-        TextView textForgotPassword = (TextView) findViewById(R.id.textViewForgotPassword);
-        Button buttonEmail = (Button) findViewById(R.id.buttonEmail);
-        Button buttonSignIn = (Button) findViewById(R.id.buttonLogin);
-        Button buttonRegister = (Button) findViewById(R.id.buttonRegister);
-        Button buttonNext1 = (Button) findViewById(R.id.buttonNext1);
-        Button buttonNext = (Button) findViewById(R.id.buttonNext);
-        Button buttonResetPassword = (Button) findViewById(R.id.buttonResetPassword);
+        EditText textEmail = findViewById(R.id.editTextEmail);
+        EditText textPassword = findViewById(R.id.editTextPassword);
+        TextView textSignUp = findViewById(R.id.textViewSignUp);
+        TextView textForgotPassword = findViewById(R.id.textViewForgotPassword);
+        Button buttonEmail = findViewById(R.id.buttonEmail);
+        Button buttonSignIn = findViewById(R.id.buttonLogin);
+        Button buttonRegister = findViewById(R.id.buttonRegister);
+        Button buttonNext1 = findViewById(R.id.buttonNext1);
+        Button buttonNext = findViewById(R.id.buttonNext);
+        Button buttonResetPassword = findViewById(R.id.buttonResetPassword);
 
         buttonEmail.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -81,13 +80,14 @@ public class LandingActivity extends AppCompatActivity {
         buttonSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String email = textEmail.getText().toString(), password = textPassword.getText().toString();
+                Boolean result = true;
+                Navigation.showProgress();
                 //TODO Add email sign in authorisation code
-                try {
-                    Navigation.showProgress(3);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                finish();
+
+                Navigation.hideProgress();
+                if (result = true)
+                    finish();
             }
         });
 
@@ -95,11 +95,7 @@ public class LandingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //TODO Add sign up authorisation code
-                try {
-                    Navigation.showProgress(3);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+
                 finish();
             }
         });
@@ -127,14 +123,12 @@ public class LandingActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //TODO Add reset password code
                 layoutResetPassword.setVisibility(View.GONE);
-                try {
-                    Navigation.showProgress(3);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+
                 finish();
             }
         });
+
+
     }
 
 
@@ -162,16 +156,17 @@ public class LandingActivity extends AppCompatActivity {
         }
     }
 
-   public void imgFacebookLogin(View  v){
-       Intent intent = new Intent(getApplicationContext(),FacebookLoginActivity.class);
-       startActivity(intent);
-    }
-
-    public void imgTwitterGenericLogin(View  v){
-        Intent intent = new Intent(getApplicationContext(),GenericIdpActivity.class);
+    public void imgFacebookLogin(View v) {
+        Intent intent = new Intent(getApplicationContext(), FacebookLoginActivity.class);
         startActivity(intent);
     }
-    private  boolean connectionAvailable() {
+
+    public void imgTwitterGenericLogin(View v) {
+        Intent intent = new Intent(getApplicationContext(), GenericIdpActivity.class);
+        startActivity(intent);
+    }
+
+    private boolean connectionAvailable() {
         boolean connected = false;
         ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
@@ -180,11 +175,7 @@ public class LandingActivity extends AppCompatActivity {
             if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
                 connected = true;
             } else {
-                if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
-                    connected = true;
-                } else {
-                    connected = false;
-                }
+                connected = activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE;
             }
         }
         return connected;

@@ -57,6 +57,7 @@ public class NewsFeedAdapter extends ArrayAdapter<String> {
         TextView textLikeCount = rowView.findViewById(R.id.counterLikes);
         CircleImageView imageProfilePic = rowView.findViewById(R.id.imageProfilePic);
         ImageView imagePost = rowView.findViewById(R.id.imageViewPost);
+
         titleText.setText(eventTitle.get(position));
         textAuthor.setText(author.get(position));
         textDescription.setText(description.get(position));
@@ -70,5 +71,4 @@ public class NewsFeedAdapter extends ArrayAdapter<String> {
 
     }
 
-    ;
 }

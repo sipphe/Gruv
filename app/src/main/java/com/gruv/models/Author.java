@@ -2,7 +2,9 @@ package com.gruv.models;
 
 import com.stfalcon.chatkit.commons.models.IUser;
 
-public class Author implements IUser {
+import java.io.Serializable;
+
+public class Author implements IUser, Serializable {
     private String id, name, avatar;
     private Integer profilePictureId;
 

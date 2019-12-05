@@ -1,10 +1,11 @@
 package com.gruv.models;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Event {
+public class Event implements Serializable {
 
     private String eventId, eventName, eventDescription;
     private Author author;

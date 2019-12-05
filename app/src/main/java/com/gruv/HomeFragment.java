@@ -1,6 +1,6 @@
 package com.gruv;
 
-import android.os.Build;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.ScrollView;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -39,9 +38,10 @@ public class HomeFragment extends Fragment {
     private List<String> month = new ArrayList<>();
     private List<Integer> imageIDPostPic = new ArrayList<>();
     private List<Integer> imageIDProfilePic = new ArrayList<>();
+    private List<Event> eventList = new ArrayList<>();
     private Event event, event2;
     private NewsFeedAdapter adapter;
-    private ListView listView;
+    private ListView feed;
     private ScrollView scrollView;
 
     public HomeFragment() {
@@ -60,49 +60,30 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         Toolbar toolbar = getActivity().findViewById(R.id.main_app_toolbar);
         DrawerLayout drawerLayout = getActivity().findViewById(R.id.drawerLayout);
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.title_notifications, R.string.title_notifications);
-        listView = getActivity().findViewById(R.id.listNewsFeed);
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.app_name, R.string.app_name);
+
+        feed = getActivity().findViewById(R.id.listNewsFeed);
         scrollView = getActivity().findViewById(R.id.mainScrollView);
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            Author eventAuthor = new Author("1234", "Night Show", null, R.drawable.profile_pic6);
-            event = new Event("123", "Night Show at Mercury", eventAuthor, LocalDate.of(2019, Month.MAY, 3), "Night Show at Mercury has a jam packed line-up", null, null, R.drawable.party_4);
-            addPost(event);
+        Author eventAuthor = new Author("1234", "Night Show", null, R.drawable.profile_pic6);
+        event = new Event("123", "Night Show at Mercury", eventAuthor, LocalDate.of(2019, Month.MAY, 3), "Night Show at Mercury has a jam packed line-up", null, null, R.drawable.party_4);
+        addPost(event);
 
-
-            adapter = new NewsFeedAdapter(getActivity(), eventTitle, author, description, countLikes, countComments, day, month, imageIDPostPic, imageIDProfilePic);
-            listView.setAdapter(adapter);
-        }
+        adapter = new NewsFeedAdapter(getActivity(), eventTitle, author, description, countLikes, countComments, day, month, imageIDPostPic, imageIDProfilePic);
+        feed.setAdapter(adapter);
 
         FloatingActionButton fab = getActivity().findViewById(R.id.floatingActionButton);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onClick(View v) {
-                // save index and top position
-                int index = listView.getFirstVisiblePosition();
-                v = listView.getChildAt(0);
-                int top = (v == null) ? 0 : (v.getTop() - listView.getPaddingTop());
+        fab.setOnClickListener((v) -> {
+            addPostToFeed(v);
+        });
 
-                // add new post
-                Comment comment = new Comment("123", "124", "Lit!", new Author("1", "Night Show", null, R.drawable.profile_pic4));
-                ArrayList<Comment> list = new ArrayList<Comment>();
-                list.add(comment);
-                list.add(comment);
-                event2 = new Event("124", "Another Show at Mercury", new Author("1", "Night Show", null, R.drawable.profile_pic4), LocalDate.of(2019, Month.FEBRUARY, 14), "Night Show at Mercury has a jam packed line-up",list, null, R.drawable.party_3);
-                addPost(event2);
-
-                adapter = new NewsFeedAdapter(getActivity(), eventTitle, author, description, countLikes, countComments, day, month, imageIDPostPic, imageIDProfilePic);
-
-                // restore index and position
-                listView.setSelectionFromTop(index, top);
-
-            }
+        feed.setOnItemClickListener((parent, view1, position, id) -> {
+            startPostActivity(position);
         });
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
     public void addPost(Event event) {
 
         Integer size = eventTitle.size();
@@ -126,6 +107,7 @@ public class HomeFragment extends Fragment {
             month.add(0, event.getEventDate().getMonth().toString().substring(0, 3).toUpperCase());
             imageIDProfilePic.add(0, event.getAuthor().getProfilePictureId());
             imageIDPostPic.add(0, event.getImagePostId());
+            eventList.add(0, event);
         } else {
             eventTitle.add(event.getEventName());
             author.add(event.getAuthor().getName());
@@ -144,8 +126,42 @@ public class HomeFragment extends Fragment {
             month.add(event.getEventDate().getMonth().toString().substring(0, 3).toUpperCase());
             imageIDProfilePic.add(event.getAuthor().getProfilePictureId());
             imageIDPostPic.add(event.getImagePostId());
-
+            eventList.add(event);
         }
+
+    }
+
+    public void addPostToFeed(View v) {
+        // save index and top position
+        int index = feed.getFirstVisiblePosition();
+        v = feed.getChildAt(0);
+        int top = (v == null) ? 0 : (v.getTop() - feed.getPaddingTop());
+
+        // add new post
+        Comment comment = new Comment("123", "124", "Lit!", new Author("1", "Night Show", null, R.drawable.profile_pic4));
+        ArrayList<Comment> list = new ArrayList<>();
+        list.add(comment);
+        list.add(comment);
+        list.add(comment);
+        list.add(comment);
+        list.add(comment);
+        list.add(comment);
+        event2 = new Event("124", "Deep Brew Sundaze", new Author("1", "The Grand", null, R.drawable.profile_pic6), LocalDate.of(2019, Month.DECEMBER, 16), "Deep Brew is set at the sunset of the roof garden bar. Situated in the heart of Port Elizabeth, it is an event to enjoy, and maybe throw an after party at the end of it all", list, null, R.drawable.party);
+        addPost(event2);
+
+        adapter = new NewsFeedAdapter(getActivity(), eventTitle, author, description, countLikes, countComments, day, month, imageIDPostPic, imageIDProfilePic);
+
+        // restore index and position
+        feed.setSelectionFromTop(index, top);
+
+    }
+
+    public void startPostActivity(int position) {
+        Object o = feed.getItemAtPosition(position);
+
+        Intent post = new Intent(getActivity(), PostActivity.class);
+        post.putExtra("Event", eventList.get(position));
+        startActivity(post);
     }
 
 }

@@ -10,9 +10,11 @@ public class Navigation extends LandingActivity {
     }
 
 
-    public static void showProgress(int seconds) {
+    public static void showProgress() {
         layoutProgress.setVisibility(View.VISIBLE);
-        //TimeUnit.MINUTES.sleep(seconds);
+    }
+
+    public static void hideProgress() {
         layoutProgress.setVisibility(View.GONE);
     }
 }

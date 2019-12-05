@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"
+        android:elevation="@dimen/four"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonBack"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="@dimen/forty"
+            android:layout_height="@dimen/forty"
+            android:paddingStart="@dimen/twenty"
+            android:paddingTop="@dimen/four"
+            app:icon="@drawable/ic_arrow_back_white_24dp"
+            app:iconGravity="textStart"
+            app:iconTint="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/main_app_toolbar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/main_app_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_marginStart="@dimen/forty_eight"
+            android:layout_marginEnd="@dimen/forty_eight"
+            android:background="@color/transparent"
+            android:backgroundTint="@color/transparent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="Event"
+            app:titleTextColor="@color/white" />
+
+        <ImageButton
+            android:id="@+id/buttonLike"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="@dimen/thirty_two"
+            android:layout_height="@dimen/thirty_two"
+            android:layout_marginTop="@dimen/four"
+            android:layout_marginEnd="@dimen/twenty"
+            android:padding="4dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/sunshine"
+            app:iconTint="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ScrollView
+        android:id="@+id/scrollViewPost"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:fillViewport="true"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:fillViewport="true"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/imageViewPost"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:elevation="@dimen/eight"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/party_4"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layoutEventSummary"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/eighty"
+                    android:background="@color/colorPrimary"
+                    android:elevation="@dimen/twelve"
+                    app:layout_constraintTop_toBottomOf="@+id/imageViewPost">
+
+                    <TextView
+                        android:id="@+id/textEventTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/thirty_two"
+                        android:layout_marginTop="@dimen/twelve"
+                        android:text="Event Title"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/layoutAuthor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/thirty_two"
+                        android:layout_marginBottom="@dimen/sixteen"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent">
+
+                        <TextView
+                            android:id="@+id/textEventAuthor"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/thirty_two"
+                            android:text="by Author"
+                            android:textColor="@color/colorPrimaryLight"
+                            android:textSize="@dimen/text_size"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/imageProfilePic"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/profile_pic5"
+                            app:layout_constraintEnd_toStartOf="@+id/textViewEventAuthor"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/layoutDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/twenty"
+                        android:layout_marginBottom="@dimen/four"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/textViewDay"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/twenty_eight"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/textViewMonth"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/zero"
+                            android:text="JAN"
+                            android:textColor="@color/white"
+                            android:textSize="15dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/textViewDay" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layoutDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/layoutEventSummary">
+
+                    <TextView
+                        android:id="@+id/textEventDescription"
+                        android:layout_width="296dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/twenty"
+                        android:layout_marginTop="@dimen/twenty"
+                        android:layout_marginBottom="@dimen/sixty"
+                        android:text="Event Description"
+                        android:textSize="@dimen/sixteen"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.button.MaterialButton
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/twelve"
+                        android:layout_marginBottom="@dimen/twelve"
+                        android:text="Read More"
+                        android:textColor="@color/black"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layoutLikeComment"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/forty_four"
+                    app:layout_constraintTop_toBottomOf="@id/layoutDescription">
+
+                    <TextView
+                        android:id="@+id/textviewLikeCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/twenty"
+                        android:text="0 LIKES"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/textviewCommentCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/twenty"
+                        android:text="0 COMMENTS"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/textviewLikeCount"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
+                    android:id="@+id/layoutSeperator"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="@dimen/eight"
+                    android:layout_marginEnd="@dimen/eight"
+                    android:background="@color/grey"
+                    android:orientation="horizontal"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/layoutLikeComment" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="580dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/layoutSeperator">
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/scrollViewPost">
+
+        <com.stfalcon.chatkit.messages.MessageInput
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:inputHint="add a comment..."
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
