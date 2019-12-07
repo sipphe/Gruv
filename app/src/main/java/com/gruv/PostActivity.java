@@ -53,15 +53,7 @@ public class PostActivity extends AppCompatActivity {
         scrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
             @Override
             public void onScrollChanged() {
-
-                int scrollY = scrollView.getScrollY();
-                if (scrollY > 544) {
-                    appBarLayout.setBackgroundColor(ContextCompat.getColor(PostActivity.this, R.color.colorPrimary));
-                    toolbar.setTitle(eventTitle + " - " + postEvent.getEventDate().getDayOfMonth() + " " + postEvent.getEventDate().getMonth().toString().substring(0, 3));
-                } else {
-                    appBarLayout.setBackgroundColor(ContextCompat.getColor(PostActivity.this, R.color.transparent));
-                    toolbar.setTitle("Event");
-                }
+                collapseToolbar();
             }
         });
 
@@ -73,6 +65,17 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void collapseToolbar() {
+        int scrollY = scrollView.getScrollY();
+        if (scrollY > 544) {
+            appBarLayout.setBackgroundColor(ContextCompat.getColor(PostActivity.this, R.color.colorPrimary));
+            toolbar.setTitle(eventTitle + " - " + postEvent.getEventDate().getDayOfMonth() + " " + postEvent.getEventDate().getMonth().toString().substring(0, 3));
+        } else {
+            appBarLayout.setBackgroundColor(ContextCompat.getColor(PostActivity.this, R.color.transparent));
+            toolbar.setTitle("Event");
+        }
     }
 
     public void setPost() {

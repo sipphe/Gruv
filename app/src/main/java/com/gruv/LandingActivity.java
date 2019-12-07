@@ -10,11 +10,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.facebook.CallbackManager;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.gruv.navigation.Navigation;
 
 public class LandingActivity extends AppCompatActivity {
@@ -26,6 +29,9 @@ public class LandingActivity extends AppCompatActivity {
     ImageView imageFacebook;
 
     private CallbackManager mCallbackManager;
+    private FirebaseAuth authenticateObj;
+    private FirebaseUser currentUser;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +49,8 @@ public class LandingActivity extends AppCompatActivity {
         //login : social
         imageFacebook = findViewById(R.id.imageFacebook);
 
-        EditText textEmail = findViewById(R.id.editTextEmail);
-        EditText textPassword = findViewById(R.id.editTextPassword);
+        EditText textEmail = findViewById(R.id.editTextEmailLogin);
+        EditText textPassword = findViewById(R.id.editTextPasswordLogin);
         TextView textSignUp = findViewById(R.id.textViewSignUp);
         TextView textForgotPassword = findViewById(R.id.textViewForgotPassword);
         Button buttonEmail = findViewById(R.id.buttonEmail);
@@ -80,14 +86,30 @@ public class LandingActivity extends AppCompatActivity {
         buttonSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = textEmail.getText().toString(), password = textPassword.getText().toString();
-                Boolean result = true;
+                String email = textEmail.getText().toString();
+                String password = textPassword.getText().toString();
+                boolean result = false;
+
                 Navigation.showProgress();
-                //TODO Add email sign in authorisation code
+                authenticateObj = FirebaseAuth.getInstance();
+                currentUser = authenticateObj.getCurrentUser();
+
+                if (currentUser == null) {
+                    result = false;
+                    //Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_LONG).show();
+                }
+                if (!email.isEmpty() && email != null) {
+                    authenticateObj.signInWithEmailAndPassword(email, password);
+                    finish();
+                    result = true;
+                } else {
+                    Toast.makeText(getApplicationContext(), "Enter Email and Password", Toast.LENGTH_LONG).show();
+                }
 
                 Navigation.hideProgress();
-                if (result = true)
-                    finish();
+                if (result = true) {
+                } else {
+                }
             }
         });
 

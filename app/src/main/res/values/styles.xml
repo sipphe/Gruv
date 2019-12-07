@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorControlNormal">@color/white</item>
 
+
     </style>
     <style name="HeaderBar">
         <item name="android:background">@color/colorPrimary</item>
@@ -17,5 +18,9 @@
         <item name="color">#000</item>
     </style>
 
+    <style name="TranslucentStatusBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
 
 </resources>
