@@ -12,10 +12,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.facebook.CallbackManager;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.gruv.navigation.Navigation;
@@ -31,7 +35,7 @@ public class LandingActivity extends AppCompatActivity {
     private CallbackManager mCallbackManager;
     private FirebaseAuth authenticateObj;
     private FirebaseUser currentUser;
-    private EditText textEmail, textPassword;
+    private EditText textEmail, textPassword, editTextEmail, editTextPassword, editTextName, editTextConfirmPassword;
     private TextView textSignUp, textForgotPassword, textViewSignUp;
     private Button buttonEmail, buttonSignIn, buttonRegister, buttonNext1, buttonNext, buttonResetPassword;
 
@@ -82,9 +86,8 @@ public class LandingActivity extends AppCompatActivity {
         buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO Add sign up authorisation code
-
-                finish();
+                registerUserWithEmailAndPassword();
+                //finish();
             }
         });
 
@@ -218,18 +221,28 @@ public class LandingActivity extends AppCompatActivity {
 
     private void initializeControls() {
         //controls
-        imageFacebook = findViewById(R.id.imageFacebook);
-        textEmail = findViewById(R.id.editTextEmailLogin);
-        textPassword = findViewById(R.id.editTextPasswordLogin);
-        textSignUp = findViewById(R.id.textViewSignUp);
-        textForgotPassword = findViewById(R.id.textViewForgotPassword);
-        textViewSignUp = findViewById(R.id.textViewSignUp);
+        //landing
         buttonEmail = findViewById(R.id.buttonEmail);
         buttonSignIn = findViewById(R.id.buttonLogin);
         buttonRegister = findViewById(R.id.buttonRegister);
         buttonNext1 = findViewById(R.id.buttonNext1);
         buttonNext = findViewById(R.id.buttonNext);
         buttonResetPassword = findViewById(R.id.buttonResetPassword);
+        imageFacebook = findViewById(R.id.imageFacebook);
+        textForgotPassword = findViewById(R.id.textViewForgotPassword);
+        textViewSignUp = findViewById(R.id.textViewSignUp);
+
+        //login
+        textEmail = findViewById(R.id.editTextEmailLogin);
+        textPassword = findViewById(R.id.editTextPasswordLogin);
+        textSignUp = findViewById(R.id.textViewSignUp);
+
+        //register
+        editTextEmail = findViewById(R.id.editTextEmail);
+        editTextPassword = findViewById(R.id.editTextPassword);
+        editTextName = findViewById(R.id.editTextName);
+        editTextConfirmPassword = findViewById(R.id.editTextConfirmPassword);
+
         //layouts
         layoutLoginStart = findViewById(R.id.constraintLayoutLoginStart);
         layoutLoginEmail = findViewById(R.id.constraintLayoutLogin);
@@ -238,6 +251,52 @@ public class LandingActivity extends AppCompatActivity {
         layoutEnterVerifyCode = findViewById(R.id.constraintLayoutEnterVerifyCode);
         layoutResetPassword = findViewById(R.id.constraintLayoutResetPassword);
         layoutProgress = findViewById(R.id.constraintLayoutProgressBar);
+    }
+
+    public void registerUserWithEmailAndPassword() {
+
+        layoutRegister.setVisibility(View.VISIBLE);
+
+        String name = editTextName.getText().toString().trim();
+        String email = editTextEmail.getText().toString().trim();
+        String password = editTextPassword.getText().toString().trim();
+        String confirmPasword = editTextConfirmPassword.getText().toString().trim();
+
+        if (connectionAvailable()) {
+            if (name == null || name.length() == 0
+                    || email == null || email.length() == 0
+                    || password == null || password.length() == 0
+                    || confirmPasword == null || confirmPasword.length() == 0) {
+
+                //replace with snackBar
+                Toast.makeText(getApplicationContext(), "Enter all Fields", Toast.LENGTH_LONG).show();
+            } else {
+                if (!confirmPasword.equals(password)) {
+                    Toast.makeText(getApplicationContext(), "Password must match", Toast.LENGTH_LONG).show();
+                } else {
+                    authenticateObj.createUserWithEmailAndPassword(email, password).
+                            addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        // Sign in success, update UI with the signed-in user's information
+                                        FirebaseUser user = authenticateObj.getCurrentUser();
+                                    } else {
+                                        // If sign in fails, display a message to the user.
+                                        //Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                                        Toast.makeText(getApplicationContext(), "Authentication failed.",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                }
+            }
+        } else {
+            //replace with snackBar
+            Toast.makeText(getApplicationContext(), "Check internet connection and try again later", Toast.LENGTH_LONG).show();
+        }
+
+
     }
 }
 
