@@ -5,17 +5,25 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 
 import com.facebook.CallbackManager;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.gruv.navigation.Navigation;
@@ -31,9 +39,10 @@ public class LandingActivity extends AppCompatActivity {
     private CallbackManager mCallbackManager;
     private FirebaseAuth authenticateObj;
     private FirebaseUser currentUser;
-    private EditText textEmail, textPassword;
+    private TextInputLayout layoutEmailText, layoutPasswordText;
+    private TextInputEditText textEmail, textPassword;
     private TextView textSignUp, textForgotPassword, textViewSignUp;
-    private Button buttonEmail, buttonSignIn, buttonRegister, buttonNext1, buttonNext, buttonResetPassword;
+    private MaterialButton buttonEmail, buttonSignIn, buttonRegister, buttonNext1, buttonNext, buttonResetPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +61,6 @@ public class LandingActivity extends AppCompatActivity {
         textViewSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 createAccount();
             }
         });
@@ -69,6 +77,23 @@ public class LandingActivity extends AppCompatActivity {
             public void onClick(View v) {
                 layoutLoginEmail.setVisibility(View.GONE);
                 layoutForgotPassword.setVisibility(View.VISIBLE);
+            }
+        });
+
+        textEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                validateEmail();
             }
         });
 
@@ -115,10 +140,12 @@ public class LandingActivity extends AppCompatActivity {
                 finish();
             }
         });
+
     }
 
     private void createAccount() {
-        Toast.makeText(getApplicationContext(), "Method works", Toast.LENGTH_LONG).show();
+        showSnackBar("Method works", R.id.layoutParent, Snackbar.LENGTH_SHORT);
+        //Toast.makeText(getApplicationContext(), , Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -160,28 +187,38 @@ public class LandingActivity extends AppCompatActivity {
             authenticateObj = FirebaseAuth.getInstance();
             currentUser = authenticateObj.getCurrentUser();
 
-            if (currentUser == null) {
-                result = false;
-            } else {
-
-                layoutLoginStart.setVisibility(View.VISIBLE);
-            }
-            if (!email.isEmpty() && email != null) {
-                authenticateObj.signInWithEmailAndPassword(email, password);
-                finish();
+//            if (currentUser == null) {
+//                result = false;
+//            } else {
+//
+//            layoutLoginStart.setVisibility(View.VISIBLE);
+//            }
+            if (!email.isEmpty() && !password.isEmpty()) {
+                try {
+                    authenticateObj.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                currentUser = authenticateObj.getCurrentUser();
+                                finish();
+                            } else {
+                                showSnackBar("Incorrect email or password", R.id.layoutParent, Snackbar.LENGTH_SHORT);
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    showSnackBar("Something went wrong", R.id.layoutParent, Snackbar.LENGTH_SHORT);
+                    e.printStackTrace();
+                }
                 result = true;
             } else {
-                Toast.makeText(getApplicationContext(), "Enter Email and Password", Toast.LENGTH_LONG).show();
+                showSnackBar("Enter Email and Password", R.id.layoutParent, Snackbar.LENGTH_SHORT);
             }
-
-            Navigation.hideProgress();
-            if (result = true) {
-                //replace with snackBar
-                Toast.makeText(getApplicationContext(), "Check internet connection and try again later", Toast.LENGTH_LONG).show();
-            } else {
-
-            }
+        } else {
+            showSnackBar("Check internet connection and try again later", R.id.layoutParent, Snackbar.LENGTH_SHORT);
         }
+        Navigation.hideProgress();
+
         return result;
     }
 
@@ -222,8 +259,8 @@ public class LandingActivity extends AppCompatActivity {
         textEmail = findViewById(R.id.editTextEmailLogin);
         textPassword = findViewById(R.id.editTextPasswordLogin);
         textSignUp = findViewById(R.id.textViewSignUp);
-        textForgotPassword = findViewById(R.id.textViewForgotPassword);
         textViewSignUp = findViewById(R.id.textViewSignUp);
+        textForgotPassword = findViewById(R.id.textViewForgotPassword);
         buttonEmail = findViewById(R.id.buttonEmail);
         buttonSignIn = findViewById(R.id.buttonLogin);
         buttonRegister = findViewById(R.id.buttonRegister);
@@ -231,6 +268,8 @@ public class LandingActivity extends AppCompatActivity {
         buttonNext = findViewById(R.id.buttonNext);
         buttonResetPassword = findViewById(R.id.buttonResetPassword);
         //layouts
+        layoutEmailText = findViewById(R.id.editTextLayoutEmail);
+        layoutPasswordText = findViewById(R.id.editTextLayoutPassword);
         layoutLoginStart = findViewById(R.id.constraintLayoutLoginStart);
         layoutLoginEmail = findViewById(R.id.constraintLayoutLogin);
         layoutRegister = findViewById(R.id.constraintLayoutRegister);
@@ -238,6 +277,25 @@ public class LandingActivity extends AppCompatActivity {
         layoutEnterVerifyCode = findViewById(R.id.constraintLayoutEnterVerifyCode);
         layoutResetPassword = findViewById(R.id.constraintLayoutResetPassword);
         layoutProgress = findViewById(R.id.constraintLayoutProgressBar);
+    }
+
+    public void showSnackBar(String message, Integer layout, Integer length) {
+        View contextView = findViewById(layout);
+        Snackbar.make(contextView, message, length).show();
+    }
+
+    public void validateEmail() {
+        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-zA-Z._-]+[a-zA-Z._-]";
+        // onClick of button perform this simplest code.
+        if (!textEmail.getText().toString().trim().matches(emailPattern)) {
+            layoutEmailText.setError("Invalid email");
+            buttonSignIn.setClickable(false);
+            buttonSignIn.setTextColor(ContextCompat.getColor(getApplicationContext(), (R.color.grey)));
+        } else {
+            layoutEmailText.setError(null);
+            buttonSignIn.setClickable(true);
+            buttonSignIn.setTextColor(ContextCompat.getColor(getApplicationContext(), (R.color.colorPrimary)));
+        }
     }
 }
 
