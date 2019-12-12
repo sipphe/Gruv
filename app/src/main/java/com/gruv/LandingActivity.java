@@ -39,8 +39,8 @@ public class LandingActivity extends AppCompatActivity {
     private CallbackManager mCallbackManager;
     private FirebaseAuth authenticateObj;
     private FirebaseUser currentUser;
-    private TextInputLayout layoutEmailText, layoutPasswordText;
-    private TextInputEditText textEmail, textPassword;
+    private TextInputLayout layoutEmailText, layoutPasswordText, layoutEmailRegisterText;
+    private TextInputEditText textEmail, textPassword, editTextEmail, editTextPassword, editTextName, editTextConfirmPassword;
     private TextView textSignUp, textForgotPassword, textViewSignUp;
     private MaterialButton buttonEmail, buttonSignIn, buttonRegister, buttonNext1, buttonNext, buttonResetPassword;
 
@@ -93,7 +93,23 @@ public class LandingActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                validateEmail();
+                validateEmail(s, layoutEmailText, buttonSignIn);
+            }
+        });
+        editTextEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                validateEmail(s, layoutEmailRegisterText, buttonRegister);
             }
         });
 
@@ -108,8 +124,8 @@ public class LandingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //TODO Add sign up authorisation code
-
-                finish();
+                registerUserWithEmailAndPassword();
+                //finish();
             }
         });
 
@@ -255,21 +271,32 @@ public class LandingActivity extends AppCompatActivity {
 
     private void initializeControls() {
         //controls
-        imageFacebook = findViewById(R.id.imageFacebook);
-        textEmail = findViewById(R.id.editTextEmailLogin);
-        textPassword = findViewById(R.id.editTextPasswordLogin);
-        textSignUp = findViewById(R.id.textViewSignUp);
-        textViewSignUp = findViewById(R.id.textViewSignUp);
-        textForgotPassword = findViewById(R.id.textViewForgotPassword);
+        //landing
         buttonEmail = findViewById(R.id.buttonEmail);
         buttonSignIn = findViewById(R.id.buttonLogin);
         buttonRegister = findViewById(R.id.buttonRegister);
         buttonNext1 = findViewById(R.id.buttonNext1);
         buttonNext = findViewById(R.id.buttonNext);
         buttonResetPassword = findViewById(R.id.buttonResetPassword);
-        //layouts
+        imageFacebook = findViewById(R.id.imageFacebook);
+        textForgotPassword = findViewById(R.id.textViewForgotPassword);
+        textViewSignUp = findViewById(R.id.textViewSignUp);
+
+        //login
+        textEmail = findViewById(R.id.editTextEmailLogin);
+        textPassword = findViewById(R.id.editTextPasswordLogin);
+        textSignUp = findViewById(R.id.textViewSignUp);
         layoutEmailText = findViewById(R.id.editTextLayoutEmail);
         layoutPasswordText = findViewById(R.id.editTextLayoutPassword);
+
+        //register
+        editTextEmail = findViewById(R.id.editTextEmailRegister);
+        editTextPassword = findViewById(R.id.editTextPasswordRegister);
+        editTextName = findViewById(R.id.editTextName);
+        editTextConfirmPassword = findViewById(R.id.editTextConfirmPassword);
+        layoutEmailRegisterText = findViewById(R.id.editTextLayoutEmailRegister);
+
+        //layouts
         layoutLoginStart = findViewById(R.id.constraintLayoutLoginStart);
         layoutLoginEmail = findViewById(R.id.constraintLayoutLogin);
         layoutRegister = findViewById(R.id.constraintLayoutRegister);
@@ -284,17 +311,64 @@ public class LandingActivity extends AppCompatActivity {
         Snackbar.make(contextView, message, length).show();
     }
 
-    public void validateEmail() {
+    public void validateEmail(Editable s, TextInputLayout layout, MaterialButton button) {
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-zA-Z._-]+[a-zA-Z._-]";
         // onClick of button perform this simplest code.
-        if (!textEmail.getText().toString().trim().matches(emailPattern)) {
-            layoutEmailText.setError("Invalid email");
-            buttonSignIn.setClickable(false);
-            buttonSignIn.setTextColor(ContextCompat.getColor(getApplicationContext(), (R.color.grey)));
+        if (!s.toString().trim().matches(emailPattern)) {
+            layout.setError("Invalid email");
+            button.setClickable(false);
+            button.setTextColor(ContextCompat.getColor(getApplicationContext(), (R.color.grey)));
         } else {
-            layoutEmailText.setError(null);
-            buttonSignIn.setClickable(true);
-            buttonSignIn.setTextColor(ContextCompat.getColor(getApplicationContext(), (R.color.colorPrimary)));
+            layout.setError(null);
+            button.setClickable(true);
+            button.setTextColor(ContextCompat.getColor(getApplicationContext(), (R.color.colorPrimary)));
+        }
+    }
+
+    public void registerUserWithEmailAndPassword() {
+
+        authenticateObj = FirebaseAuth.getInstance();
+        layoutRegister.setVisibility(View.VISIBLE);
+
+        String name = editTextName.getText().toString().trim();
+        String email = editTextEmail.getText().toString().trim();
+        String password = editTextPassword.getText().toString().trim();
+        String confirmPasword = editTextConfirmPassword.getText().toString().trim();
+
+        if (connectionAvailable()) {
+            if (name == null || name.length() == 0
+                    || email == null || email.length() == 0
+                    || password == null || password.length() == 0
+                    || confirmPasword == null || confirmPasword.length() == 0) {
+
+                showSnackBar("Enter all Fields", R.id.layoutParent, Snackbar.LENGTH_SHORT);
+            } else {
+                if (!confirmPasword.equals(password)) {
+                    showSnackBar("Password must match", R.id.layoutParent, Snackbar.LENGTH_SHORT);
+                    //Toast.makeText(getApplicationContext(), "Password must match", Toast.LENGTH_LONG).show();
+                } else {
+                    authenticateObj.createUserWithEmailAndPassword(email, password).
+                            addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        // Sign in success, update UI with the signed-in user's information
+                                        currentUser = authenticateObj.getCurrentUser();
+                                        showSnackBar("Great, your account is set up! Sign In", R.id.layoutParent, Snackbar.LENGTH_SHORT);
+                                        layoutRegister.setVisibility(View.GONE);
+                                        layoutLoginEmail.setVisibility(View.VISIBLE);
+
+                                    } else {
+                                        // If sign in fails, display a message to the user.
+                                        //Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                                        showSnackBar("Authentication failed", R.id.layoutParent, Snackbar.LENGTH_SHORT);
+                                    }
+                                }
+                            });
+                }
+            }
+        } else {
+            showSnackBar("Check internet connection and try again later", R.id.layoutParent, Snackbar.LENGTH_SHORT);
         }
     }
 }
