@@ -1,5 +1,7 @@
 package com.gruv.models;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -10,18 +12,30 @@ public class Event implements Serializable {
     private String eventId, eventName, eventDescription;
     private Author author;
     private LocalDate eventDate;
+    private Venue venue;
     private ArrayList<Comment> comments;
-    private ArrayList<String> likes;
+    private ArrayList<Like> likes;
     private Integer imagePostId;
 
     public Event() {
     }
 
-    public Event(String eventId, String eventName, Author author, LocalDate eventDate, String eventDescription, ArrayList<Comment> comments, List<String> likes, Integer imagePostId) {
+    public Event(@NonNull String eventId, @NonNull String eventName, String eventDescription, Author author, @NonNull LocalDate eventDate, Venue venue, Integer imagePostId) {
+        this.eventId = eventId;
+        this.eventName = eventName;
+        this.eventDescription = eventDescription;
+        this.author = author;
+        this.eventDate = eventDate;
+        this.venue = venue;
+        this.imagePostId = imagePostId;
+    }
+
+    public Event(@NonNull String eventId, @NonNull String eventName, Author author, @NonNull LocalDate eventDate, Venue venue, String eventDescription, ArrayList<Comment> comments, List<Like> likes, Integer imagePostId) {
         this.eventId = eventId;
         this.eventName = eventName;
         this.author = author;
         this.eventDate = eventDate;
+        this.venue = venue;
         this.eventDescription = eventDescription;
         this.comments = comments;
         this.imagePostId = imagePostId;
@@ -47,7 +61,7 @@ public class Event implements Serializable {
         return author;
     }
 
-    public void setAuthorName(Author author) {
+    public void setAuthor(Author author) {
         this.author = author;
     }
 
@@ -57,6 +71,14 @@ public class Event implements Serializable {
 
     public void setEventDate(LocalDate eventDate) {
         this.eventDate = eventDate;
+    }
+
+    public Venue getVenue() {
+        return venue;
+    }
+
+    public void setVenue(Venue venue) {
+        this.venue = venue;
     }
 
     public String getEventDescription() {
@@ -79,16 +101,24 @@ public class Event implements Serializable {
         this.comments.add(comment);
     }
 
-    public List<String> getLikes() {
+    public List<Like> getLikes() {
         return likes;
     }
 
-    public void setLikes(ArrayList<String> likes) {
+    public void setLikes(ArrayList<Like> likes) {
         this.likes = likes;
     }
 
-    public void addLike(String author) {
-        this.likes.add(author);
+    public void addLike(Like like) {
+        if (this.likes == null) {
+            this.likes = new ArrayList<>();
+        }
+        this.likes.add(like);
+    }
+
+    public void removeLike(Like like) {
+        if (this.likes != null)
+            this.likes.remove(like);
     }
 
     public Integer getImagePostId() {

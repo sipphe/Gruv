@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 
@@ -18,6 +19,9 @@ import com.gruv.com.gruv.NewsFeedAdapter;
 import com.gruv.models.Author;
 import com.gruv.models.Comment;
 import com.gruv.models.Event;
+import com.gruv.models.Venue;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -32,6 +36,7 @@ public class HomeFragment extends Fragment {
     private List<String> eventTitle = new ArrayList<>();
     private List<String> author = new ArrayList<>();
     private List<String> description = new ArrayList<>();
+    public NewsFeedAdapter adapter;
     private List<Integer> countLikes = new ArrayList<>();
     private List<Integer> countComments = new ArrayList<>();
     private List<Integer> day = new ArrayList<>();
@@ -40,9 +45,10 @@ public class HomeFragment extends Fragment {
     private List<Integer> imageIDProfilePic = new ArrayList<>();
     private List<Event> eventList = new ArrayList<>();
     private Event event, event2;
-    private NewsFeedAdapter adapter;
+    private List<Venue> venue = new ArrayList<>();
     private ListView feed;
     private ScrollView scrollView;
+    private LinearLayout layoutProgress;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -62,14 +68,15 @@ public class HomeFragment extends Fragment {
         DrawerLayout drawerLayout = getActivity().findViewById(R.id.drawerLayout);
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.app_name, R.string.app_name);
 
+        layoutProgress = getActivity().findViewById(R.id.layout_progress);
         feed = getActivity().findViewById(R.id.listNewsFeed);
-        scrollView = getActivity().findViewById(R.id.mainScrollView);
+        //scrollView = getActivity().findViewById(R.id.mainScrollView);
 
         Author eventAuthor = new Author("1234", "Night Show", null, R.drawable.profile_pic6);
-        event = new Event("123", "Night Show at Mercury", eventAuthor, LocalDate.of(2019, Month.MAY, 3), "Night Show at Mercury has a jam packed line-up", null, null, R.drawable.party_4);
+        event = new Event("123", "Night Show at Mercury", "Night Show at Mercury has a jam packed line-up", eventAuthor, LocalDate.of(2019, Month.MAY, 3), new Venue("Mercury Live"), R.drawable.party_4);
         addPost(event);
 
-        adapter = new NewsFeedAdapter(getActivity(), eventTitle, author, description, countLikes, countComments, day, month, imageIDPostPic, imageIDProfilePic);
+        adapter = new NewsFeedAdapter(getActivity(), eventTitle, author, description, venue, countLikes, countComments, day, month, imageIDPostPic, imageIDProfilePic);
         feed.setAdapter(adapter);
 
         FloatingActionButton fab = getActivity().findViewById(R.id.floatingActionButton);
@@ -81,53 +88,32 @@ public class HomeFragment extends Fragment {
             startPostActivity(position);
         });
 
+
     }
 
 
-    public void addPost(Event event) {
+    public void addPost(@NotNull Event event) {
 
-        Integer size = eventTitle.size();
-        if (size >= 1) {
-            eventTitle.add(0, event.getEventName());
-            author.add(0, event.getAuthor().getName());
-            description.add(0, event.getEventDescription());
 
-            if (event.getComments() == null || event.getComments().isEmpty()) {
-                countComments.add(0, 0);
-            } else {
-                countComments.add(0, event.getComments().size());
-            }
-            if (event.getLikes() == null || event.getLikes().isEmpty()) {
-                countLikes.add(0, 0);
-            } else {
-                countLikes.add(0, event.getLikes().size());
-            }
+        eventTitle.add(event.getEventName());
+        author.add(event.getAuthor().getName());
+        description.add(event.getEventDescription());
+        venue.add(event.getVenue());
+        if (event.getComments() == null || event.getComments().isEmpty())
+            countComments.add(0);
+        else
+            countComments.add(event.getComments().size());
 
-            day.add(0, event.getEventDate().getDayOfMonth());
-            month.add(0, event.getEventDate().getMonth().toString().substring(0, 3).toUpperCase());
-            imageIDProfilePic.add(0, event.getAuthor().getProfilePictureId());
-            imageIDPostPic.add(0, event.getImagePostId());
-            eventList.add(0, event);
-        } else {
-            eventTitle.add(event.getEventName());
-            author.add(event.getAuthor().getName());
-            description.add(event.getEventDescription());
-            if (event.getComments() == null || event.getComments().isEmpty())
-                countComments.add(0);
-            else
-                countComments.add(event.getComments().size());
+        if (event.getLikes() == null || event.getLikes().isEmpty())
+            countLikes.add(0);
+        else
+            countLikes.add(event.getComments().size());
 
-            if (event.getLikes() == null || event.getLikes().isEmpty())
-                countLikes.add(0);
-            else
-                countLikes.add(event.getComments().size());
-
-            day.add(event.getEventDate().getDayOfMonth());
-            month.add(event.getEventDate().getMonth().toString().substring(0, 3).toUpperCase());
-            imageIDProfilePic.add(event.getAuthor().getProfilePictureId());
-            imageIDPostPic.add(event.getImagePostId());
-            eventList.add(event);
-        }
+        day.add(event.getEventDate().getDayOfMonth());
+        month.add(event.getEventDate().getMonth().toString().substring(0, 3).toUpperCase());
+        imageIDProfilePic.add(event.getAuthor().getProfilePictureId());
+        imageIDPostPic.add(event.getImagePostId());
+        eventList.add(event);
 
     }
 
@@ -146,14 +132,13 @@ public class HomeFragment extends Fragment {
         list.add(comment);
         list.add(comment);
         list.add(comment);
-        event2 = new Event("124", "Deep Brew Sundaze", new Author("1", "The Grand", null, R.drawable.profile_pic6), LocalDate.of(2019, Month.DECEMBER, 16), "Deep Brew is set at the sunset of the roof garden bar. Situated in the heart of Port Elizabeth, it is an event to enjoy, and maybe throw an after party at the end of it all", list, null, R.drawable.party);
+        event2 = new Event("124", "Deep Brew Sundaze", new Author("1", "The Grand", null, R.drawable.profile_pic6), LocalDate.of(2019, Month.DECEMBER, 16), new Venue("Roof Garden Bar"), "Deep Brew is set at the sunset of the roof garden bar. Situated in the heart of Port Elizabeth, it is an event to enjoy, and maybe throw an after party at the end of it all. The Indian Ocean is named after India (Oceanus Orientalis Indicus) since at least 1515. India, then, is the Greek/Roman name for the \"region of the Indus River\".[6]\n\nCalled the Sindhu Mahasagara or the great sea of the Sindhu by the Ancient Indians, this ocean has been variously called Hindu Ocean, Indic Ocean, etc. in various languages. The Indian Ocean was also known earlier as the Eastern Ocean, a term was still in use during the mid-18th century (see map).[6] Conversely, when China explored the Indian Ocean in the 15th century they called it the \"Western Oceans\".", list, null, R.drawable.party);
         addPost(event2);
 
-        adapter = new NewsFeedAdapter(getActivity(), eventTitle, author, description, countLikes, countComments, day, month, imageIDPostPic, imageIDProfilePic);
+        adapter = new NewsFeedAdapter(getActivity(), eventTitle, author, description, venue, countLikes, countComments, day, month, imageIDPostPic, imageIDProfilePic);
 
         // restore index and position
         feed.setSelectionFromTop(index, top);
-
     }
 
     public void startPostActivity(int position) {
@@ -164,5 +149,7 @@ public class HomeFragment extends Fragment {
         startActivity(post);
     }
 
+    public void scrollToTop() {
+    }
 }
 

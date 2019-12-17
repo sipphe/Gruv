@@ -127,12 +127,42 @@
                     android:id="@+id/textEventDescription"
                     android:layout_width="210dp"
                     android:layout_height="50dp"
-                    android:paddingTop="10dp"
+                    android:paddingTop="@dimen/four"
                     android:text="Event Description"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/layoutVenue"
                     app:layout_constraintStart_toStartOf="parent" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layoutVenue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <ImageView
+                        android:id="@+id/imagePin"
+                        android:layout_width="@dimen/twelve"
+                        android:layout_height="@dimen/sixteen"
+                        android:src="@drawable/ic_pin_drop_white_24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/textVenue"
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/four"
+                        android:text="Event Venue"
+                        android:textColor="@color/light_grey"
+                        android:textSize="@dimen/text_size"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/imagePin"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/layoutDate"

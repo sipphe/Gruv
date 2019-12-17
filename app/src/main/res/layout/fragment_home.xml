@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/frame_home_fragment"
     android:layout_width="match_parent"
@@ -38,49 +39,49 @@
 
     </RelativeLayout>
 
-    <ScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/mainScrollView"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="match_parent"
         android:fillViewport="true"
         android:paddingTop="55dp"
         android:paddingBottom="55dp">
 
-        <LinearLayout
+        <!--        <LinearLayout-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:orientation="vertical">-->
+
+
+        <ListView
+            android:id="@+id/listNewsFeed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:stackFromBottom="true"
+            android:transcriptMode="alwaysScroll"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
+        <LinearLayout
+            android:id="@+id/layout_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/listNewsFeed"
+            tools:visibility="visible">
 
-            <ListView
-                android:id="@+id/listNewsFeed"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-            </ListView>
-
-
-            <LinearLayout
-                android:id="@+id/layout_progress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="6dp"
-                android:orientation="vertical"
-                tools:visibility="visible">
-
-                <ProgressBar
-                    android:id="@+id/progressBar"
-                    style="?android:attr/progressBarStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="6dp" />
-            </LinearLayout>
+                android:layout_marginTop="6dp" />
         </LinearLayout>
+        <!--        </LinearLayout>-->
 
 
-    </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </RelativeLayout>

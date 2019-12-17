@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.gruv.R;
+import com.gruv.models.Venue;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class NewsFeedAdapter extends ArrayAdapter<String> {
     private final List<String> eventTitle;
     private final List<String> author;
     private final List<String> description;
+    private final List<Venue> venue;
     private final List<Integer> countLikes;
     private final List<Integer> countComments;
     private final List<Integer> day;
@@ -29,12 +31,13 @@ public class NewsFeedAdapter extends ArrayAdapter<String> {
     private final List<Integer> imageIDPostPic;
     private final List<Integer> imageIDProfilePic;
 
-    public NewsFeedAdapter(@NonNull Activity context, List<String> eventTitle, List<String> author, List<String> description, List<Integer> countLikes, List<Integer> countComments, List<Integer> day, List<String> month, List<Integer> imageIDPostPic, List<Integer> imageIDProfilePic) {
+    public NewsFeedAdapter(@NonNull Activity context, List<String> eventTitle, List<String> author, List<String> description, List<Venue> venue, List<Integer> countLikes, List<Integer> countComments, List<Integer> day, List<String> month, List<Integer> imageIDPostPic, List<Integer> imageIDProfilePic) {
         super(context, R.layout.post, eventTitle);
         this.context = context;
         this.eventTitle = eventTitle;
         this.author = author;
         this.description = description;
+        this.venue = venue;
         this.countLikes = countLikes;
         this.countComments = countComments;
         this.day = day;
@@ -51,6 +54,7 @@ public class NewsFeedAdapter extends ArrayAdapter<String> {
         TextView titleText = rowView.findViewById(R.id.textViewEventTitle);
         TextView textAuthor = rowView.findViewById(R.id.textViewEventAuthor);
         TextView textDescription = rowView.findViewById(R.id.textEventDescription);
+        TextView textVenue = rowView.findViewById((R.id.textVenue));
         TextView textDay = rowView.findViewById(R.id.textViewDay);
         TextView textMonth = rowView.findViewById(R.id.textViewMonth);
         TextView textCommentCount = rowView.findViewById(R.id.counterComments);
@@ -61,6 +65,7 @@ public class NewsFeedAdapter extends ArrayAdapter<String> {
         titleText.setText(eventTitle.get(position));
         textAuthor.setText(author.get(position));
         textDescription.setText(description.get(position));
+        textVenue.setText(venue.get(position).getVenueName());
         textDay.setText(day.get(position).toString());
         textMonth.setText(month.get(position));
         textCommentCount.setText(countComments.get(position).toString());

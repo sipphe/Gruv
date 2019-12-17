@@ -203,12 +203,7 @@ public class LandingActivity extends AppCompatActivity {
             authenticateObj = FirebaseAuth.getInstance();
             currentUser = authenticateObj.getCurrentUser();
 
-//            if (currentUser == null) {
-//                result = false;
-//            } else {
-//
-//            layoutLoginStart.setVisibility(View.VISIBLE);
-//            }
+
             if (!email.isEmpty() && !password.isEmpty()) {
                 try {
                     authenticateObj.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -354,6 +349,7 @@ public class LandingActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         // Sign in success, update UI with the signed-in user's information
                                         currentUser = authenticateObj.getCurrentUser();
+                                        //currentUser.updateProfile()
                                         showSnackBar("Great, your account is set up! Sign In", R.id.layoutParent, Snackbar.LENGTH_SHORT);
                                         layoutRegister.setVisibility(View.GONE);
                                         layoutLoginEmail.setVisibility(View.VISIBLE);
