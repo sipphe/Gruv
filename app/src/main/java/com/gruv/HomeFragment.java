@@ -124,9 +124,10 @@ public class HomeFragment extends Fragment {
         int top = (v == null) ? 0 : (v.getTop() - feed.getPaddingTop());
 
         // add new post
-        Comment comment = new Comment("123", "124", "Lit!", new Author("1", "Night Show", null, R.drawable.profile_pic4));
+        Comment comment = new Comment("123", "124", "Okay, I can't wait to be there. The line up looks so nice. There should be a photographer!", new Author("2", "Finn Human", null, R.drawable.profile_pic5));
         ArrayList<Comment> list = new ArrayList<>();
         list.add(comment);
+        comment = new Comment("123", "124", "Lit!", new Author("1", "Night Show", null, R.drawable.profile_pic4));
         list.add(comment);
         list.add(comment);
         list.add(comment);

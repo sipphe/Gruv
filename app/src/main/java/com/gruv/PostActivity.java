@@ -7,6 +7,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -16,9 +17,13 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.button.MaterialButton;
+import com.gruv.com.gruv.CommentListAdapter;
 import com.gruv.models.Author;
 import com.gruv.models.Event;
 import com.gruv.models.Like;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -39,6 +44,7 @@ public class PostActivity extends AppCompatActivity {
     TextView textEventDescription;
     TextView textVenue;
     TextView likeCount, commentCount;
+    ListView commentList;
     ScrollView scrollView;
     Boolean liked = false;
     Like thisLike;
@@ -50,6 +56,7 @@ public class PostActivity extends AppCompatActivity {
         postEvent = (Event) getIntent().getSerializableExtra("Event");
         toolbar = findViewById(R.id.main_app_toolbar);
         buttonReadMore = findViewById(R.id.buttonReadMore);
+        commentList = findViewById(R.id.listComments);
 
         setTransparentStatusBar();
         setTopPadding(getStatusBarHeight());
@@ -69,6 +76,8 @@ public class PostActivity extends AppCompatActivity {
         } else {
             buttonReadMore.setVisibility(View.GONE);
         }
+
+        setComments();
 
         scrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
             @Override
@@ -146,6 +155,19 @@ public class PostActivity extends AppCompatActivity {
             likeCount.setText(postEvent.getLikes().size() + " LIKES");
         if (postEvent.getComments() != null)
             commentCount.setText(postEvent.getComments().size() + " COMMENTS");
+    }
+
+    public void setComments() {
+        List<String> strings = new ArrayList<>();
+        if (postEvent.getComments() != null) {
+            for (int i = 0; i < postEvent.getComments().size(); i++) {
+                strings.add(postEvent.getComments().get(i).getCommentText());
+            }
+        }
+        CommentListAdapter adapter = new CommentListAdapter(this, postEvent.getComments(), strings);
+
+
+        commentList.setAdapter(adapter);
     }
 
     public int getStatusBarHeight() {
