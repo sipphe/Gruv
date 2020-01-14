@@ -3,6 +3,7 @@ package com.gruv;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Criteria;
@@ -15,6 +16,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
@@ -35,8 +38,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.gruv.com.gruv.SearchListAdapter;
+import com.gruv.models.Author;
+import com.gruv.models.Event;
+import com.gruv.models.Venue;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -56,6 +66,8 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
     private BottomSheetBehavior sheetBehavior;
     private ConstraintLayout bottom_sheet;
     private int peekHeight = 700;
+    List<Event> events;
+    private ListView listSearch;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -84,19 +96,49 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
         sheetBehavior = BottomSheetBehavior.from(bottom_sheet);
         sheetBehavior.setPeekHeight(peekHeight);
         sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        listSearch = getActivity().findViewById(R.id.search_list);
 
+        Author eventAuthor = new Author("1234", "The Grand at Night Show", null, R.drawable.profile_pic5);
+        events = new ArrayList<>();
+        Event event = new Event("123", "Night Show at Mercury", "Night Show at Mercury has a jam packed line-up", eventAuthor, LocalDateTime.of(2019, Month.FEBRUARY, 27, 21, 0), new Venue("Mercury Live", -33.877348, 18.633143), R.drawable.party_3);
+        events.add(event);
+        events.add(event);
+        event = new Event("123", "Deep Brew Sundaze", "", eventAuthor, LocalDateTime.of(2019, Month.MAY, 3, 18, 0), new Venue("Roof Garden Bar", -33.876929, 18.633937), R.drawable.party_2);
+        events.add(event);
+        events.add(event);
+        events.add(event);
+        events.add(event);
+        events.add(event);
+        events.add(event);
 
+        List<String> strings = new ArrayList<>();
+        for (int i = 0; i < events.size(); i++) {
+            strings.add(events.get(i).getEventName());
+        }
+
+        SearchListAdapter adapter = new SearchListAdapter(getActivity(), events, strings);
+        listSearch.setAdapter(adapter);
+
+        listSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                startPostActivity(position);
+            }
+        });
     }
 
+    public void startPostActivity(int position) {
+        Object o = listSearch.getItemAtPosition(position);
+
+        Intent post = new Intent(getActivity(), PostActivity.class);
+        post.putExtra("Event", events.get(position));
+        startActivity(post);
+    }
 
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
+     * This is where we can add markers or lines, add listeners or move the camera.
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -119,6 +161,11 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
             map.setMyLocationEnabled(true);
         }
         map.setPadding(0, 0, 0, peekHeight + 20);
+
+        for (int i = 0; i < events.size(); i++) {
+            if (events.get(i).getVenue().getLatitude() != 0 && events.get(i).getVenue().getLongitude() != 0)
+                map.addMarker(new MarkerOptions().position(new LatLng(events.get(i).getVenue().getLatitude(), events.get(i).getVenue().getLongitude())).title(events.get(i).getEventName()));
+        }
     }
 
     protected synchronized void buildGoogleApiClient() {

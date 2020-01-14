@@ -23,7 +23,7 @@ import com.gruv.models.Venue;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +73,7 @@ public class HomeFragment extends Fragment {
         //scrollView = getActivity().findViewById(R.id.mainScrollView);
 
         Author eventAuthor = new Author("1234", "Night Show", null, R.drawable.profile_pic6);
-        event = new Event("123", "Night Show at Mercury", "Night Show at Mercury has a jam packed line-up", eventAuthor, LocalDate.of(2019, Month.MAY, 3), new Venue("Mercury Live"), R.drawable.party_4);
+        event = new Event("123", "Night Show at Mercury", "Night Show at Mercury has a jam packed line-up", eventAuthor, LocalDateTime.of(2019, Month.MAY, 3, 16, 30), new Venue("Mercury Live"), R.drawable.party_4);
         addPost(event);
 
         adapter = new NewsFeedAdapter(getActivity(), eventTitle, author, description, venue, countLikes, countComments, day, month, imageIDPostPic, imageIDProfilePic);
@@ -132,8 +132,10 @@ public class HomeFragment extends Fragment {
         list.add(comment);
         list.add(comment);
         list.add(comment);
+        list.add(new Comment("123", "124", "Hela Khanjonge", new Author("1", "Random", null, R.drawable.profile_pic5)));
         list.add(comment);
-        event2 = new Event("124", "Deep Brew Sundaze", new Author("1", "The Grand", null, R.drawable.profile_pic6), LocalDate.of(2019, Month.DECEMBER, 16), new Venue("Roof Garden Bar"), "Deep Brew is set at the sunset of the roof garden bar. Situated in the heart of Port Elizabeth, it is an event to enjoy, and maybe throw an after party at the end of it all. The Indian Ocean is named after India (Oceanus Orientalis Indicus) since at least 1515. India, then, is the Greek/Roman name for the \"region of the Indus River\".[6]\n\nCalled the Sindhu Mahasagara or the great sea of the Sindhu by the Ancient Indians, this ocean has been variously called Hindu Ocean, Indic Ocean, etc. in various languages. The Indian Ocean was also known earlier as the Eastern Ocean, a term was still in use during the mid-18th century (see map).[6] Conversely, when China explored the Indian Ocean in the 15th century they called it the \"Western Oceans\".", list, null, R.drawable.party);
+        list.add(comment);
+        event2 = new Event("124", "Deep Brew Sundaze", new Author("1", "The Grand", null, R.drawable.profile_pic6), LocalDateTime.of(2019, Month.DECEMBER, 16, 19, 0), new Venue("Roof Garden Bar"), "Deep Brew is set at the sunset of the roof garden bar. Situated in the heart of Port Elizabeth, it is an event to enjoy, and maybe throw an after party at the end of it all. The Indian Ocean is named after India (Oceanus Orientalis Indicus) since at least 1515. India, then, is the Greek/Roman name for the \"region of the Indus River\".[6]\n\nCalled the Sindhu Mahasagara or the great sea of the Sindhu by the Ancient Indians, this ocean has been variously called Hindu Ocean, Indic Ocean, etc. in various languages. The Indian Ocean was also known earlier as the Eastern Ocean, a term was still in use during the mid-18th century (see map).[6] Conversely, when China explored the Indian Ocean in the 15th century they called it the \"Western Oceans\".", list, null, R.drawable.party);
         addPost(event2);
 
         adapter = new NewsFeedAdapter(getActivity(), eventTitle, author, description, venue, countLikes, countComments, day, month, imageIDPostPic, imageIDProfilePic);

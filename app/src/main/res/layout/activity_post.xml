@@ -55,8 +55,8 @@
 
             app:iconTint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:layout_editor_absoluteX="341dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -245,24 +245,28 @@
                         style="@style/Widget.MaterialComponents.Button.TextButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/sixteen"
+                        android:layout_marginEnd="@dimen/twenty"
                         android:text="Read More"
                         android:textColor="@color/black"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/layoutLikeComment"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/forty_eight"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/four"
+                    android:visibility="visible"
                     app:layout_constraintTop_toBottomOf="@id/layoutVenueReadMore">
 
                     <TextView
-                        android:id="@+id/textviewLikeCount"
+                        android:id="@+id/textViewLikeCount"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/fifty_six"
                         android:layout_marginStart="@dimen/twenty"
                         android:text="0 LIKES"
+                        android:gravity="center"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -270,14 +274,77 @@
                     <TextView
                         android:id="@+id/textviewCommentCount"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/fifty_six"
                         android:layout_marginStart="@dimen/twenty"
                         android:text="0 COMMENTS"
+                        android:gravity="center"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/textviewLikeCount"
+                        app:layout_constraintStart_toEndOf="@+id/textViewLikeCount"
                         app:layout_constraintTop_toTopOf="parent" />
 
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/buttonComment"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/twenty"
+                        android:text="Comment"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:strokeColor="@color/colorAccent" />
 
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layoutAddComment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:elevation="@dimen/four"
+                    android:paddingBottom="@dimen/four"
+                    android:visibility="invisible"
+                    app:layout_constraintTop_toBottomOf="@id/layoutVenueReadMore">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/twenty"
+                        android:maxLength="200"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editTextComment"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="100dp"
+                            android:hint="add comment"
+                            android:imeOptions="actionDone"
+                            android:inputType="textMultiLine" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <ImageButton
+                        android:id="@+id/buttonCloseComment"
+                        android:layout_width="@dimen/forty"
+                        android:layout_height="@dimen/fifty_six"
+                        android:layout_marginEnd="@dimen/twenty"
+                        android:backgroundTint="@color/transparent"
+                        android:src="@drawable/ic_close_black_24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageButton
+                        android:id="@+id/buttonSend"
+                        android:layout_width="@dimen/forty"
+                        android:layout_height="@dimen/fifty_six"
+                        android:backgroundTint="@color/transparent"
+                        android:src="@drawable/ic_send_black_24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/buttonCloseComment"
+                        app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <LinearLayout
@@ -289,25 +356,53 @@
                     android:background="@color/grey"
                     android:orientation="horizontal"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/layoutLikeComment" />
+                    app:layout_constraintTop_toBottomOf="@id/layoutAddComment" />
 
                 <androidx.core.widget.NestedScrollView
+                    android:id="@+id/scrollViewComments"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
+                    android:layout_height="360dp"
                     android:fillViewport="true"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/layoutSeperator">
 
-                    <ListView
-                        android:id="@+id/listComments"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:divider="@null"
-                        android:listSelector="@android:color/transparent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        android:nestedScrollingEnabled="true"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:orientation="vertical">
+
+                        <ListView
+                            android:id="@+id/listComments"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clipToPadding="false"
+                            android:divider="@null"
+                            android:listSelector="@android:color/transparent"
+                            android:nestedScrollingEnabled="true"
+                            android:paddingBottom="?attr/actionBarSize"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <LinearLayout
+                            android:id="@+id/layout_progress"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_weight="2"
+                            android:orientation="vertical"
+                            android:paddingBottom="?attr/actionBarSize"
+                            tools:visibility="gone">
+
+                            <ProgressBar
+                                android:id="@+id/progressBar"
+                                style="?android:attr/progressBarStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="30dp"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="6dp" />
+                        </LinearLayout>
+                    </LinearLayout>
                 </androidx.core.widget.NestedScrollView>
 
 
@@ -315,18 +410,5 @@
         </LinearLayout>
     </ScrollView>
 
-    <com.tuann.floatingactionbuttonexpandable.FloatingActionButtonExpandable
-        android:id="@+id/fabComment"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/fifty_six"
-        android:layout_marginEnd="@dimen/twenty"
-        android:layout_marginBottom="@dimen/fifty_six"
-        android:radius="8dp"
-        app:fab_bg_color="@color/colorAccent"
-        app:fab_content="COMMENT"
-        app:fab_expanded="true"
-        app:fab_icon="@drawable/ic_mode_edit_black_24dp"
-        app:fab_text_color="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,7 +3,7 @@ package com.gruv.models;
 import androidx.annotation.NonNull;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +11,7 @@ public class Event implements Serializable {
 
     private String eventId, eventName, eventDescription;
     private Author author;
-    private LocalDate eventDate;
+    private LocalDateTime eventDate;
     private Venue venue;
     private ArrayList<Comment> comments;
     private ArrayList<Like> likes;
@@ -20,7 +20,7 @@ public class Event implements Serializable {
     public Event() {
     }
 
-    public Event(@NonNull String eventId, @NonNull String eventName, String eventDescription, Author author, @NonNull LocalDate eventDate, Venue venue, Integer imagePostId) {
+    public Event(@NonNull String eventId, @NonNull String eventName, String eventDescription, Author author, @NonNull LocalDateTime eventDate, Venue venue, Integer imagePostId) {
         this.eventId = eventId;
         this.eventName = eventName;
         this.eventDescription = eventDescription;
@@ -30,7 +30,7 @@ public class Event implements Serializable {
         this.imagePostId = imagePostId;
     }
 
-    public Event(@NonNull String eventId, @NonNull String eventName, Author author, @NonNull LocalDate eventDate, Venue venue, String eventDescription, ArrayList<Comment> comments, List<Like> likes, Integer imagePostId) {
+    public Event(@NonNull String eventId, @NonNull String eventName, Author author, @NonNull LocalDateTime eventDate, Venue venue, String eventDescription, ArrayList<Comment> comments, List<Like> likes, Integer imagePostId) {
         this.eventId = eventId;
         this.eventName = eventName;
         this.author = author;
@@ -65,11 +65,11 @@ public class Event implements Serializable {
         this.author = author;
     }
 
-    public LocalDate getEventDate() {
+    public LocalDateTime getEventDate() {
         return eventDate;
     }
 
-    public void setEventDate(LocalDate eventDate) {
+    public void setEventDate(LocalDateTime eventDate) {
         this.eventDate = eventDate;
     }
 
@@ -98,7 +98,12 @@ public class Event implements Serializable {
     }
 
     public void addComment(Comment comment) {
-        this.comments.add(comment);
+        if (comments != null) {
+            this.comments.add(comment);
+        } else {
+            this.comments = new ArrayList<>();
+            this.comments.add(comment);
+        }
     }
 
     public List<Like> getLikes() {

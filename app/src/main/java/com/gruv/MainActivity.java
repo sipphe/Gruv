@@ -174,9 +174,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void addToolbar(Toolbar toelbar) {
-        ActionBarDrawerToggle actionBarDrawerToggl = new ActionBarDrawerToggle(this, drawerLayout, toelbar, R.string.app_name, R.string.app_name);
-        drawerLayout.addDrawerListener(actionBarDrawerToggl);
-        actionBarDrawerToggl.syncState();
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toelbar, R.string.app_name, R.string.app_name);
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
         toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
     }
 
@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
         View view = drawer.getHeaderView(0);
 
         TextView name = view.findViewById(R.id.textUsername);
-        drawerLayout.closeDrawer(Gravity.LEFT);
+        drawerLayout.closeDrawer(GravityCompat.START);
 
         currentUser = authenticateObj.getCurrentUser();
         if (currentUser != null) {

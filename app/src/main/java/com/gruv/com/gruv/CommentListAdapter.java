@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import com.gruv.R;
 import com.gruv.models.Comment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -19,12 +20,21 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class CommentListAdapter extends ArrayAdapter<String> {
 
     private final Activity context;
-    private final List<Comment> commentList;
+    private List<Comment> commentList;
 
     public CommentListAdapter(@NonNull Activity context, List<Comment> commentList, List<String> strings) {
         super(context, R.layout.comment, strings);
         this.context = context;
         this.commentList = commentList;
+    }
+
+    public void setData(Comment comment) {
+        if (commentList != null) {
+            this.commentList.add(comment);
+        } else {
+            this.commentList = new ArrayList<>();
+            this.commentList.add(comment);
+        }
     }
 
     public View getView(int position, View view, ViewGroup parent) {
