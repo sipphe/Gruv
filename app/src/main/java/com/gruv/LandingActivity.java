@@ -33,7 +33,7 @@ public class LandingActivity extends AppCompatActivity {
             layoutLoginStart, layoutLoginEmail,
             layoutRegister, layoutForgotPassword,
             layoutEnterVerifyCode, layoutProgress,
-            layoutResetPassword;
+            layoutResetPassword, layoutAddPicture;
     ImageView imageFacebook;
 
     private CallbackManager mCallbackManager;
@@ -42,7 +42,7 @@ public class LandingActivity extends AppCompatActivity {
     private TextInputLayout layoutEmailText, layoutPasswordText, layoutEmailRegisterText;
     private TextInputEditText textEmail, textPassword, editTextEmail, editTextPassword, editTextName, editTextConfirmPassword;
     private TextView textSignUp, textForgotPassword, textViewSignUp;
-    private MaterialButton buttonEmail, buttonSignIn, buttonRegister, buttonNext1, buttonNext, buttonResetPassword;
+    private MaterialButton buttonEmail, buttonSignIn, buttonRegister, buttonNext1, buttonNext, buttonResetPassword, buttonAddPicture, buttonSkip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,6 +153,13 @@ public class LandingActivity extends AppCompatActivity {
                 //TODO Add reset password code
                 layoutResetPassword.setVisibility(View.GONE);
 
+                finish();
+            }
+        });
+
+        buttonSkip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 finish();
             }
         });
@@ -291,6 +298,10 @@ public class LandingActivity extends AppCompatActivity {
         editTextConfirmPassword = findViewById(R.id.editTextConfirmPassword);
         layoutEmailRegisterText = findViewById(R.id.editTextLayoutEmailRegister);
 
+        //add image
+        buttonAddPicture = findViewById(R.id.buttonAddPicture);
+        buttonSkip = findViewById(R.id.buttonSkip);
+
         //layouts
         layoutLoginStart = findViewById(R.id.constraintLayoutLoginStart);
         layoutLoginEmail = findViewById(R.id.constraintLayoutLogin);
@@ -299,6 +310,7 @@ public class LandingActivity extends AppCompatActivity {
         layoutEnterVerifyCode = findViewById(R.id.constraintLayoutEnterVerifyCode);
         layoutResetPassword = findViewById(R.id.constraintLayoutResetPassword);
         layoutProgress = findViewById(R.id.constraintLayoutProgressBar);
+        layoutAddPicture = findViewById(R.id.constraintLayoutAddImage);
     }
 
     public void showSnackBar(String message, Integer layout, Integer length) {
@@ -350,9 +362,9 @@ public class LandingActivity extends AppCompatActivity {
                                         // Sign in success, update UI with the signed-in user's information
                                         currentUser = authenticateObj.getCurrentUser();
                                         //currentUser.updateProfile()
-                                        showSnackBar("Great, your account is set up! Sign In", R.id.layoutParent, Snackbar.LENGTH_SHORT);
+                                        showSnackBar("Account created!", R.id.layoutParent, Snackbar.LENGTH_LONG);
                                         layoutRegister.setVisibility(View.GONE);
-                                        layoutLoginEmail.setVisibility(View.VISIBLE);
+                                        layoutAddPicture.setVisibility(View.VISIBLE);
 
                                     } else {
                                         // If sign in fails, display a message to the user.
