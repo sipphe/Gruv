@@ -1,16 +1,20 @@
 package com.gruv;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -27,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     NavigationView drawer;
     DrawerLayout drawerLayout;
+    ImageButton buttonDrawer;
+    TextView textTitle;
+    SearchView searchView;
     HomeFragment fragHome = new HomeFragment();
     MessagesFragment fragMessages = new MessagesFragment();
     Fragment fragNotification = new NotificationFragment();
@@ -49,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                         active = fragHome;
                         toolbar = findViewById(R.id.main_app_toolbar);
                         setSupportActionBar(toolbar);
-                        addToolbar(toolbar);
+                        searchBarToggle(false);
                         getSupportActionBar().show();
                     } else {
                         list = findViewById(R.id.listNewsFeed);
@@ -57,18 +64,25 @@ public class MainActivity extends AppCompatActivity {
                     }
                     return true;
                 case R.id.navigation_search:
-                    fragManager.beginTransaction().hide(active).show(fragSearch).commit();
-                    active = fragSearch;
-                    toolbar = findViewById(R.id.searchViewBar);
-                    setSupportActionBar(toolbar);
-                    addToolbar(toolbar);
+                    if (!active.equals(fragSearch)) {
+                        fragManager.beginTransaction().hide(active).show(fragSearch).commit();
+                        active = fragSearch;
+                        toolbar = findViewById(R.id.searchViewBar);
+                        setSupportActionBar(toolbar);
+                        searchBarToggle(true);
+                        getSupportActionBar().show();
+                    } else {
+                        searchView.requestFocus();
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                    }
                     return true;
                 case R.id.navigation_notifications:
                     fragManager.beginTransaction().hide(active).show(fragNotification).commit();
                     active = fragNotification;
                     toolbar = findViewById(R.id.main_app_toolbar);
                     setSupportActionBar(toolbar);
-                    addToolbar(toolbar);
+                    searchBarToggle(false);
                     getSupportActionBar().show();
                     return true;
                 case R.id.navigation_messages:
@@ -76,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
                     active = fragMessages;
                     toolbar = findViewById(R.id.main_app_toolbar);
                     setSupportActionBar(toolbar);
-                    addToolbar(toolbar);
                     getSupportActionBar().show();
                     return true;
             }
@@ -108,6 +121,10 @@ public class MainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.main_app_toolbar);
         drawer = findViewById(R.id.nav_view_drawer2);
         drawerLayout = findViewById(R.id.drawerLayout);
+        buttonDrawer = findViewById(R.id.buttonDrawerIcon);
+        textTitle = findViewById(R.id.textTitle);
+        searchView = findViewById(R.id.searchView);
+        searchView.setIconifiedByDefault(false);
         View view = drawer.getHeaderView(0);
 
         TextView name = view.findViewById(R.id.textUsername);
@@ -147,13 +164,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
-                R.string.app_name, R.string.app_name);
-        drawerLayout.addDrawerListener(actionBarDrawerToggle);
-        toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
-
-
-        actionBarDrawerToggle.syncState();
         drawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -164,6 +174,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        buttonDrawer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
 
     }
 
@@ -178,6 +194,17 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
         toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
+    }
+
+    public void searchBarToggle(Boolean showSearch) {
+        if (showSearch) {
+            textTitle.setVisibility(View.GONE);
+            searchView.setVisibility(View.VISIBLE);
+        } else {
+            textTitle.setVisibility(View.VISIBLE);
+            searchView.setVisibility(View.GONE);
+        }
+
     }
 
     @Override

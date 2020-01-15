@@ -21,7 +21,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/imageViewPost"
+                android:id="@+id/imageViewProfilePicture"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -37,7 +37,7 @@
                 android:background="@drawable/gradient_shape"
                 android:padding="20dp"
                 android:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="@+id/imageViewPost"
+                app:layout_constraintBottom_toBottomOf="@+id/imageViewProfilePicture"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0"
                 tools:layout_editor_absoluteX="0dp">

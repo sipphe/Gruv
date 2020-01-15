@@ -79,7 +79,7 @@
                 android:layout_height="match_parent">
 
                 <ImageView
-                    android:id="@+id/imageViewPost"
+                    android:id="@+id/imageViewProfilePicture"
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
                     android:elevation="@dimen/eight"
@@ -96,7 +96,7 @@
                     android:layout_height="@dimen/eighty"
                     android:background="@color/colorPrimary"
                     android:elevation="@dimen/twelve"
-                    app:layout_constraintTop_toBottomOf="@+id/imageViewPost">
+                    app:layout_constraintTop_toBottomOf="@+id/imageViewProfilePicture">
 
                     <TextView
                         android:id="@+id/textEventTitle"

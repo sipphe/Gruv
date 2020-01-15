@@ -60,7 +60,7 @@ public class NewsFeedAdapter extends ArrayAdapter<String> {
         TextView textCommentCount = rowView.findViewById(R.id.counterComments);
         TextView textLikeCount = rowView.findViewById(R.id.counterLikes);
         CircleImageView imageProfilePic = rowView.findViewById(R.id.imageProfilePic);
-        ImageView imagePost = rowView.findViewById(R.id.imageViewPost);
+        ImageView imagePost = rowView.findViewById(R.id.imageViewProfilePicture);
 
         titleText.setText(eventTitle.get(position));
         textAuthor.setText(author.get(position));

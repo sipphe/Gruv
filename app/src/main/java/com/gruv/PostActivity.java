@@ -215,7 +215,7 @@ public class PostActivity extends AppCompatActivity {
     }
 
     public void setPost() {
-        postPic = findViewById(R.id.imageViewPost);
+        postPic = findViewById(R.id.imageViewProfilePicture);
         imageProfilePicture = findViewById(R.id.imageProfilePic);
         textEventTitle = findViewById(R.id.textEventTitle);
         textAuthor = findViewById(R.id.textEventAuthor);

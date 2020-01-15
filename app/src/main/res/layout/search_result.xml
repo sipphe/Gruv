@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:elevation="@dimen/twelve"
         android:padding="@dimen/eight"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewPost">
+        app:layout_constraintTop_toBottomOf="@+id/imageViewProfilePicture">
 
         <TextView
             android:id="@+id/textEventTitle"
