@@ -1,15 +1,20 @@
 package com.gruv;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,31 +23,49 @@ import androidx.core.content.ContextCompat;
 
 import com.facebook.CallbackManager;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.gruv.navigation.Navigation;
+
+import java.io.IOException;
+import java.util.UUID;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class LandingActivity extends AppCompatActivity {
     protected static ConstraintLayout
             layoutLoginStart, layoutLoginEmail,
             layoutRegister, layoutForgotPassword,
             layoutEnterVerifyCode, layoutProgress,
-            layoutResetPassword;
+            layoutResetPassword, layoutAddPicture;
     ImageView imageFacebook;
 
     private CallbackManager mCallbackManager;
     private FirebaseAuth authenticateObj;
     private FirebaseUser currentUser;
+    private FirebaseStorage storage;
+    private StorageReference storageReference;
     private TextInputLayout layoutEmailText, layoutPasswordText, layoutEmailRegisterText;
     private TextInputEditText textEmail, textPassword, editTextEmail, editTextPassword, editTextName, editTextConfirmPassword;
     private TextView textSignUp, textForgotPassword, textViewSignUp;
-    private MaterialButton buttonEmail, buttonSignIn, buttonRegister, buttonNext1, buttonNext, buttonResetPassword;
+    private MaterialButton buttonEmail, buttonSignIn, buttonRegister, buttonNext1, buttonNext, buttonResetPassword, buttonAddPicture, buttonSkip;
+    private FloatingActionButton buttonChoosePicture;
+    private CircleImageView imageProfilePicture;
+    private Uri filePath;
+    private final int PICK_IMAGE_REQUEST = 71;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +84,6 @@ public class LandingActivity extends AppCompatActivity {
         textViewSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createAccount();
             }
         });
         textSignUp.setOnClickListener(new View.OnClickListener() {
@@ -106,6 +128,8 @@ public class LandingActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
             }
+
+
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -157,12 +181,30 @@ public class LandingActivity extends AppCompatActivity {
             }
         });
 
+        buttonSkip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        buttonChoosePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                chooseImage();
+            }
+        });
+
+        buttonAddPicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                uploadImage();
+            }
+        });
+
     }
 
-    private void createAccount() {
-        showSnackBar("Method works", R.id.layoutParent, Snackbar.LENGTH_SHORT);
-        //Toast.makeText(getApplicationContext(), , Toast.LENGTH_LONG).show();
-    }
+
 
     @Override
     public void onBackPressed() {
@@ -181,8 +223,8 @@ public class LandingActivity extends AppCompatActivity {
         } else if (layoutResetPassword.getVisibility() == View.VISIBLE) {
             layoutResetPassword.setVisibility(View.GONE);
             layoutEnterVerifyCode.setVisibility(View.VISIBLE);
-        } else if (layoutProgress.getVisibility() == View.VISIBLE) {
-
+        } else if (layoutAddPicture.getVisibility() == View.VISIBLE) {
+            finish();
         } else {
             this.finishAffinity();
         }
@@ -291,6 +333,12 @@ public class LandingActivity extends AppCompatActivity {
         editTextConfirmPassword = findViewById(R.id.editTextConfirmPassword);
         layoutEmailRegisterText = findViewById(R.id.editTextLayoutEmailRegister);
 
+        //add image
+        imageProfilePicture = findViewById(R.id.imagePicture);
+        buttonChoosePicture = findViewById(R.id.fabChoose);
+        buttonAddPicture = findViewById(R.id.buttonAddPicture);
+        buttonSkip = findViewById(R.id.buttonSkip);
+
         //layouts
         layoutLoginStart = findViewById(R.id.constraintLayoutLoginStart);
         layoutLoginEmail = findViewById(R.id.constraintLayoutLogin);
@@ -299,6 +347,11 @@ public class LandingActivity extends AppCompatActivity {
         layoutEnterVerifyCode = findViewById(R.id.constraintLayoutEnterVerifyCode);
         layoutResetPassword = findViewById(R.id.constraintLayoutResetPassword);
         layoutProgress = findViewById(R.id.constraintLayoutProgressBar);
+        layoutAddPicture = findViewById(R.id.constraintLayoutAddImage);
+
+        //firebase
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
     }
 
     public void showSnackBar(String message, Integer layout, Integer length) {
@@ -350,9 +403,20 @@ public class LandingActivity extends AppCompatActivity {
                                         // Sign in success, update UI with the signed-in user's information
                                         currentUser = authenticateObj.getCurrentUser();
                                         //currentUser.updateProfile()
-                                        showSnackBar("Great, your account is set up! Sign In", R.id.layoutParent, Snackbar.LENGTH_SHORT);
+                                        showSnackBar("Account created!", R.id.layoutParent, Snackbar.LENGTH_LONG);
+
+                                        authenticateObj.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                                if (task.isSuccessful()) {
+                                                    currentUser = authenticateObj.getCurrentUser();
+                                                } else {
+                                                    showSnackBar("Something went wrong", R.id.layoutParent, Snackbar.LENGTH_SHORT);
+                                                }
+                                            }
+                                        });
                                         layoutRegister.setVisibility(View.GONE);
-                                        layoutLoginEmail.setVisibility(View.VISIBLE);
+                                        layoutAddPicture.setVisibility(View.VISIBLE);
 
                                     } else {
                                         // If sign in fails, display a message to the user.
@@ -367,5 +431,65 @@ public class LandingActivity extends AppCompatActivity {
             showSnackBar("Check internet connection and try again later", R.id.layoutParent, Snackbar.LENGTH_SHORT);
         }
     }
+
+    private void chooseImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null) {
+            filePath = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                imageProfilePicture.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                showSnackBar("Something went wrong", R.id.layoutParent, Snackbar.LENGTH_LONG);
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    private void uploadImage() {
+
+        if(filePath != null)
+        {
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
+
+            StorageReference ref = storageReference.child("images/"+ UUID.randomUUID().toString());
+            ref.putFile(filePath)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            progressDialog.dismiss();
+                            showSnackBar("Done!",R.id.layoutParent, Snackbar.LENGTH_LONG);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            showSnackBar("Something went wrong", R.id.layoutParent, Snackbar.LENGTH_SHORT);
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
+                                    .getTotalByteCount());
+                            progressDialog.setMessage("Uploaded "+(int)progress+"%");
+                        }
+                    });
+        }
+    }
+
 }
 

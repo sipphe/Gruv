@@ -1,0 +1,135 @@
+{
+  "project_info": {
+    "project_number": "217904122257",
+    "firebase_url": "https://gruv-2c170.firebaseio.com",
+    "project_id": "gruv-2c170",
+    "storage_bucket": "gruv-2c170.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:217904122257:android:c7c7feee6d4a531ea0f230",
+        "android_client_info": {
+          "package_name": "com.google.firebase.quickstart.auth"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "217904122257-hah5buts0j9j0rb8ihviri9a9phdq3es.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDutd7Z00AG8AwkLzpF0OqL33eCnqK7w8E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "217904122257-hah5buts0j9j0rb8ihviri9a9phdq3es.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:217904122257:android:cf283f84c11481a4a0f230",
+        "android_client_info": {
+          "package_name": "com.gruv"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "217904122257-anbgt25nl91atuu7cjvvfodqvh2suo67.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gruv",
+            "certificate_hash": "48cde609f09576f784d269a9762cb61a090581bf"
+          }
+        },
+        {
+          "client_id": "217904122257-hah5buts0j9j0rb8ihviri9a9phdq3es.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDutd7Z00AG8AwkLzpF0OqL33eCnqK7w8E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "217904122257-hah5buts0j9j0rb8ihviri9a9phdq3es.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:217904122257:android:e398cd9ffa2d8dfd",
+        "android_client_info": {
+          "package_name": "com.social.gruv"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "217904122257-hah5buts0j9j0rb8ihviri9a9phdq3es.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDutd7Z00AG8AwkLzpF0OqL33eCnqK7w8E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "217904122257-hah5buts0j9j0rb8ihviri9a9phdq3es.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:217904122257:android:b0c366baf45772d3a0f230",
+        "android_client_info": {
+          "package_name": "com.social.gruvstubs"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "217904122257-hah5buts0j9j0rb8ihviri9a9phdq3es.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDutd7Z00AG8AwkLzpF0OqL33eCnqK7w8E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "217904122257-hah5buts0j9j0rb8ihviri9a9phdq3es.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
