@@ -467,7 +467,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/circleImageView"
+                    android:id="@+id/imagePicture"
                     android:layout_width="140dp"
                     android:layout_height="140dp"
                     android:layout_marginTop="@dimen/twenty"
@@ -477,13 +477,14 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fabChoose"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:foregroundGravity="center"
                     android:scaleType="center"
                     android:src="@drawable/ic_mode_edit_black_24dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/circleImageView"
-                    app:layout_constraintEnd_toEndOf="@+id/circleImageView" />
+                    app:layout_constraintBottom_toBottomOf="@+id/imagePicture"
+                    app:layout_constraintEnd_toEndOf="@+id/imagePicture" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/buttonAddPicture"
@@ -495,7 +496,7 @@
                     android:textColor="@color/colorPrimary"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/circleImageView" />
+                    app:layout_constraintTop_toBottomOf="@+id/imagePicture" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/buttonSkip"
