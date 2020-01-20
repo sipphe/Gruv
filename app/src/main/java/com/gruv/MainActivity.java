@@ -23,6 +23,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -167,8 +168,13 @@ public class MainActivity extends AppCompatActivity {
         drawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
+                showSnackBar(menuItem.getTitle() + "", R.id.layoutParent, Snackbar.LENGTH_SHORT);
 
+                switch (menuItem.getTitle().toString()) {
+                    case "Profile":
+                        Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                        startActivity(intent);
+                        break;
                 }
                 return false;
             }
@@ -207,6 +213,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void showSnackBar(String message, Integer layout, Integer length) {
+        View contextView = findViewById(layout);
+        Snackbar.make(contextView, message, length).show();
+    }
+
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -238,4 +249,5 @@ public class MainActivity extends AppCompatActivity {
 
     }
 }
+
 

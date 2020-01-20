@@ -17,6 +17,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
+import com.gruv.com.gruv.MessagesListAdapter;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,7 +41,7 @@ public class MessagesFragment extends Fragment {
     }
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        RelativeLayout layoutError = (RelativeLayout)getView().findViewById(R.id.layoutError);
+        RelativeLayout layoutError = getView().findViewById(R.id.layoutError);
         layoutError.setVisibility(View.GONE);
         Toolbar toolbar = getActivity().findViewById(R.id.main_app_toolbar);
         DrawerLayout drawerLayout = getActivity().findViewById(R.id.drawerLayout);
@@ -64,7 +66,7 @@ public class MessagesFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Object o = list.getItemAtPosition(position);
                 Intent intentChat = new Intent(getActivity(), ChatActivity.class);
-                TextView textSendersName = (TextView)getView().findViewById(R.id.textSendersName) ;
+                TextView textSendersName = getView().findViewById(R.id.textSendersName);
                 intentChat.putExtra("sendersName", senderName[position]);
                 intentChat.putExtra("pic", imgid[position]);
                 intentChat.putExtra("messageText", messagePreview[position]);
