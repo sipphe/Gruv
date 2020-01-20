@@ -40,8 +40,32 @@
             android:layout_marginEnd="@dimen/forty_eight"
             android:background="@color/transparent"
             android:backgroundTint="@color/transparent"
+            android:visibility="visible"
             app:layout_constraintTop_toTopOf="parent"
             app:title="Profile"
+            app:titleTextColor="@color/white" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imageSmallProfilePic"
+            android:layout_width="@dimen/forty"
+            android:layout_height="@dimen/forty"
+            android:src="@drawable/profile_pic"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/buttonBack"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/profilePicToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_marginStart="@dimen/eighty"
+            android:layout_marginEnd="@dimen/forty_eight"
+            android:background="@color/transparent"
+            android:backgroundTint="@color/transparent"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="Name"
             app:titleTextColor="@color/white" />
 
         <ImageButton
@@ -63,7 +87,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ScrollView
-        android:id="@+id/scrollViewPost"
+        android:id="@+id/scrollViewProfile"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
@@ -80,7 +104,7 @@
                 android:layout_height="match_parent">
 
                 <ImageView
-                    android:id="@+id/imageViewProfilePicture"
+                    android:id="@+id/imageViewPostPicture"
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
                     android:elevation="@dimen/eight"
@@ -97,7 +121,7 @@
                     android:layout_height="@dimen/eighty"
                     android:background="@color/colorPrimary"
                     android:elevation="@dimen/twelve"
-                    app:layout_constraintTop_toBottomOf="@+id/imageViewProfilePicture">
+                    app:layout_constraintTop_toBottomOf="@+id/imageViewPostPicture">
 
                     <TextView
                         android:id="@+id/textName"
@@ -127,6 +151,41 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layoutPostedEvents"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/layoutUserName">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerPostedEvents"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:id="@+id/textPromotedEvents"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/twenty"
+                    android:padding="@dimen/twelve"
+                    android:text="All Events"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/layoutPostedEvents" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerPromotedEvents"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textPromotedEvents" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </ScrollView>

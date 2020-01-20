@@ -188,7 +188,7 @@ public class PostActivity extends AppCompatActivity {
         buttonReadMore = findViewById(R.id.buttonReadMore);
         commentList = findViewById(R.id.listComments);
         backImage = findViewById(R.id.buttonBack);
-        scrollView = findViewById(R.id.scrollViewPost);
+        scrollView = findViewById(R.id.scrollViewProfile);
         scrollViewComments = findViewById(R.id.scrollViewComments);
         appBarLayout = findViewById(R.id.appBarLayout);
         layoutDesc = findViewById(R.id.layoutDescription);
@@ -215,7 +215,7 @@ public class PostActivity extends AppCompatActivity {
     }
 
     public void setPost() {
-        postPic = findViewById(R.id.imageViewProfilePicture);
+        postPic = findViewById(R.id.imageViewPostPicture);
         imageProfilePicture = findViewById(R.id.imageProfilePic);
         textEventTitle = findViewById(R.id.textEventTitle);
         textAuthor = findViewById(R.id.textEventAuthor);
@@ -315,8 +315,6 @@ public class PostActivity extends AppCompatActivity {
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
         decorView.setSystemUiVisibility(uiOptions);
-
-
     }
 
     public void setTopPadding(int topPadding) {

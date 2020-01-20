@@ -14,7 +14,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,7 +40,6 @@ import com.google.firebase.storage.UploadTask;
 import com.gruv.navigation.Navigation;
 
 import java.io.IOException;
-import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -456,6 +454,7 @@ public class LandingActivity extends AppCompatActivity {
 
     }
 
+
     private void uploadImage() {
 
         if(filePath != null)
@@ -464,7 +463,7 @@ public class LandingActivity extends AppCompatActivity {
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
 
-            StorageReference ref = storageReference.child("images/"+ UUID.randomUUID().toString());
+            StorageReference ref = storageReference.child(currentUser.getUid() + "/profilePicture");
             ref.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
