@@ -5,9 +5,12 @@ import com.stfalcon.chatkit.commons.models.IUser;
 import java.io.Serializable;
 
 public class Author implements IUser, Serializable {
-    private String id, name, avatar;
+    private String id, email, name, avatar;
     private Integer profilePictureId;
 
+    public Author() {
+
+    }
 
     public Author(String id, String name, String avatar, Integer profilePictureId) {
         this.id = id;
@@ -50,5 +53,13 @@ public class Author implements IUser, Serializable {
 
     public void setProfilePictureId(Integer profilePictureId) {
         this.profilePictureId = profilePictureId;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

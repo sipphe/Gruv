@@ -26,6 +26,9 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.gruv.models.Author;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
     FragmentManager fragManager = getSupportFragmentManager();
@@ -35,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     ImageButton buttonDrawer;
     TextView textTitle;
     SearchView searchView;
+    CircleImageView imageProfilePicture;
     HomeFragment fragHome = new HomeFragment();
     MessagesFragment fragMessages = new MessagesFragment();
     Fragment fragNotification = new NotificationFragment();
@@ -42,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     Fragment active = fragHome;
     Boolean signedIn = false;
     ListView list;
+    Author thisUser = new Author();
     private FirebaseAuth authenticateObj;
     private FirebaseUser currentUser;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -105,8 +110,11 @@ public class MainActivity extends AppCompatActivity {
 
         authenticateObj = FirebaseAuth.getInstance();
         currentUser = authenticateObj.getCurrentUser();
+
+
         if (currentUser != null) {
             signedIn = true;
+            setCurrentUser();
         }
 
         if (!signedIn) {
@@ -129,8 +137,10 @@ public class MainActivity extends AppCompatActivity {
         View view = drawer.getHeaderView(0);
 
         TextView name = view.findViewById(R.id.textUsername);
+        TextView descriptor = view.findViewById(R.id.textDescriptor);
         if (currentUser != null) {
-            name.setText(currentUser.getEmail());
+            name.setText(thisUser.getName());
+            descriptor.setText(thisUser.getEmail());
         }
 
         name.setClickable(true);
@@ -233,12 +243,17 @@ public class MainActivity extends AppCompatActivity {
         View view = drawer.getHeaderView(0);
 
         TextView name = view.findViewById(R.id.textUsername);
+        TextView descriptor = view.findViewById(R.id.textDescriptor);
+        imageProfilePicture = view.findViewById(R.id.imageProfilePic);
         drawerLayout.closeDrawer(GravityCompat.START);
 
         currentUser = authenticateObj.getCurrentUser();
         if (currentUser != null) {
             signedIn = true;
             name.setText(currentUser.getEmail());
+            descriptor.setText(currentUser.getDisplayName());
+            if (currentUser.getPhotoUrl() != null)
+                imageProfilePicture.setImageURI(currentUser.getPhotoUrl());
         } else {
             signedIn = false;
             name.setText("Not signed in");
@@ -247,6 +262,13 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+    }
+
+    public void setCurrentUser() {
+        thisUser = new Author(currentUser.getUid(), currentUser.getDisplayName(), null, R.drawable.profile_pic4);
+        if (currentUser.getPhotoUrl() != null)
+            thisUser.setAvatar(currentUser.getPhotoUrl().toString());
+        thisUser.setEmail(currentUser.getEmail());
     }
 }
 

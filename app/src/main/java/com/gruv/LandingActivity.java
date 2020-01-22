@@ -10,8 +10,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,10 +35,12 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.gruv.models.Author;
 import com.gruv.navigation.Navigation;
 
 import java.io.IOException;
@@ -56,13 +60,15 @@ public class LandingActivity extends AppCompatActivity {
     private FirebaseUser currentUser;
     private FirebaseStorage storage;
     private StorageReference storageReference;
-    private TextInputLayout layoutEmailText, layoutPasswordText, layoutEmailRegisterText;
+    private TextInputLayout layoutEmailText, layoutPasswordText, layoutPasswordTextRegister, layoutEmailRegisterText;
     private TextInputEditText textEmail, textPassword, editTextEmail, editTextPassword, editTextName, editTextConfirmPassword;
     private TextView textSignUp, textForgotPassword, textViewSignUp;
     private MaterialButton buttonEmail, buttonSignIn, buttonRegister, buttonNext1, buttonNext, buttonResetPassword, buttonAddPicture, buttonSkip;
     private FloatingActionButton buttonChoosePicture;
+    private ImageButton buttonSeePassword;
     private CircleImageView imageProfilePicture;
     private Uri filePath;
+    private Author thisUser = new Author();
     private final int PICK_IMAGE_REQUEST = 71;
 
     @Override
@@ -128,13 +134,40 @@ public class LandingActivity extends AppCompatActivity {
             }
 
 
-
             @Override
             public void afterTextChanged(Editable s) {
                 validateEmail(s, layoutEmailRegisterText, buttonRegister);
             }
         });
 
+        editTextPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                validatePassword(editable, layoutPasswordTextRegister, buttonRegister);
+                showSeePasswordButton(editable);
+            }
+        });
+
+        buttonSeePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int inputType = editTextPassword.getInputType();
+                if (inputType != 129)
+                    editTextPassword.setInputType(129);
+                else
+                    editTextPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            }
+        });
         buttonSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -197,11 +230,18 @@ public class LandingActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 uploadImage();
+                finish();
             }
         });
 
     }
 
+    private void showSeePasswordButton(Editable editable) {
+        if (editable.length() > 0)
+            buttonSeePassword.setVisibility(View.VISIBLE);
+        else
+            buttonSeePassword.setVisibility(View.GONE);
+    }
 
 
     @Override
@@ -330,6 +370,10 @@ public class LandingActivity extends AppCompatActivity {
         editTextName = findViewById(R.id.editTextName);
         editTextConfirmPassword = findViewById(R.id.editTextConfirmPassword);
         layoutEmailRegisterText = findViewById(R.id.editTextLayoutEmailRegister);
+        layoutPasswordTextRegister = findViewById(R.id.editTextLayoutPasswordRegister);
+        buttonSeePassword = findViewById(R.id.buttonSeePassword);
+        editTextPassword.setInputType(129);
+        editTextConfirmPassword.setInputType(129);
 
         //add image
         imageProfilePicture = findViewById(R.id.imagePicture);
@@ -371,6 +415,18 @@ public class LandingActivity extends AppCompatActivity {
         }
     }
 
+    public void validatePassword(Editable editable, TextInputLayout layout, MaterialButton button) {
+        if (editable.length() < 6) {
+            layout.setError("Password must have more than 6 characters");
+            button.setClickable(false);
+            button.setTextColor(ContextCompat.getColor(getApplicationContext(), (R.color.grey)));
+        } else {
+            layout.setError(null);
+            button.setClickable(true);
+            button.setTextColor(ContextCompat.getColor(getApplicationContext(), (R.color.colorPrimary)));
+        }
+    }
+
     public void registerUserWithEmailAndPassword() {
 
         authenticateObj = FirebaseAuth.getInstance();
@@ -379,17 +435,17 @@ public class LandingActivity extends AppCompatActivity {
         String name = editTextName.getText().toString().trim();
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
-        String confirmPasword = editTextConfirmPassword.getText().toString().trim();
+        String confirmPassword = editTextConfirmPassword.getText().toString().trim();
 
         if (connectionAvailable()) {
             if (name == null || name.length() == 0
                     || email == null || email.length() == 0
                     || password == null || password.length() == 0
-                    || confirmPasword == null || confirmPasword.length() == 0) {
+                    || confirmPassword == null || confirmPassword.length() == 0) {
 
                 showSnackBar("Enter all Fields", R.id.layoutParent, Snackbar.LENGTH_SHORT);
             } else {
-                if (!confirmPasword.equals(password)) {
+                if (!confirmPassword.equals(password)) {
                     showSnackBar("Password must match", R.id.layoutParent, Snackbar.LENGTH_SHORT);
                     //Toast.makeText(getApplicationContext(), "Password must match", Toast.LENGTH_LONG).show();
                 } else {
@@ -402,6 +458,16 @@ public class LandingActivity extends AppCompatActivity {
                                         currentUser = authenticateObj.getCurrentUser();
                                         //currentUser.updateProfile()
                                         showSnackBar("Account created!", R.id.layoutParent, Snackbar.LENGTH_LONG);
+
+                                        thisUser.setId(currentUser.getUid());
+                                        thisUser.setName(name);
+                                        thisUser.setEmail(email);
+
+                                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                                .setDisplayName(thisUser.getName())
+                                                .build();
+
+                                        currentUser.updateProfile(profileUpdates);
 
                                         authenticateObj.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                             @Override
@@ -419,7 +485,7 @@ public class LandingActivity extends AppCompatActivity {
                                     } else {
                                         // If sign in fails, display a message to the user.
                                         //Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                                        showSnackBar("Authentication failed", R.id.layoutParent, Snackbar.LENGTH_SHORT);
+                                        showSnackBar("Something went wrong", R.id.layoutParent, Snackbar.LENGTH_SHORT);
                                     }
                                 }
                             });
@@ -457,19 +523,32 @@ public class LandingActivity extends AppCompatActivity {
 
     private void uploadImage() {
 
-        if(filePath != null)
-        {
+        if (filePath != null) {
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
-
-            StorageReference ref = storageReference.child(currentUser.getUid() + "/profilePicture");
+            String path = currentUser.getUid() + "/profilePicture/picture";
+            StorageReference ref = storageReference.child(path);
             ref.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             progressDialog.dismiss();
-                            showSnackBar("Done!",R.id.layoutParent, Snackbar.LENGTH_LONG);
+                            thisUser.setAvatar(taskSnapshot.getUploadSessionUri().toString());
+                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                    .setPhotoUri(taskSnapshot.getUploadSessionUri())
+                                    .build();
+
+                            currentUser.updateProfile(profileUpdates)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (!task.isSuccessful()) {
+                                                showSnackBar("Couldn't update picture", R.id.layoutParent, Snackbar.LENGTH_SHORT);
+                                            }
+                                        }
+                                    });
+                            showSnackBar("Done!", R.id.layoutParent, Snackbar.LENGTH_LONG);
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -482,13 +561,14 @@ public class LandingActivity extends AppCompatActivity {
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
                                     .getTotalByteCount());
-                            progressDialog.setMessage("Uploaded "+(int)progress+"%");
+                            progressDialog.setMessage("Uploaded " + (int) progress + "%");
                         }
                     });
         }
     }
+
 
 }
 
