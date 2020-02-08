@@ -178,7 +178,6 @@ public class MainActivity extends AppCompatActivity {
         drawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                showSnackBar(menuItem.getTitle() + "", R.id.layoutParent, Snackbar.LENGTH_SHORT);
 
                 switch (menuItem.getTitle().toString()) {
                     case "Profile":

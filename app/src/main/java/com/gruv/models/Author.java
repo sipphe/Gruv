@@ -1,5 +1,7 @@
 package com.gruv.models;
 
+import androidx.annotation.NonNull;
+
 import com.stfalcon.chatkit.commons.models.IUser;
 
 import java.io.Serializable;
@@ -12,7 +14,7 @@ public class Author implements IUser, Serializable {
 
     }
 
-    public Author(String id, String name, String avatar, Integer profilePictureId) {
+    public Author(@NonNull String id, String name, String avatar, Integer profilePictureId) {
         this.id = id;
         this.name = name;
         this.avatar = avatar;

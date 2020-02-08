@@ -1,6 +1,5 @@
 package com.gruv;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,6 +14,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -41,7 +41,6 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.gruv.models.Author;
-import com.gruv.navigation.Navigation;
 
 import java.io.IOException;
 
@@ -65,8 +64,9 @@ public class LandingActivity extends AppCompatActivity {
     private TextView textSignUp, textForgotPassword, textViewSignUp;
     private MaterialButton buttonEmail, buttonSignIn, buttonRegister, buttonNext1, buttonNext, buttonResetPassword, buttonAddPicture, buttonSkip;
     private FloatingActionButton buttonChoosePicture;
-    private ImageButton buttonSeePassword;
+    private ImageButton buttonSeePassword, buttonSeePasswordLogin;
     private CircleImageView imageProfilePicture;
+    private ProgressBar progressLanding;
     private Uri filePath;
     private Author thisUser = new Author();
     private final int PICK_IMAGE_REQUEST = 71;
@@ -122,6 +122,32 @@ public class LandingActivity extends AppCompatActivity {
                 validateEmail(s, layoutEmailText, buttonSignIn);
             }
         });
+
+        textPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                validatePassword(editable, layoutPasswordText, buttonSignIn);
+                showSeePasswordButton(editable, buttonSeePasswordLogin);
+            }
+        });
+
+        buttonSeePasswordLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPassword(textPassword);
+            }
+        });
+
         editTextEmail.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -154,18 +180,14 @@ public class LandingActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 validatePassword(editable, layoutPasswordTextRegister, buttonRegister);
-                showSeePasswordButton(editable);
+                showSeePasswordButton(editable, buttonSeePassword);
             }
         });
 
         buttonSeePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int inputType = editTextPassword.getInputType();
-                if (inputType != 129)
-                    editTextPassword.setInputType(129);
-                else
-                    editTextPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                showPassword(editTextPassword);
             }
         });
         buttonSignIn.setOnClickListener(new View.OnClickListener() {
@@ -236,11 +258,19 @@ public class LandingActivity extends AppCompatActivity {
 
     }
 
-    private void showSeePasswordButton(Editable editable) {
-        if (editable.length() > 0)
-            buttonSeePassword.setVisibility(View.VISIBLE);
+    private void showPassword(TextInputEditText editText) {
+        int inputType = editText.getInputType();
+        if (inputType != 129)
+            editText.setInputType(129);
         else
-            buttonSeePassword.setVisibility(View.GONE);
+            editText.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+    }
+
+    private void showSeePasswordButton(Editable editable, ImageButton button) {
+        if (editable.length() > 0)
+            button.setVisibility(View.VISIBLE);
+        else
+            button.setVisibility(View.GONE);
     }
 
 
@@ -278,8 +308,8 @@ public class LandingActivity extends AppCompatActivity {
         String password = textPassword.getText().toString();
         boolean result = false;
 
-        Navigation.showProgress();
         if (connectionAvailable()) {
+            showProgressBar();
             authenticateObj = FirebaseAuth.getInstance();
             currentUser = authenticateObj.getCurrentUser();
 
@@ -289,26 +319,31 @@ public class LandingActivity extends AppCompatActivity {
                     authenticateObj.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
+
                             if (task.isSuccessful()) {
                                 currentUser = authenticateObj.getCurrentUser();
+                                hideProgressBar();
                                 finish();
                             } else {
+                                hideProgressBar();
                                 showSnackBar("Incorrect email or password", R.id.layoutParent, Snackbar.LENGTH_SHORT);
                             }
                         }
                     });
                 } catch (Exception e) {
+                    hideProgressBar();
                     showSnackBar("Something went wrong", R.id.layoutParent, Snackbar.LENGTH_SHORT);
                     e.printStackTrace();
                 }
                 result = true;
             } else {
+                hideProgressBar();
                 showSnackBar("Enter Email and Password", R.id.layoutParent, Snackbar.LENGTH_SHORT);
             }
         } else {
-            showSnackBar("Check internet connection and try again later", R.id.layoutParent, Snackbar.LENGTH_SHORT);
+            hideProgressBar();
+            showSnackBar("Check internet connection", R.id.layoutParent, Snackbar.LENGTH_SHORT);
         }
-        Navigation.hideProgress();
 
         return result;
     }
@@ -356,10 +391,13 @@ public class LandingActivity extends AppCompatActivity {
         imageFacebook = findViewById(R.id.imageFacebook);
         textForgotPassword = findViewById(R.id.textViewForgotPassword);
         textViewSignUp = findViewById(R.id.textViewSignUp);
+        progressLanding = findViewById(R.id.progressLanding);
 
         //login
         textEmail = findViewById(R.id.editTextEmailLogin);
         textPassword = findViewById(R.id.editTextPasswordLogin);
+        textPassword.setInputType(129);
+        buttonSeePasswordLogin = findViewById(R.id.buttonSeePasswordLogin);
         textSignUp = findViewById(R.id.textViewSignUp);
         layoutEmailText = findViewById(R.id.editTextLayoutEmail);
         layoutPasswordText = findViewById(R.id.editTextLayoutPassword);
@@ -437,15 +475,17 @@ public class LandingActivity extends AppCompatActivity {
         String password = editTextPassword.getText().toString().trim();
         String confirmPassword = editTextConfirmPassword.getText().toString().trim();
 
+        showProgressBar();
         if (connectionAvailable()) {
-            if (name == null || name.length() == 0
-                    || email == null || email.length() == 0
-                    || password == null || password.length() == 0
-                    || confirmPassword == null || confirmPassword.length() == 0) {
-
+            if (name.length() == 0
+                    || email.length() == 0
+                    || password.length() == 0
+                    || confirmPassword.length() == 0) {
+                hideProgressBar();
                 showSnackBar("Enter all Fields", R.id.layoutParent, Snackbar.LENGTH_SHORT);
             } else {
                 if (!confirmPassword.equals(password)) {
+                    hideProgressBar();
                     showSnackBar("Password must match", R.id.layoutParent, Snackbar.LENGTH_SHORT);
                     //Toast.makeText(getApplicationContext(), "Password must match", Toast.LENGTH_LONG).show();
                 } else {
@@ -468,13 +508,14 @@ public class LandingActivity extends AppCompatActivity {
                                                 .build();
 
                                         currentUser.updateProfile(profileUpdates);
-
                                         authenticateObj.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                             @Override
                                             public void onComplete(@NonNull Task<AuthResult> task) {
                                                 if (task.isSuccessful()) {
+                                                    hideProgressBar();
                                                     currentUser = authenticateObj.getCurrentUser();
                                                 } else {
+                                                    hideProgressBar();
                                                     showSnackBar("Something went wrong", R.id.layoutParent, Snackbar.LENGTH_SHORT);
                                                 }
                                             }
@@ -483,6 +524,7 @@ public class LandingActivity extends AppCompatActivity {
                                         layoutAddPicture.setVisibility(View.VISIBLE);
 
                                     } else {
+                                        hideProgressBar();
                                         // If sign in fails, display a message to the user.
                                         //Log.w(TAG, "createUserWithEmail:failure", task.getException());
                                         showSnackBar("Something went wrong", R.id.layoutParent, Snackbar.LENGTH_SHORT);
@@ -492,8 +534,17 @@ public class LandingActivity extends AppCompatActivity {
                 }
             }
         } else {
-            showSnackBar("Check internet connection and try again later", R.id.layoutParent, Snackbar.LENGTH_SHORT);
+            hideProgressBar();
+            showSnackBar("Check internet connection", R.id.layoutParent, Snackbar.LENGTH_SHORT);
         }
+    }
+
+    private void showProgressBar() {
+        progressLanding.setVisibility(View.VISIBLE);
+    }
+
+    private void hideProgressBar() {
+        progressLanding.setVisibility(View.INVISIBLE);
     }
 
     private void chooseImage() {
@@ -524,16 +575,15 @@ public class LandingActivity extends AppCompatActivity {
     private void uploadImage() {
 
         if (filePath != null) {
-            final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading...");
-            progressDialog.show();
+            final ProgressBar progressDialog = findViewById(R.id.progressLandingPercentage);
+            progressDialog.setVisibility(View.VISIBLE);
             String path = currentUser.getUid() + "/profilePicture/picture";
             StorageReference ref = storageReference.child(path);
             ref.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            progressDialog.dismiss();
+                            progressDialog.setVisibility(View.INVISIBLE);
                             thisUser.setAvatar(taskSnapshot.getUploadSessionUri().toString());
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                     .setPhotoUri(taskSnapshot.getUploadSessionUri())
@@ -554,7 +604,7 @@ public class LandingActivity extends AppCompatActivity {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            progressDialog.dismiss();
+                            progressDialog.setVisibility(View.INVISIBLE);
                             showSnackBar("Something went wrong", R.id.layoutParent, Snackbar.LENGTH_SHORT);
                         }
                     })
@@ -563,7 +613,7 @@ public class LandingActivity extends AppCompatActivity {
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                             double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
                                     .getTotalByteCount());
-                            progressDialog.setMessage("Uploaded " + (int) progress + "%");
+                            progressDialog.setProgress((int) progress);
                         }
                     });
         }
