@@ -20,6 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:elevation="5dp"
+            android:background="@color/colorPrimary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -27,6 +28,7 @@
                 android:id="@+id/main_app_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                style="@style/RobotoTextViewStyle"
                 android:navigationIcon="@drawable/ic_menu_white_24dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
