@@ -30,6 +30,8 @@ import com.gruv.models.Author;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.gruv.LandingActivity.thisUser;
+
 public class MainActivity extends AppCompatActivity {
     FragmentManager fragManager = getSupportFragmentManager();
     Toolbar toolbar;
@@ -44,9 +46,10 @@ public class MainActivity extends AppCompatActivity {
     Fragment fragNotification = new NotificationFragment();
     SearchFragment fragSearch = new SearchFragment();
     Fragment active = fragHome;
+    BottomNavigationView navView;
     Boolean signedIn = false;
     ListView list;
-    Author thisUser = new Author();
+    // Author thisUser = new Author();
     private FirebaseAuth authenticateObj;
     private FirebaseUser currentUser;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -114,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (currentUser != null) {
             signedIn = true;
-            setCurrentUser();
+            //setCurrentUser();
         }
 
         if (!signedIn) {
@@ -138,9 +141,23 @@ public class MainActivity extends AppCompatActivity {
 
         TextView name = view.findViewById(R.id.textUsername);
         TextView descriptor = view.findViewById(R.id.textDescriptor);
+        imageProfilePicture = view.findViewById(R.id.imageProfilePic);
+        drawerLayout.closeDrawer(GravityCompat.START);
+
+        currentUser = authenticateObj.getCurrentUser();
         if (currentUser != null) {
-            name.setText(thisUser.getName());
-            descriptor.setText(thisUser.getEmail());
+            signedIn = true;
+            name.setText(currentUser.getEmail());
+            descriptor.setText(currentUser.getDisplayName());
+            // String url = currentUser.getPhotoUrl().toString();
+            if (currentUser.getPhotoUrl() != null)
+                imageProfilePicture.setImageURI(currentUser.getPhotoUrl());
+        } else {
+            signedIn = false;
+            name.setText("Not signed in");
+            Intent myIntent = new Intent(getApplicationContext(), LandingActivity.class);
+            startActivity(myIntent);
+
         }
 
         name.setClickable(true);
@@ -157,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
+        navView = findViewById(R.id.nav_view);
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         fragManager.beginTransaction().add(R.id.content_main, fragHome, "home").commit();
@@ -231,6 +248,10 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawers();
+        } else if (active == fragSearch || active == fragNotification || active == fragMessages) {
+            fragManager.beginTransaction().hide(active).show(fragHome).commit();
+            active = fragHome;
+            navView.setSelectedItemId(R.id.navigation_home);
         } else {
             super.onBackPressed();
         }
@@ -246,13 +267,17 @@ public class MainActivity extends AppCompatActivity {
         imageProfilePicture = view.findViewById(R.id.imageProfilePic);
         drawerLayout.closeDrawer(GravityCompat.START);
 
+        authenticateObj = FirebaseAuth.getInstance();
         currentUser = authenticateObj.getCurrentUser();
         if (currentUser != null) {
             signedIn = true;
-            name.setText(currentUser.getEmail());
-            descriptor.setText(currentUser.getDisplayName());
-            if (currentUser.getPhotoUrl() != null)
-                imageProfilePicture.setImageURI(currentUser.getPhotoUrl());
+            name.setText(currentUser.getDisplayName());
+            descriptor.setText(currentUser.getEmail());
+
+            if (currentUser.getPhotoUrl() != null) {
+                //   Uri url = Uri.parse(thisUser.getAvatar());
+                //   imageProfilePicture.setImageURI(url);
+            }
         } else {
             signedIn = false;
             name.setText("Not signed in");
@@ -263,12 +288,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void setCurrentUser() {
+
+    public void settCurrentUser() {
         thisUser = new Author(currentUser.getUid(), currentUser.getDisplayName(), null, R.drawable.profile_pic4);
-        if (currentUser.getPhotoUrl() != null)
+        if (currentUser.getPhotoUrl() != null) {
             thisUser.setAvatar(currentUser.getPhotoUrl().toString());
-        thisUser.setEmail(currentUser.getEmail());
+            thisUser.setEmail(currentUser.getEmail());
+        }
     }
 }
-
 
