@@ -496,7 +496,6 @@ public class LandingActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         // Sign in success, update UI with the signed-in user's information
                                         currentUser = authenticateObj.getCurrentUser();
-                                        //currentUser.updateProfile()
                                         showSnackBar("Account created!", R.id.layoutParent, Snackbar.LENGTH_LONG);
 
                                         thisUser.setId(currentUser.getUid());
@@ -579,6 +578,7 @@ public class LandingActivity extends AppCompatActivity {
             progressDialog.setVisibility(View.VISIBLE);
             String path = currentUser.getUid() + "/profilePicture/picture";
             StorageReference ref = storageReference.child(path);
+
             ref.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -603,6 +603,7 @@ public class LandingActivity extends AppCompatActivity {
                             e.printStackTrace();
                             progressDialog.setVisibility(View.INVISIBLE);
                             showSnackBar("Something went wrong", R.id.layoutParent, Snackbar.LENGTH_SHORT);
+                            e.printStackTrace();
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {

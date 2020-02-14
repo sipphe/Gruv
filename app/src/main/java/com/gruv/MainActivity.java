@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     Fragment fragNotification = new NotificationFragment();
     SearchFragment fragSearch = new SearchFragment();
     Fragment active = fragHome;
+    BottomNavigationView navView;
     Boolean signedIn = false;
     ListView list;
     Author thisUser = new Author();
@@ -174,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
+        navView = findViewById(R.id.nav_view);
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         fragManager.beginTransaction().add(R.id.content_main, fragHome, "home").commit();
@@ -248,6 +249,10 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawers();
+        } else if (active == fragSearch || active == fragNotification || active == fragMessages) {
+            fragManager.beginTransaction().hide(active).show(fragHome).commit();
+            active = fragHome;
+            navView.setSelectedItemId(R.id.navigation_home);
         } else {
             super.onBackPressed();
         }
