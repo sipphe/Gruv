@@ -2,12 +2,14 @@ package com.gruv;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -21,6 +23,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -30,8 +33,6 @@ import com.gruv.models.Author;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.gruv.LandingActivity.thisUser;
-
 public class MainActivity extends AppCompatActivity {
     FragmentManager fragManager = getSupportFragmentManager();
     Toolbar toolbar;
@@ -39,6 +40,10 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     ImageButton buttonDrawer;
     TextView textTitle;
+    View view;
+    TextView name;
+    TextView descriptor;
+    Uri uri = null;
     SearchView searchView;
     CircleImageView imageProfilePicture;
     HomeFragment fragHome = new HomeFragment();
@@ -46,10 +51,9 @@ public class MainActivity extends AppCompatActivity {
     Fragment fragNotification = new NotificationFragment();
     SearchFragment fragSearch = new SearchFragment();
     Fragment active = fragHome;
-    BottomNavigationView navView;
     Boolean signedIn = false;
     ListView list;
-    // Author thisUser = new Author();
+    Author thisUser = new Author();
     private FirebaseAuth authenticateObj;
     private FirebaseUser currentUser;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -117,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (currentUser != null) {
             signedIn = true;
-            //setCurrentUser();
+            setCurrentUser();
         }
 
         if (!signedIn) {
@@ -128,7 +132,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
-
         list = findViewById(R.id.listNewsFeed);
         toolbar = findViewById(R.id.main_app_toolbar);
         drawer = findViewById(R.id.nav_view_drawer2);
@@ -137,27 +140,24 @@ public class MainActivity extends AppCompatActivity {
         textTitle = findViewById(R.id.textTitle);
         searchView = findViewById(R.id.searchView);
         searchView.setIconifiedByDefault(false);
-        View view = drawer.getHeaderView(0);
+        view = drawer.getHeaderView(0);
+        name = view.findViewById(R.id.textUsername);
+        descriptor = view.findViewById(R.id.textDescriptor);
+        imageProfilePicture = view.findViewById(R.id.imageProfilePic);
 
         TextView name = view.findViewById(R.id.textUsername);
         TextView descriptor = view.findViewById(R.id.textDescriptor);
-        imageProfilePicture = view.findViewById(R.id.imageProfilePic);
-        drawerLayout.closeDrawer(GravityCompat.START);
-
-        currentUser = authenticateObj.getCurrentUser();
         if (currentUser != null) {
-            signedIn = true;
-            name.setText(currentUser.getEmail());
-            descriptor.setText(currentUser.getDisplayName());
-            // String url = currentUser.getPhotoUrl().toString();
-            if (currentUser.getPhotoUrl() != null)
-                imageProfilePicture.setImageURI(currentUser.getPhotoUrl());
-        } else {
-            signedIn = false;
-            name.setText("Not signed in");
-            Intent myIntent = new Intent(getApplicationContext(), LandingActivity.class);
-            startActivity(myIntent);
-
+            name.setText(thisUser.getName());
+            descriptor.setText(thisUser.getEmail());
+            if (currentUser != null) {
+                signedIn = true;
+                name.setText(currentUser.getEmail());
+                descriptor.setText(currentUser.getDisplayName());
+                if (currentUser.getPhotoUrl() != null)
+                    uri = currentUser.getPhotoUrl();
+                loadAndSetDrawerPicture(uri, imageProfilePicture);
+            }
         }
 
         name.setClickable(true);
@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-        navView = findViewById(R.id.nav_view);
+        BottomNavigationView navView = findViewById(R.id.nav_view);
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         fragManager.beginTransaction().add(R.id.content_main, fragHome, "home").commit();
@@ -248,10 +248,6 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawers();
-        } else if (active == fragSearch || active == fragNotification || active == fragMessages) {
-            fragManager.beginTransaction().hide(active).show(fragHome).commit();
-            active = fragHome;
-            navView.setSelectedItemId(R.id.navigation_home);
         } else {
             super.onBackPressed();
         }
@@ -266,17 +262,15 @@ public class MainActivity extends AppCompatActivity {
         TextView descriptor = view.findViewById(R.id.textDescriptor);
         imageProfilePicture = view.findViewById(R.id.imageProfilePic);
         drawerLayout.closeDrawer(GravityCompat.START);
-
-        authenticateObj = FirebaseAuth.getInstance();
+        Uri uri = null;
         currentUser = authenticateObj.getCurrentUser();
         if (currentUser != null) {
             signedIn = true;
-            name.setText(currentUser.getDisplayName());
-            descriptor.setText(currentUser.getEmail());
-
+            name.setText(currentUser.getEmail());
+            descriptor.setText(currentUser.getDisplayName());
             if (currentUser.getPhotoUrl() != null) {
-                //   Uri url = Uri.parse(thisUser.getAvatar());
-                //   imageProfilePicture.setImageURI(url);
+                uri = currentUser.getPhotoUrl();
+                loadAndSetDrawerPicture(uri, imageProfilePicture);
             }
         } else {
             signedIn = false;
@@ -288,13 +282,16 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-    public void settCurrentUser() {
+    public void setCurrentUser() {
         thisUser = new Author(currentUser.getUid(), currentUser.getDisplayName(), null, R.drawable.profile_pic4);
-        if (currentUser.getPhotoUrl() != null) {
+        if (currentUser.getPhotoUrl() != null)
             thisUser.setAvatar(currentUser.getPhotoUrl().toString());
-            thisUser.setEmail(currentUser.getEmail());
-        }
+        thisUser.setEmail(currentUser.getEmail());
+    }
+
+    public void loadAndSetDrawerPicture(Uri uri, ImageView imageView) {
+        Glide.with(this).load(uri).centerCrop().into(imageView);
     }
 }
+
 

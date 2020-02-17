@@ -1,6 +1,7 @@
 package com.gruv;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -17,6 +18,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -58,7 +60,10 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
         setContentView(R.layout.activity_profile);
         authenticateObj = FirebaseAuth.getInstance();
         currentUser = authenticateObj.getCurrentUser();
-        setUser();
+        if (currentUser != null) {
+            setCurrentUser();
+        }
+//        setUser();
         initialiseControls();
         setTransparentStatusBar();
         setTopPadding(getStatusBarHeight());
@@ -67,7 +72,8 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
         postedEventsListener = this;
         promotedEventsListener = this;
 
-        profilePic.setImageResource(thisUser.getProfilePictureId());
+        loadAndSetPicture(Uri.parse(thisUser.getAvatar()), profilePic);
+        loadAndSetPicture(Uri.parse(thisUser.getAvatar()), profilePicSmall);
         textFullName.setText(thisUser.getName());
         textUsername.setText(currentUser.getEmail());
 
@@ -120,13 +126,12 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
 
         //set static resource
         profilePicToolbar.setTitle(thisUser.getName());
-        profilePicSmall.setImageResource(thisUser.getProfilePictureId());
     }
 
-    private void setUser() {
-        thisUser = new Author(currentUser.getUid(), "This User", null, R.drawable.profile_pic5);
-        //thisUser.setEmail(currentUser.getEmail());
-    }
+//    private void setUser() {
+//        thisUser = new Author(currentUser.getUid(), "This User", null, R.drawable.profile_pic5);
+//        thisUser.setEmail(currentUser.getEmail());
+//    }
 
     public void setTransparentStatusBar() {
         Window w = getWindow();
@@ -177,5 +182,16 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
             profilePicToolbar.setVisibility(View.GONE);
             profilePicSmall.setVisibility(View.GONE);
         }
+    }
+
+    public void setCurrentUser() {
+        thisUser = new Author(currentUser.getUid(), currentUser.getDisplayName(), null, R.drawable.profile_pic4);
+        if (currentUser.getPhotoUrl() != null)
+            thisUser.setAvatar(currentUser.getPhotoUrl().toString());
+        thisUser.setEmail(currentUser.getEmail());
+    }
+
+    public void loadAndSetPicture(Uri uri, ImageView imageView) {
+        Glide.with(this).load(uri).centerCrop().into(imageView);
     }
 }

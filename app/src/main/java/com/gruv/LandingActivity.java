@@ -68,7 +68,7 @@ public class LandingActivity extends AppCompatActivity {
     private CircleImageView imageProfilePicture;
     private ProgressBar progressLanding;
     private Uri filePath;
-    public static Author thisUser = new Author();
+    private Author thisUser = new Author();
     private final int PICK_IMAGE_REQUEST = 71;
 
     @Override
@@ -496,6 +496,7 @@ public class LandingActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         // Sign in success, update UI with the signed-in user's information
                                         currentUser = authenticateObj.getCurrentUser();
+                                        //currentUser.updateProfile()
                                         showSnackBar("Account created!", R.id.layoutParent, Snackbar.LENGTH_LONG);
 
                                         thisUser.setId(currentUser.getUid());
@@ -570,7 +571,6 @@ public class LandingActivity extends AppCompatActivity {
 
     }
 
-    public static Uri uri;
 
     private void uploadImage() {
 
@@ -579,50 +579,30 @@ public class LandingActivity extends AppCompatActivity {
             progressDialog.setVisibility(View.VISIBLE);
             String path = currentUser.getUid() + "/profilePicture/picture";
             StorageReference ref = storageReference.child(path);
-
             ref.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             progressDialog.setVisibility(View.INVISIBLE);
-                            thisUser.setAvatar(taskSnapshot.getUploadSessionUri().toString());
-                            ref.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                            ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
-                                public void onComplete(@NonNull Task<Uri> task) {
-                                    if (task.isSuccessful()) {
-                                        uri = task.getResult();
-                                    } else {
-                                        task.getException().printStackTrace();
-                                    }
+                                public void onSuccess(Uri uri) {
+                                    String url = uri.toString();
+                                    updateUser(uri, progressDialog);
                                 }
                             });
 
-                            thisUser.setAvatar(uri.toString());
-                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                    .setPhotoUri(uri)
-                                    .build();
 
-                            currentUser.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        showSnackBar("Profile Updated", R.id.layoutParent, Snackbar.LENGTH_LONG);
-                                        finish();
-                                    } else {
-                                        showSnackBar("Something went wrong", R.id.layoutParent, Snackbar.LENGTH_LONG);
-                                        task.getException().printStackTrace();
-                                    }
-                                }
-                            });
+
                             showSnackBar("Done!", R.id.layoutParent, Snackbar.LENGTH_LONG);
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
+                            e.printStackTrace();
                             progressDialog.setVisibility(View.INVISIBLE);
                             showSnackBar("Something went wrong", R.id.layoutParent, Snackbar.LENGTH_SHORT);
-                            e.printStackTrace();
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -633,9 +613,24 @@ public class LandingActivity extends AppCompatActivity {
                             progressDialog.setProgress((int) progress);
                         }
                     });
-
-            //finish();
         }
+    }
+
+    private void updateUser(Uri uri, ProgressBar progressDialog) {
+        thisUser.setAvatar(uri.toString());
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setPhotoUri(uri)
+                .build();
+        currentUser.updateProfile(profileUpdates)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        progressDialog.setVisibility(View.INVISIBLE);
+                        if (!task.isSuccessful()) {
+                            showSnackBar("Couldn't update picture", R.id.layoutParent, Snackbar.LENGTH_SHORT);
+                        }
+                    }
+                });
     }
 
 
