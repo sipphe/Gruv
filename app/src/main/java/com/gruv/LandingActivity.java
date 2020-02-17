@@ -584,26 +584,23 @@ public class LandingActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             progressDialog.setVisibility(View.INVISIBLE);
-                            thisUser.setAvatar(taskSnapshot.getUploadSessionUri().toString());
-                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                    .setPhotoUri(taskSnapshot.getUploadSessionUri())
-                                    .build();
+                            ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    String url = uri.toString();
+                                    updateUser(uri, progressDialog);
+                                }
+                            });
 
-                            currentUser.updateProfile(profileUpdates)
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (!task.isSuccessful()) {
-                                                showSnackBar("Couldn't update picture", R.id.layoutParent, Snackbar.LENGTH_SHORT);
-                                            }
-                                        }
-                                    });
+
+
                             showSnackBar("Done!", R.id.layoutParent, Snackbar.LENGTH_LONG);
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
+                            e.printStackTrace();
                             progressDialog.setVisibility(View.INVISIBLE);
                             showSnackBar("Something went wrong", R.id.layoutParent, Snackbar.LENGTH_SHORT);
                         }
@@ -617,6 +614,23 @@ public class LandingActivity extends AppCompatActivity {
                         }
                     });
         }
+    }
+
+    private void updateUser(Uri uri, ProgressBar progressDialog) {
+        thisUser.setAvatar(uri.toString());
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setPhotoUri(uri)
+                .build();
+        currentUser.updateProfile(profileUpdates)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        progressDialog.setVisibility(View.INVISIBLE);
+                        if (!task.isSuccessful()) {
+                            showSnackBar("Couldn't update picture", R.id.layoutParent, Snackbar.LENGTH_SHORT);
+                        }
+                    }
+                });
     }
 
 

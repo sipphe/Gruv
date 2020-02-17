@@ -31,6 +31,7 @@ MERGED from [com.google.android.gms:play-services-auth:17.0.0] C:\Users\siphe\.g
 MERGED from [androidx.browser:browser:1.0.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\9bfe6ea4c81aa2702b51a7d12477090a\browser-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [com.twitter.sdk.android:tweet-composer:3.3.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\78ac9ae3c220c56c8c4edb89d530a2d4\tweet-composer-3.3.0\AndroidManifest.xml:18:1-39:12
 MERGED from [com.twitter.sdk.android:twitter-core:3.3.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\8c80edb0e4f9151c2d5a3a4545f7266b\jetified-twitter-core-3.3.0\AndroidManifest.xml:18:1-35:12
+MERGED from [com.github.bumptech.glide:glide:4.11.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\14e1904a47c75ffdbd7bc4595a7ccff8\glide-4.11.0\AndroidManifest.xml:2:1-12:12
 MERGED from [com.google.android.gms:play-services-places-placereport:17.0.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\d83b694e52fd69ed77d39eafdb6d1469\play-services-places-placereport-17.0.0\AndroidManifest.xml:17:1-24:12
 MERGED from [com.google.firebase:firebase-auth-interop:19.0.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\2ed9ac81f3f164fa54e06cf022dde970\firebase-auth-interop-19.0.0\AndroidManifest.xml:2:1-10:12
 MERGED from [com.google.android.gms:play-services-auth-api-phone:17.0.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\faaede8b859b7fb86aa797a8778ac5a2\play-services-auth-api-phone-17.0.0\AndroidManifest.xml:2:1-7:12
@@ -76,6 +77,8 @@ MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\siphe\.gradle\
 MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\0572fb836b13754ec5229a66c998d409\localbroadcastmanager-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [com.google.firebase:firebase-components:16.0.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\42d0570d782c94f9eb86e579b6ce9daf\jetified-firebase-components-16.0.0\AndroidManifest.xml:15:1-23:12
 MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\145ceaebca7e3ab74e3fcbc7ad97f821\interpolator-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [com.github.bumptech.glide:gifdecoder:4.11.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\c418a1a96befa84cc9cafbbddecea344\gifdecoder-4.11.0\AndroidManifest.xml:2:1-11:12
+MERGED from [androidx.exifinterface:exifinterface:1.0.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\f5f3eab858f7fae5fb8e5512dc54d912\exifinterface-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.documentfile:documentfile:1.0.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\82f12e328b573a400c5c5265c35e1d47\documentfile-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.print:print:1.0.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\02d004519efdfd015e4b7e0ffb8ccafe\print-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.lifecycle:lifecycle-process:2.1.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\47ecb745954fd894e9c5d4c2264ee606\lifecycle-process-2.1.0\AndroidManifest.xml:17:1-30:12
@@ -182,6 +185,8 @@ MERGED from [com.twitter.sdk.android:tweet-composer:3.3.0] C:\Users\siphe\.gradl
 MERGED from [com.twitter.sdk.android:tweet-composer:3.3.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\78ac9ae3c220c56c8c4edb89d530a2d4\tweet-composer-3.3.0\AndroidManifest.xml:27:5-37:19
 MERGED from [com.twitter.sdk.android:twitter-core:3.3.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\8c80edb0e4f9151c2d5a3a4545f7266b\jetified-twitter-core-3.3.0\AndroidManifest.xml:27:5-33:19
 MERGED from [com.twitter.sdk.android:twitter-core:3.3.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\8c80edb0e4f9151c2d5a3a4545f7266b\jetified-twitter-core-3.3.0\AndroidManifest.xml:27:5-33:19
+MERGED from [com.github.bumptech.glide:glide:4.11.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\14e1904a47c75ffdbd7bc4595a7ccff8\glide-4.11.0\AndroidManifest.xml:10:5-20
+MERGED from [com.github.bumptech.glide:glide:4.11.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\14e1904a47c75ffdbd7bc4595a7ccff8\glide-4.11.0\AndroidManifest.xml:10:5-20
 MERGED from [com.google.android.gms:play-services-places-placereport:17.0.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\d83b694e52fd69ed77d39eafdb6d1469\play-services-places-placereport-17.0.0\AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.gms:play-services-places-placereport:17.0.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\d83b694e52fd69ed77d39eafdb6d1469\play-services-places-placereport-17.0.0\AndroidManifest.xml:22:5-20
 MERGED from [com.google.firebase:firebase-auth-interop:19.0.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\2ed9ac81f3f164fa54e06cf022dde970\firebase-auth-interop-19.0.0\AndroidManifest.xml:7:5-8:19
@@ -228,6 +233,8 @@ MERGED from [androidx.core:core:1.0.1] C:\Users\siphe\.gradle\caches\transforms-
 MERGED from [androidx.core:core:1.0.1] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\576da1d0dffd769126e261a00deab8bb\core-1.0.1\AndroidManifest.xml:22:5-89
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\3f81a995b6a711190916f5eda8f212df\versionedparcelable-1.0.0\AndroidManifest.xml:22:5-23:19
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\3f81a995b6a711190916f5eda8f212df\versionedparcelable-1.0.0\AndroidManifest.xml:22:5-23:19
+MERGED from [com.github.bumptech.glide:gifdecoder:4.11.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\c418a1a96befa84cc9cafbbddecea344\gifdecoder-4.11.0\AndroidManifest.xml:9:5-20
+MERGED from [com.github.bumptech.glide:gifdecoder:4.11.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\c418a1a96befa84cc9cafbbddecea344\gifdecoder-4.11.0\AndroidManifest.xml:9:5-20
 MERGED from [androidx.lifecycle:lifecycle-process:2.1.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\47ecb745954fd894e9c5d4c2264ee606\lifecycle-process-2.1.0\AndroidManifest.xml:22:5-28:19
 MERGED from [androidx.lifecycle:lifecycle-process:2.1.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\47ecb745954fd894e9c5d4c2264ee606\lifecycle-process-2.1.0\AndroidManifest.xml:22:5-28:19
 MERGED from [com.android.installreferrer:installreferrer:1.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\18213715059386cb81f073fbc35b5b2f\jetified-installreferrer-1.0\AndroidManifest.xml:11:5-20
@@ -435,6 +442,8 @@ MERGED from [com.twitter.sdk.android:tweet-composer:3.3.0] C:\Users\siphe\.gradl
 MERGED from [com.twitter.sdk.android:tweet-composer:3.3.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\78ac9ae3c220c56c8c4edb89d530a2d4\tweet-composer-3.3.0\AndroidManifest.xml:23:5-44
 MERGED from [com.twitter.sdk.android:twitter-core:3.3.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\8c80edb0e4f9151c2d5a3a4545f7266b\jetified-twitter-core-3.3.0\AndroidManifest.xml:23:5-44
 MERGED from [com.twitter.sdk.android:twitter-core:3.3.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\8c80edb0e4f9151c2d5a3a4545f7266b\jetified-twitter-core-3.3.0\AndroidManifest.xml:23:5-44
+MERGED from [com.github.bumptech.glide:glide:4.11.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\14e1904a47c75ffdbd7bc4595a7ccff8\glide-4.11.0\AndroidManifest.xml:6:5-8:41
+MERGED from [com.github.bumptech.glide:glide:4.11.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\14e1904a47c75ffdbd7bc4595a7ccff8\glide-4.11.0\AndroidManifest.xml:6:5-8:41
 MERGED from [com.google.android.gms:play-services-places-placereport:17.0.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\d83b694e52fd69ed77d39eafdb6d1469\play-services-places-placereport-17.0.0\AndroidManifest.xml:20:5-44
 MERGED from [com.google.android.gms:play-services-places-placereport:17.0.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\d83b694e52fd69ed77d39eafdb6d1469\play-services-places-placereport-17.0.0\AndroidManifest.xml:20:5-44
 MERGED from [com.google.firebase:firebase-auth-interop:19.0.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\2ed9ac81f3f164fa54e06cf022dde970\firebase-auth-interop-19.0.0\AndroidManifest.xml:5:5-44
@@ -525,6 +534,10 @@ MERGED from [com.google.firebase:firebase-components:16.0.0] C:\Users\siphe\.gra
 MERGED from [com.google.firebase:firebase-components:16.0.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\42d0570d782c94f9eb86e579b6ce9daf\jetified-firebase-components-16.0.0\AndroidManifest.xml:19:5-21:41
 MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\145ceaebca7e3ab74e3fcbc7ad97f821\interpolator-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\145ceaebca7e3ab74e3fcbc7ad97f821\interpolator-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [com.github.bumptech.glide:gifdecoder:4.11.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\c418a1a96befa84cc9cafbbddecea344\gifdecoder-4.11.0\AndroidManifest.xml:5:5-7:41
+MERGED from [com.github.bumptech.glide:gifdecoder:4.11.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\c418a1a96befa84cc9cafbbddecea344\gifdecoder-4.11.0\AndroidManifest.xml:5:5-7:41
+MERGED from [androidx.exifinterface:exifinterface:1.0.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\f5f3eab858f7fae5fb8e5512dc54d912\exifinterface-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.exifinterface:exifinterface:1.0.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\f5f3eab858f7fae5fb8e5512dc54d912\exifinterface-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.documentfile:documentfile:1.0.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\82f12e328b573a400c5c5265c35e1d47\documentfile-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.documentfile:documentfile:1.0.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\82f12e328b573a400c5c5265c35e1d47\documentfile-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.print:print:1.0.0] C:\Users\siphe\.gradle\caches\transforms-2\files-2.1\02d004519efdfd015e4b7e0ffb8ccafe\print-1.0.0\AndroidManifest.xml:20:5-44
