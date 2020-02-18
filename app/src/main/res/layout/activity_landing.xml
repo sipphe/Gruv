@@ -171,7 +171,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/eighty"
                 android:padding="@dimen/twenty"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageViewLogoText">
@@ -297,20 +297,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:errorEnabled="true"
+                    style="@style/TextLabel"
                     app:layout_constraintBottom_toTopOf="@+id/editTextLayoutPassword"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.095">
+                    app:hintTextAppearance="@style/TextAppearance.AppCompat.Small.Inverse">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editTextEmailLogin"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:autofillHints="@string/email_input"
-                        android:ems="10"
                         android:hint="@string/email_input"
-
+                        android:background="@color/transparent"
+                        android:textColor="@color/white"
+                        app:backgroundTint="@color/white"
                         android:inputType="textEmailAddress" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -320,6 +322,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:errorEnabled="true"
+                    style="@style/TextLabel"
+                    app:endIconMode="password_toggle"
+                    app:hintTextAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -333,22 +338,10 @@
                         android:autofillHints="@string/password_input"
                         android:elevation="@dimen/zero"
                         android:hint="@string/password_input"
+                        android:textColor="@color/white"
                         android:inputType="textPassword" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <androidx.appcompat.widget.AppCompatImageButton
-                    android:id="@+id/buttonSeePasswordLogin"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="@dimen/thirty_two"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="25dp"
-                    android:elevation="@dimen/four"
-                    android:outlineProvider="none"
-                    android:src="@drawable/ic_remove_red_eye_black_24dp"
-                    android:visibility="invisible"
-                    app:layout_constraintBottom_toBottomOf="@+id/editTextLayoutPassword"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/editTextLayoutPassword" />
 
                 <TextView
                     android:id="@+id/textViewForgotPassword"
@@ -392,7 +385,7 @@
                 android:layout_width="267dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/fifty_six"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:paddingBottom="@dimen/forty"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.576"
@@ -403,6 +396,8 @@
                     android:id="@+id/editTextLayoutName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    style="@style/TextLabel"
+                    app:hintTextAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -414,6 +409,7 @@
                         android:autofillHints="@string/name_input"
                         android:ems="10"
                         android:hint="@string/name_input"
+                        android:textColor="@color/white"
                         android:inputType="textPersonName"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -425,7 +421,8 @@
                     android:id="@+id/editTextLayoutEmailRegister"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/thirty_two"
+                    style="@style/TextLabel"
+                    app:hintTextAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/editTextLayoutName">
@@ -434,6 +431,7 @@
                         android:id="@+id/editTextEmailRegister"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/white"
                         android:autofillHints="@string/email_input"
                         android:hint="@string/email_input"
                         android:inputType="textEmailAddress" />
@@ -443,7 +441,9 @@
                     android:id="@+id/editTextLayoutPasswordRegister"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/thirty_two"
+                    style="@style/TextLabel"
+                    app:endIconMode="password_toggle"
+                    app:hintTextAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/editTextLayoutEmailRegister">
@@ -452,29 +452,22 @@
                         android:id="@+id/editTextPasswordRegister"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/thirty_two"
+                        android:textColor="@color/white"
                         android:autofillHints="@string/password_input"
                         android:hint="@string/password_input"
                         android:inputType="textPassword" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <androidx.appcompat.widget.AppCompatImageButton
-                    android:id="@+id/buttonSeePassword"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="@dimen/thirty_two"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_remove_red_eye_black_24dp"
-                    android:visibility="invisible"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/editTextLayoutPasswordRegister" />
+
 
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/editTextLayoutConfirmPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/thirty_two"
+                    style="@style/TextLabel"
+                    app:hintTextAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/editTextLayoutPasswordRegister">
@@ -483,7 +476,7 @@
                         android:id="@+id/editTextConfirmPassword"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/thirty_two"
+                        android:textColor="@color/white"
                         android:autofillHints="@string/password_input"
                         android:hint="@string/confirm_password_input"
                         android:inputType="textPassword" />

@@ -11,8 +11,9 @@
     <color name="black">#000000</color>
     <color name="blackDN">#000000</color>
     <color name="dark_grey">#383838</color>
+    <color name="dark_greyDN">#383838</color>
     <color name="light_grey">#C7C7C7</color>
     <color name="grey">#929292</color>
-    <color name="red">#E30425</color>
+    <color name="red">#C70020</color>
 
 </resources>

@@ -9,10 +9,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -64,12 +62,12 @@ public class LandingActivity extends AppCompatActivity {
     private TextView textSignUp, textForgotPassword, textViewSignUp;
     private MaterialButton buttonEmail, buttonSignIn, buttonRegister, buttonNext1, buttonNext, buttonResetPassword, buttonAddPicture, buttonSkip;
     private FloatingActionButton buttonChoosePicture;
-    private ImageButton buttonSeePassword, buttonSeePasswordLogin;
     private CircleImageView imageProfilePicture;
     private ProgressBar progressLanding;
     private Uri filePath;
     private Author thisUser = new Author();
     private final int PICK_IMAGE_REQUEST = 71;
+    private boolean emailCorrect, passwordCorrect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,16 +135,10 @@ public class LandingActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 validatePassword(editable, layoutPasswordText, buttonSignIn);
-                showSeePasswordButton(editable, buttonSeePasswordLogin);
             }
         });
 
-        buttonSeePasswordLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showPassword(textPassword);
-            }
-        });
+
 
         editTextEmail.addTextChangedListener(new TextWatcher() {
             @Override
@@ -180,16 +172,10 @@ public class LandingActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 validatePassword(editable, layoutPasswordTextRegister, buttonRegister);
-                showSeePasswordButton(editable, buttonSeePassword);
             }
         });
 
-        buttonSeePassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showPassword(editTextPassword);
-            }
-        });
+
         buttonSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -256,21 +242,6 @@ public class LandingActivity extends AppCompatActivity {
             }
         });
 
-    }
-
-    private void showPassword(TextInputEditText editText) {
-        int inputType = editText.getInputType();
-        if (inputType != 129)
-            editText.setInputType(129);
-        else
-            editText.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-    }
-
-    private void showSeePasswordButton(Editable editable, ImageButton button) {
-        if (editable.length() > 0)
-            button.setVisibility(View.VISIBLE);
-        else
-            button.setVisibility(View.GONE);
     }
 
 
@@ -396,8 +367,6 @@ public class LandingActivity extends AppCompatActivity {
         //login
         textEmail = findViewById(R.id.editTextEmailLogin);
         textPassword = findViewById(R.id.editTextPasswordLogin);
-        textPassword.setInputType(129);
-        buttonSeePasswordLogin = findViewById(R.id.buttonSeePasswordLogin);
         textSignUp = findViewById(R.id.textViewSignUp);
         layoutEmailText = findViewById(R.id.editTextLayoutEmail);
         layoutPasswordText = findViewById(R.id.editTextLayoutPassword);
@@ -409,7 +378,6 @@ public class LandingActivity extends AppCompatActivity {
         editTextConfirmPassword = findViewById(R.id.editTextConfirmPassword);
         layoutEmailRegisterText = findViewById(R.id.editTextLayoutEmailRegister);
         layoutPasswordTextRegister = findViewById(R.id.editTextLayoutPasswordRegister);
-        buttonSeePassword = findViewById(R.id.buttonSeePassword);
         editTextPassword.setInputType(129);
         editTextConfirmPassword.setInputType(129);
 
@@ -443,25 +411,33 @@ public class LandingActivity extends AppCompatActivity {
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-zA-Z._-]+[a-zA-Z._-]";
         // onClick of button perform this simplest code.
         if (!s.toString().trim().matches(emailPattern)) {
+            emailCorrect = false;
             layout.setError("Invalid email");
             button.setClickable(false);
             button.setTextColor(ContextCompat.getColor(getApplicationContext(), (R.color.grey)));
         } else {
+            emailCorrect = true;
             layout.setError(null);
-            button.setClickable(true);
-            button.setTextColor(ContextCompat.getColor(getApplicationContext(), (R.color.colorPrimary)));
+            if (passwordCorrect) {
+                button.setClickable(true);
+                button.setTextColor(ContextCompat.getColor(getApplicationContext(), (R.color.colorPrimary)));
+            }
         }
     }
 
     public void validatePassword(Editable editable, TextInputLayout layout, MaterialButton button) {
         if (editable.length() < 6) {
+            passwordCorrect = false;
             layout.setError("Password must have more than 6 characters");
             button.setClickable(false);
             button.setTextColor(ContextCompat.getColor(getApplicationContext(), (R.color.grey)));
         } else {
             layout.setError(null);
-            button.setClickable(true);
-            button.setTextColor(ContextCompat.getColor(getApplicationContext(), (R.color.colorPrimary)));
+            passwordCorrect = true;
+            if (emailCorrect) {
+                button.setClickable(true);
+                button.setTextColor(ContextCompat.getColor(getApplicationContext(), (R.color.colorPrimary)));
+            }
         }
     }
 

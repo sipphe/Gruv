@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/sixteen"
             android:text="Events around you:"
-            android:textColor="@color/black"
+            android:textColor="@color/blackDN"
             android:textSize="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

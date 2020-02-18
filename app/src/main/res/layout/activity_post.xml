@@ -247,7 +247,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/twenty"
                         android:text="Read More"
-                        android:textColor="@color/black"
+                        android:textColor="@color/blackDN"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -289,6 +289,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/twenty"
                         android:text="Comment"
+                        android:textColor="@color/colorAccent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
