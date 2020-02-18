@@ -1,79 +1,162 @@
 package com.gruv.com.gruv;
 
-import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.gruv.R;
-import com.gruv.models.Venue;
+import com.gruv.interfaces.ClickInterface;
+import com.gruv.models.Author;
+import com.gruv.models.Event;
+import com.gruv.models.Like;
 
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class NewsFeedAdapter extends ArrayAdapter<String> {
-
-    private final Activity context;
-    private final List<String> eventTitle;
-    private final List<String> author;
-    private final List<String> description;
-    private final List<Venue> venue;
-    private final List<Integer> countLikes;
-    private final List<Integer> countComments;
-    private final List<Integer> day;
-    private final List<String> month;
-    private final List<Integer> imageIDPostPic;
-    private final List<Integer> imageIDProfilePic;
-
-    public NewsFeedAdapter(@NonNull Activity context, List<String> eventTitle, List<String> author, List<String> description, List<Venue> venue, List<Integer> countLikes, List<Integer> countComments, List<Integer> day, List<String> month, List<Integer> imageIDPostPic, List<Integer> imageIDProfilePic) {
-        super(context, R.layout.post, eventTitle);
-        this.context = context;
-        this.eventTitle = eventTitle;
-        this.author = author;
-        this.description = description;
-        this.venue = venue;
-        this.countLikes = countLikes;
-        this.countComments = countComments;
-        this.day = day;
-        this.month = month;
-        this.imageIDPostPic = imageIDPostPic;
-        this.imageIDProfilePic = imageIDProfilePic;
-    }
+public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHolder> {
 
 
-    public View getView(int position, View view, ViewGroup parent) {
-        LayoutInflater inflater = context.getLayoutInflater();
-        View rowView = inflater.inflate(R.layout.post, null, true);
+    private final ClickInterface listener;
+    private List<Event> eventList;
+    private Author thisUser;
+    private Like like;
 
-        TextView titleText = rowView.findViewById(R.id.textViewEventTitle);
-        TextView textAuthor = rowView.findViewById(R.id.textViewEventAuthor);
-        TextView textDescription = rowView.findViewById(R.id.textEventDescription);
-        TextView textVenue = rowView.findViewById((R.id.textVenue));
-        TextView textDay = rowView.findViewById(R.id.textViewDay);
-        TextView textMonth = rowView.findViewById(R.id.textViewMonth);
-        TextView textCommentCount = rowView.findViewById(R.id.counterComments);
-        TextView textLikeCount = rowView.findViewById(R.id.counterLikes);
-        CircleImageView imageProfilePic = rowView.findViewById(R.id.imageProfilePic);
-        ImageView imagePost = rowView.findViewById(R.id.imageViewPostPicture);
-
-        titleText.setText(eventTitle.get(position));
-        textAuthor.setText(author.get(position));
-        textDescription.setText(description.get(position));
-        textVenue.setText(venue.get(position).getVenueName());
-        textDay.setText(day.get(position).toString());
-        textMonth.setText(month.get(position));
-        textCommentCount.setText(countComments.get(position).toString());
-        textLikeCount.setText(countLikes.get(position).toString());
-        imageProfilePic.setImageResource(imageIDProfilePic.get(position));
-        imagePost.setImageResource(imageIDPostPic.get(position));
-        return rowView;
+    public NewsFeedAdapter(List<Event> eventList, ClickInterface listener, Author thisUser) {
+        this.eventList = eventList;
+        this.listener = listener;
+        this.thisUser = thisUser;
 
     }
 
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        Context context = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
+
+
+        // Inflate the custom layout
+        View eventView = inflater.inflate(R.layout.post, parent, false);
+        ViewHolder viewHolder = new ViewHolder(eventView);
+
+
+        return viewHolder;
+    }
+
+
+    @Override
+    public void onBindViewHolder(NewsFeedAdapter.ViewHolder viewHolder, int position) {
+        // Get the data model based on position
+        Event event = eventList.get(position);
+        TextView titleText = viewHolder.titleText;
+        TextView textAuthor = viewHolder.textAuthor;
+        TextView textDescription = viewHolder.textDescription;
+        TextView textVenue = viewHolder.textVenue;
+        TextView textDay = viewHolder.textDay;
+        TextView textMonth = viewHolder.textMonth;
+        TextView textCommentCount = viewHolder.textCommentCount;
+        TextView textLikeCount = viewHolder.textLikeCount;
+        CircleImageView imageProfilePic = viewHolder.imageProfilePic;
+        ImageView imagePost = viewHolder.imagePost;
+
+
+        titleText.setText(event.getEventName());
+        textAuthor.setText(event.getAuthor().getName());
+        textDescription.setText(event.getEventDescription());
+        textVenue.setText(event.getVenue().getVenueName());
+        textDay.setText(event.getEventDate().getDayOfMonth() + "");
+        textMonth.setText(event.getEventDate().getMonth().toString().substring(0, 3).toUpperCase());
+        if (event.getComments() == null || event.getComments().isEmpty())
+            textCommentCount.setText("0");
+        else
+            textCommentCount.setText(event.getComments().size() + "");
+        if (event.getLikes() == null || event.getLikes().isEmpty())
+            textLikeCount.setText("0");
+        else
+            textLikeCount.setText(event.getLikes().size() + "");
+
+        imageProfilePic.setImageResource(event.getAuthor().getProfilePictureId());
+        imagePost.setImageResource(event.getImagePostId());
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return eventList.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        public TextView titleText;
+        public TextView textAuthor;
+        public TextView textDescription;
+        public TextView textVenue;
+        public TextView textDay;
+        public TextView textMonth;
+        public TextView textCommentCount;
+        public TextView textLikeCount;
+        public CircleImageView imageProfilePic;
+        public ImageView imagePost;
+        public CardView cardPost;
+        public ImageView likeButton;
+        public boolean liked = false;
+        public int position = getAdapterPosition();
+
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            like = new Like();
+            like.setAuthor(thisUser);
+
+
+            titleText = itemView.findViewById(R.id.textViewEventTitle);
+            textAuthor = itemView.findViewById(R.id.textViewEventAuthor);
+            textDescription = itemView.findViewById(R.id.textEventDescription);
+            textVenue = itemView.findViewById((R.id.textVenue));
+            textDay = itemView.findViewById(R.id.textViewDay);
+            textMonth = itemView.findViewById(R.id.textViewMonth);
+            textCommentCount = itemView.findViewById(R.id.counterComments);
+            textLikeCount = itemView.findViewById(R.id.counterLikes);
+            imageProfilePic = itemView.findViewById(R.id.imageProfilePic);
+            imagePost = itemView.findViewById(R.id.imageViewPostPicture);
+            cardPost = itemView.findViewById(R.id.card_view_post);
+            likeButton = itemView.findViewById(R.id.imageLike);
+
+            cardPost.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.recyclerViewOnClick(getAdapterPosition());
+                }
+            });
+
+            likeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!liked) {
+                        like.setEventId(eventList.get(getAdapterPosition()).getEventId());
+                        liked = true;
+                        likeButton.setImageResource(R.drawable.sunshine_clicked);
+                        eventList.get(getAdapterPosition()).addLike(like);
+
+                        if (eventList.get(getAdapterPosition()).getLikes() != null)
+                            textLikeCount.setText(Integer.toString(eventList.get(getAdapterPosition()).getLikes().size()));
+                    } else {
+                        liked = false;
+                        likeButton.setImageResource(R.drawable.sunshine);
+                        eventList.get(getAdapterPosition()).removeLike(like);
+
+                        if (eventList.get(getAdapterPosition()).getLikes() != null)
+                            textLikeCount.setText(Integer.toString(eventList.get(getAdapterPosition()).getLikes().size()));
+                    }
+                }
+            });
+
+        }
+    }
 }

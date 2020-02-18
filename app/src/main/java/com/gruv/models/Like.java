@@ -7,6 +7,9 @@ public class Like implements Serializable {
     String likeId;
     Author author;
 
+    public Like() {
+    }
+
     public Like(String eventId, Author author) {
         this.eventId = eventId;
         this.likeId = getId();

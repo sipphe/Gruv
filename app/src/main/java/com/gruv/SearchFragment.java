@@ -3,7 +3,6 @@ package com.gruv;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Criteria;
@@ -16,14 +15,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -67,7 +66,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
     private ConstraintLayout bottom_sheet;
     private int peekHeight = 700;
     List<Event> events;
-    private ListView listSearch;
+    private RecyclerView listSearch;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -110,29 +109,19 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
         events.add(event);
         events.add(event);
         events.add(event);
+        events.add(event);
+        events.add(event);
 
         List<String> strings = new ArrayList<>();
         for (int i = 0; i < events.size(); i++) {
             strings.add(events.get(i).getEventName());
         }
 
-        SearchListAdapter adapter = new SearchListAdapter(getActivity(), events, strings);
+        SearchListAdapter adapter = new SearchListAdapter(getActivity(), events);
         listSearch.setAdapter(adapter);
+        listSearch.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        listSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startPostActivity(position);
-            }
-        });
-    }
 
-    public void startPostActivity(int position) {
-        Object o = listSearch.getItemAtPosition(position);
-
-        Intent post = new Intent(getActivity(), PostActivity.class);
-        post.putExtra("Event", events.get(position));
-        startActivity(post);
     }
 
     /**

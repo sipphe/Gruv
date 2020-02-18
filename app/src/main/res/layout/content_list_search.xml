@@ -3,9 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bottom_sheet"
     android:layout_width="match_parent"
-    android:layout_height="700dp"
+    android:layout_height="wrap_content"
     android:background="@drawable/top_corner_radius"
     android:elevation="5dp"
+    android:paddingBottom="50dp"
     android:orientation="vertical"
     app:behavior_hideable="false"
     app:behavior_peekHeight="100dp"
@@ -42,11 +43,19 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-    <ListView
-        android:id="@+id/search_list"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="700dp"
-        android:layout_weight="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layoutHeader" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/search_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusableInTouchMode="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layoutHeader" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,6 +21,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     Fragment active = fragHome;
     BottomNavigationView navView;
     Boolean signedIn = false;
-    ListView list;
+    RecyclerView list;
     Author thisUser = new Author();
     private FirebaseAuth authenticateObj;
     private FirebaseUser currentUser;
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                         getSupportActionBar().show();
                     } else {
                         list = findViewById(R.id.listNewsFeed);
-                        list.smoothScrollToPosition(fragHome.adapter.getCount());
+                        list.smoothScrollToPosition(fragHome.adapter.getItemCount());
                     }
                     return true;
                 case R.id.navigation_search:
