@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -40,7 +39,7 @@
             android:layout_marginStart="48dp"
             android:layout_marginTop="7dp"
             android:text="starting tonight at 18:00"
-            android:textColor="@color/dark_grey"
+            android:textColor="@color/dark_greyDN"
             android:textSize="@dimen/text_size"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -54,7 +53,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
             android:text="Back To The Beach"
-            android:textColor="@color/black"
+            android:textColor="@color/blackDN"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -65,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="36dp"
             android:text="Karabo and 10 others are going"
-            android:textColor="@color/dark_grey"
+            android:textColor="@color/dark_greyDN"
             android:textSize="@dimen/text_size"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
