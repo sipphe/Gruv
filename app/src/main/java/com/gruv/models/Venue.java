@@ -7,6 +7,10 @@ public class Venue implements Serializable {
     private double latitude;
     private double longitude;
 
+    public Venue() {
+
+    }
+
     public Venue(String venueName) {
         this.venueName = venueName;
     }

@@ -4,6 +4,9 @@ public class Comment extends Event {
     private String commentId, eventId, commentText;
     private Author author;
 
+    public Comment() {
+
+    }
     public Comment(String commentId, String eventId, String commentText, Author author) {
         this.commentId = commentId;
         this.eventId = eventId;

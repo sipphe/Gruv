@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class Event implements Serializable {
     private ArrayList<Comment> comments;
     private ArrayList<Like> likes;
     private Integer imagePostId;
+    private String eventDateString;
 
     public Event() {
     }
@@ -71,6 +73,13 @@ public class Event implements Serializable {
 
     public void setEventDate(LocalDateTime eventDate) {
         this.eventDate = eventDate;
+    }
+
+    public void convertDate(String eventDateString) {
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+
+        LocalDateTime eventDateFormatted = LocalDateTime.parse(eventDateString, formatter);
+        this.eventDate = eventDateFormatted;
     }
 
     public Venue getVenue() {
@@ -133,4 +142,21 @@ public class Event implements Serializable {
     public void setImagePostId(Integer imagePostId) {
         this.imagePostId = imagePostId;
     }
+
+    public String getEventDateString() {
+        return eventDateString;
+    }
+
+    public void setEventDateString(String eventDateString) {
+        convertDate(eventDateString);
+        this.eventDateString = eventDateString;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getName() + "@" + Integer.toHexString(hashCode())
+                + ", " + eventName
+                + ", by " + author.getName();
+    }
+
 }
