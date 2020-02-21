@@ -66,7 +66,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
         CircleImageView imageProfilePic = viewHolder.imageProfilePic;
         ImageView imagePost = viewHolder.imagePost;
 
-
+        viewHolder.setLiked(event, thisUser, position);
         titleText.setText(event.getEventName());
         textAuthor.setText(event.getAuthor().getName());
         textDescription.setText(event.getEventDescription());
@@ -82,8 +82,8 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
         else
             textLikeCount.setText(event.getLikes().size() + "");
 
-        imageProfilePic.setImageResource(event.getAuthor().getProfilePictureId());
-        imagePost.setImageResource(event.getImagePostId());
+        //imageProfilePic.setImageResource(event.getAuthor().getProfilePictureId());
+        //imagePost.setImageResource(event.getImagePostId());
 
     }
 
@@ -93,26 +93,28 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView titleText;
-        public TextView textAuthor;
-        public TextView textDescription;
-        public TextView textVenue;
-        public TextView textDay;
-        public TextView textMonth;
-        public TextView textCommentCount;
-        public TextView textLikeCount;
+        public int position;
+        TextView titleText;
+        TextView textAuthor;
+        TextView textDescription;
+        TextView textVenue;
+        TextView textDay;
+        TextView textMonth;
+        TextView textCommentCount;
         public CircleImageView imageProfilePic;
-        public ImageView imagePost;
-        public CardView cardPost;
-        public ImageView likeButton;
-        public boolean liked = false;
-        public int position = getAdapterPosition();
+        TextView textLikeCount;
+        ImageView imagePost;
+        CardView cardPost;
+        ImageView likeButton;
+        boolean liked = false;
 
 
         public ViewHolder(View itemView) {
             super(itemView);
             like = new Like();
             like.setAuthor(thisUser);
+            position = getAdapterPosition();
+
 
 
             titleText = itemView.findViewById(R.id.textViewEventTitle);
@@ -138,25 +140,57 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
             likeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    position = getAdapterPosition();
                     if (!liked) {
-                        like.setEventId(eventList.get(getAdapterPosition()).getEventId());
+                        like.setEventId(eventList.get(position).getEventId());
                         liked = true;
-                        likeButton.setImageResource(R.drawable.sunshine_clicked);
-                        eventList.get(getAdapterPosition()).addLike(like);
+                        eventList.get(position).addLike(like);
 
-                        if (eventList.get(getAdapterPosition()).getLikes() != null)
-                            textLikeCount.setText(Integer.toString(eventList.get(getAdapterPosition()).getLikes().size()));
                     } else {
                         liked = false;
-                        likeButton.setImageResource(R.drawable.sunshine);
-                        eventList.get(getAdapterPosition()).removeLike(like);
-
-                        if (eventList.get(getAdapterPosition()).getLikes() != null)
-                            textLikeCount.setText(Integer.toString(eventList.get(getAdapterPosition()).getLikes().size()));
+                        eventList.get(position).removeLike(getUserLike(eventList.get(position)));
                     }
+                    setLiked(eventList.get(position), thisUser, position);
                 }
             });
 
+        }
+
+        public Like getUserLike(Event event) {
+            int size = 0;
+            boolean liked = false;
+            Like like = null;
+            if (event.getLikes() != null)
+                size = event.getLikes().size();
+
+            for (int i = 0; i < size; i++) {
+                if (event.getLikes().get(i).getAuthor() == thisUser)
+                    like = event.getLikes().get(i);
+            }
+            return like;
+        }
+
+        public void setLiked(Event event, Author thisUser, int position) {
+            int size = 0;
+            boolean liked = false;
+            if (event.getLikes() != null)
+                size = event.getLikes().size();
+
+            for (int i = 0; i < size; i++) {
+                if (event.getLikes().get(i).getAuthor() == thisUser)
+                    liked = true;
+            }
+
+            if (liked) {
+                likeButton.setImageResource(R.drawable.sunshine_clicked);
+            } else {
+                likeButton.setImageResource(R.drawable.sunshine);
+            }
+
+            if (event.getLikes() == null || event.getLikes().isEmpty())
+                textLikeCount.setText("0");
+            else
+                textLikeCount.setText(event.getLikes().size() + "");
         }
     }
 }

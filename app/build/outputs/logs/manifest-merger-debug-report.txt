@@ -28,6 +28,7 @@ MERGED from [com.google.firebase:firebase-core:17.2.2] C:\Users\s987216\.gradle\
 MERGED from [com.google.firebase:firebase-auth:19.2.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\db9fd4181921fcb933d270f5edbcb02d\firebase-auth-19.2.0\AndroidManifest.xml:17:1-42:12
 MERGED from [com.google.firebase:firebase-analytics:17.2.2] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\a89a6b42f2f5eaa211383d729f462362\firebase-analytics-17.2.2\AndroidManifest.xml:2:1-9:12
 MERGED from [com.google.firebase:firebase-storage:19.1.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\40777f6d0a6590304dc0a81c336b5877\firebase-storage-19.1.0\AndroidManifest.xml:15:1-39:12
+MERGED from [com.google.firebase:firebase-database:19.2.1] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\6cbd23a29d98745d48a41e2801a213a2\firebase-database-19.2.1\AndroidManifest.xml:15:1-38:12
 MERGED from [com.google.android.gms:play-services-auth:17.0.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\6cdc5333147a96546fcfd83b4ef50574\play-services-auth-17.0.0\AndroidManifest.xml:17:1-39:12
 MERGED from [androidx.browser:browser:1.0.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\9bfe6ea4c81aa2702b51a7d12477090a\browser-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [com.twitter.sdk.android:tweet-composer:3.3.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\78ac9ae3c220c56c8c4edb89d530a2d4\tweet-composer-3.3.0\AndroidManifest.xml:18:1-39:12
@@ -94,6 +95,7 @@ MERGED from [androidx.arch.core:core-runtime:2.1.0] C:\Users\s987216\.gradle\cac
 MERGED from [androidx.savedstate:savedstate:1.0.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\bb233228b8823d3c791404a2a8df1ed2\savedstate-1.0.0\AndroidManifest.xml:17:1-24:12
 MERGED from [com.google.android:flexbox:1.0.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\23961b42c706d9f15448f7403b560423\jetified-flexbox-1.0.0\AndroidManifest.xml:17:1-27:12
 MERGED from [androidx.annotation:annotation-experimental:1.0.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\eb259bf3cf08ce5f33a06667db2a117f\annotation-experimental-1.0.0\AndroidManifest.xml:17:1-24:12
+MERGED from [com.google.firebase:firebase-database-collection:17.0.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\62304ec1cd22dbd9633246fb9f969202\firebase-database-collection-17.0.0\AndroidManifest.xml:2:1-7:12
 MERGED from [com.android.installreferrer:installreferrer:1.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\d14654eb4fa99db457cf0d6419f9edef\jetified-installreferrer-1.0\AndroidManifest.xml:2:1-13:12
 INJECTED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:2:1-97:12
 INJECTED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:2:1-97:12
@@ -130,6 +132,8 @@ MERGED from [com.google.android.gms:play-services-maps:17.0.0] C:\Users\s987216\
 MERGED from [com.google.android.gms:play-services-maps:17.0.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\ce0140cbce189ad45ea4f4fc550119d8\play-services-maps-17.0.0\AndroidManifest.xml:24:5-67
 MERGED from [com.google.firebase:firebase-storage:19.1.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\40777f6d0a6590304dc0a81c336b5877\firebase-storage-19.1.0\AndroidManifest.xml:27:5-67
 MERGED from [com.google.firebase:firebase-storage:19.1.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\40777f6d0a6590304dc0a81c336b5877\firebase-storage-19.1.0\AndroidManifest.xml:27:5-67
+MERGED from [com.google.firebase:firebase-database:19.2.1] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\6cbd23a29d98745d48a41e2801a213a2\firebase-database-19.2.1\AndroidManifest.xml:26:5-67
+MERGED from [com.google.firebase:firebase-database:19.2.1] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\6cbd23a29d98745d48a41e2801a213a2\firebase-database-19.2.1\AndroidManifest.xml:26:5-67
 MERGED from [com.twitter.sdk.android:tweet-composer:3.3.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\78ac9ae3c220c56c8c4edb89d530a2d4\tweet-composer-3.3.0\AndroidManifest.xml:25:5-67
 MERGED from [com.twitter.sdk.android:tweet-composer:3.3.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\78ac9ae3c220c56c8c4edb89d530a2d4\tweet-composer-3.3.0\AndroidManifest.xml:25:5-67
 MERGED from [com.twitter.sdk.android:twitter-core:3.3.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\06aa00075fa1e8c0698be9d912a98034\jetified-twitter-core-3.3.0\AndroidManifest.xml:25:5-67
@@ -184,6 +188,8 @@ MERGED from [com.google.firebase:firebase-analytics:17.2.2] C:\Users\s987216\.gr
 MERGED from [com.google.firebase:firebase-analytics:17.2.2] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\a89a6b42f2f5eaa211383d729f462362\firebase-analytics-17.2.2\AndroidManifest.xml:7:5-20
 MERGED from [com.google.firebase:firebase-storage:19.1.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\40777f6d0a6590304dc0a81c336b5877\firebase-storage-19.1.0\AndroidManifest.xml:29:5-37:19
 MERGED from [com.google.firebase:firebase-storage:19.1.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\40777f6d0a6590304dc0a81c336b5877\firebase-storage-19.1.0\AndroidManifest.xml:29:5-37:19
+MERGED from [com.google.firebase:firebase-database:19.2.1] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\6cbd23a29d98745d48a41e2801a213a2\firebase-database-19.2.1\AndroidManifest.xml:28:5-36:19
+MERGED from [com.google.firebase:firebase-database:19.2.1] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\6cbd23a29d98745d48a41e2801a213a2\firebase-database-19.2.1\AndroidManifest.xml:28:5-36:19
 MERGED from [com.google.android.gms:play-services-auth:17.0.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\6cdc5333147a96546fcfd83b4ef50574\play-services-auth-17.0.0\AndroidManifest.xml:22:5-37:19
 MERGED from [com.google.android.gms:play-services-auth:17.0.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\6cdc5333147a96546fcfd83b4ef50574\play-services-auth-17.0.0\AndroidManifest.xml:22:5-37:19
 MERGED from [com.twitter.sdk.android:tweet-composer:3.3.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\78ac9ae3c220c56c8c4edb89d530a2d4\tweet-composer-3.3.0\AndroidManifest.xml:27:5-37:19
@@ -441,6 +447,8 @@ MERGED from [com.google.firebase:firebase-analytics:17.2.2] C:\Users\s987216\.gr
 MERGED from [com.google.firebase:firebase-analytics:17.2.2] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\a89a6b42f2f5eaa211383d729f462362\firebase-analytics-17.2.2\AndroidManifest.xml:5:5-44
 MERGED from [com.google.firebase:firebase-storage:19.1.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\40777f6d0a6590304dc0a81c336b5877\firebase-storage-19.1.0\AndroidManifest.xml:20:5-22:41
 MERGED from [com.google.firebase:firebase-storage:19.1.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\40777f6d0a6590304dc0a81c336b5877\firebase-storage-19.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.firebase:firebase-database:19.2.1] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\6cbd23a29d98745d48a41e2801a213a2\firebase-database-19.2.1\AndroidManifest.xml:19:5-21:41
+MERGED from [com.google.firebase:firebase-database:19.2.1] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\6cbd23a29d98745d48a41e2801a213a2\firebase-database-19.2.1\AndroidManifest.xml:19:5-21:41
 MERGED from [com.google.android.gms:play-services-auth:17.0.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\6cdc5333147a96546fcfd83b4ef50574\play-services-auth-17.0.0\AndroidManifest.xml:20:5-44
 MERGED from [com.google.android.gms:play-services-auth:17.0.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\6cdc5333147a96546fcfd83b4ef50574\play-services-auth-17.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.browser:browser:1.0.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\9bfe6ea4c81aa2702b51a7d12477090a\browser-1.0.0\AndroidManifest.xml:20:5-44
@@ -573,6 +581,8 @@ MERGED from [com.google.android:flexbox:1.0.0] C:\Users\s987216\.gradle\caches\t
 MERGED from [com.google.android:flexbox:1.0.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\23961b42c706d9f15448f7403b560423\jetified-flexbox-1.0.0\AndroidManifest.xml:23:5-25:41
 MERGED from [androidx.annotation:annotation-experimental:1.0.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\eb259bf3cf08ce5f33a06667db2a117f\annotation-experimental-1.0.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.annotation:annotation-experimental:1.0.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\eb259bf3cf08ce5f33a06667db2a117f\annotation-experimental-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.firebase:firebase-database-collection:17.0.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\62304ec1cd22dbd9633246fb9f969202\firebase-database-collection-17.0.0\AndroidManifest.xml:5:5-44
+MERGED from [com.google.firebase:firebase-database-collection:17.0.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\62304ec1cd22dbd9633246fb9f969202\firebase-database-collection-17.0.0\AndroidManifest.xml:5:5-44
 MERGED from [com.android.installreferrer:installreferrer:1.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\d14654eb4fa99db457cf0d6419f9edef\jetified-installreferrer-1.0\AndroidManifest.xml:5:5-7:41
 MERGED from [com.android.installreferrer:installreferrer:1.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\d14654eb4fa99db457cf0d6419f9edef\jetified-installreferrer-1.0\AndroidManifest.xml:5:5-7:41
 INJECTED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml
@@ -591,6 +601,8 @@ MERGED from [com.google.android.gms:play-services-maps:17.0.0] C:\Users\s987216\
 MERGED from [com.google.android.gms:play-services-maps:17.0.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\ce0140cbce189ad45ea4f4fc550119d8\play-services-maps-17.0.0\AndroidManifest.xml:23:5-79
 MERGED from [com.google.firebase:firebase-storage:19.1.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\40777f6d0a6590304dc0a81c336b5877\firebase-storage-19.1.0\AndroidManifest.xml:26:5-79
 MERGED from [com.google.firebase:firebase-storage:19.1.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\40777f6d0a6590304dc0a81c336b5877\firebase-storage-19.1.0\AndroidManifest.xml:26:5-79
+MERGED from [com.google.firebase:firebase-database:19.2.1] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\6cbd23a29d98745d48a41e2801a213a2\firebase-database-19.2.1\AndroidManifest.xml:25:5-79
+MERGED from [com.google.firebase:firebase-database:19.2.1] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\6cbd23a29d98745d48a41e2801a213a2\firebase-database-19.2.1\AndroidManifest.xml:25:5-79
 MERGED from [com.google.android.gms:play-services-measurement:17.2.2] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\c94343fc8b548dc39716fe83043e280f\play-services-measurement-17.2.2\AndroidManifest.xml:24:5-79
 MERGED from [com.google.android.gms:play-services-measurement:17.2.2] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\c94343fc8b548dc39716fe83043e280f\play-services-measurement-17.2.2\AndroidManifest.xml:24:5-79
 MERGED from [com.google.android.gms:play-services-measurement-api:17.2.2] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\62ab9da7904b38a58e236ebd6fd67afa\play-services-measurement-api-17.2.2\AndroidManifest.xml:23:5-79
@@ -811,6 +823,8 @@ service#com.google.firebase.components.ComponentDiscoveryService
 ADDED from [com.google.firebase:firebase-auth:19.2.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\db9fd4181921fcb933d270f5edbcb02d\firebase-auth-19.2.0\AndroidManifest.xml:33:9-39:19
 MERGED from [com.google.firebase:firebase-storage:19.1.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\40777f6d0a6590304dc0a81c336b5877\firebase-storage-19.1.0\AndroidManifest.xml:30:9-36:19
 MERGED from [com.google.firebase:firebase-storage:19.1.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\40777f6d0a6590304dc0a81c336b5877\firebase-storage-19.1.0\AndroidManifest.xml:30:9-36:19
+MERGED from [com.google.firebase:firebase-database:19.2.1] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\6cbd23a29d98745d48a41e2801a213a2\firebase-database-19.2.1\AndroidManifest.xml:29:9-35:19
+MERGED from [com.google.firebase:firebase-database:19.2.1] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\6cbd23a29d98745d48a41e2801a213a2\firebase-database-19.2.1\AndroidManifest.xml:29:9-35:19
 MERGED from [com.google.android.gms:play-services-measurement-api:17.2.2] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\62ab9da7904b38a58e236ebd6fd67afa\play-services-measurement-api-17.2.2\AndroidManifest.xml:27:9-33:19
 MERGED from [com.google.android.gms:play-services-measurement-api:17.2.2] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\62ab9da7904b38a58e236ebd6fd67afa\play-services-measurement-api-17.2.2\AndroidManifest.xml:27:9-33:19
 MERGED from [com.google.firebase:firebase-iid:20.0.2] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\00e6f73d9a8f707bb8476616450e11cd\firebase-iid-20.0.2\AndroidManifest.xml:29:9-35:19
@@ -837,6 +851,12 @@ ADDED from [com.google.firebase:firebase-storage:19.1.0] C:\Users\s987216\.gradl
 		ADDED from [com.google.firebase:firebase-storage:19.1.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\40777f6d0a6590304dc0a81c336b5877\firebase-storage-19.1.0\AndroidManifest.xml:35:17-82
 	android:name
 		ADDED from [com.google.firebase:firebase-storage:19.1.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\40777f6d0a6590304dc0a81c336b5877\firebase-storage-19.1.0\AndroidManifest.xml:34:17-107
+meta-data#com.google.firebase.components:com.google.firebase.database.DatabaseRegistrar
+ADDED from [com.google.firebase:firebase-database:19.2.1] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\6cbd23a29d98745d48a41e2801a213a2\firebase-database-19.2.1\AndroidManifest.xml:32:13-34:85
+	android:value
+		ADDED from [com.google.firebase:firebase-database:19.2.1] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\6cbd23a29d98745d48a41e2801a213a2\firebase-database-19.2.1\AndroidManifest.xml:34:17-82
+	android:name
+		ADDED from [com.google.firebase:firebase-database:19.2.1] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\6cbd23a29d98745d48a41e2801a213a2\firebase-database-19.2.1\AndroidManifest.xml:33:17-109
 activity#com.google.android.gms.auth.api.signin.internal.SignInHubActivity
 ADDED from [com.google.android.gms:play-services-auth:17.0.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\6cdc5333147a96546fcfd83b4ef50574\play-services-auth-17.0.0\AndroidManifest.xml:23:9-27:75
 	android:excludeFromRecents

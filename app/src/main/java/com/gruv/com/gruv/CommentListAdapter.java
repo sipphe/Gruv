@@ -45,7 +45,7 @@ public class CommentListAdapter extends ArrayAdapter<String> {
         TextView textAuthor = rowView.findViewById(R.id.textEventAuthor);
         TextView textComment = rowView.findViewById(R.id.textComment);
 
-        profilePic.setImageResource(commentList.get(position).getAuthor().getProfilePictureId());
+//        profilePic.setImageResource(commentList.get(position).getAuthor().getProfilePictureId());
         textAuthor.setText(commentList.get(position).getAuthor().getName());
         textComment.setText(commentList.get(position).getCommentText());
 

@@ -226,8 +226,8 @@ public class PostActivity extends AppCompatActivity {
         likeCount = findViewById(R.id.textViewLikeCount);
         commentCount = findViewById(R.id.textviewCommentCount);
 
-        postPic.setImageResource(postEvent.getImagePostId());
-        imageProfilePicture.setImageResource(postEvent.getAuthor().getProfilePictureId());
+        //postPic.setImageResource(postEvent.getImagePostId());
+        //imageProfilePicture.setImageResource(postEvent.getAuthor().getProfilePictureId());
         eventTitle = postEvent.getEventName();
         textEventTitle.setText(eventTitle);
         textAuthor.setText("by " + postEvent.getAuthor().getName());
