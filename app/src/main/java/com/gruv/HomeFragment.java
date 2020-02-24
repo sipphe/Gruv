@@ -5,13 +5,12 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,7 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,18 +30,15 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.gruv.com.gruv.NewsFeedAdapter;
 import com.gruv.interfaces.ClickInterface;
 import com.gruv.models.Author;
 import com.gruv.models.Event;
-import com.gruv.models.Venue;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -51,24 +47,21 @@ import java.util.Map;
 public class HomeFragment extends Fragment implements ClickInterface {
     private FirebaseAuth authenticateObj;
     private FirebaseUser currentUser;
-    int count = 0;
-    boolean doneAdding = false;
     public NewsFeedAdapter adapter;
     private List<Event> eventList = new ArrayList<>();
-    private Event event, event2;
+    ExtendedFloatingActionButton fab;
     private ClickInterface clickInterface;
-    private List<Venue> venue = new ArrayList<>();
     private RecyclerView feed;
-    private ScrollView scrollView;
     private LinearLayout layoutProgress;
-    Map<String, String> map;
     private LinearLayoutManager layoutManager;
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
-    Toolbar toolbar;
-    DrawerLayout drawerLayout;
-    RelativeLayout parentLayout;
+    private Event event;
+    private Toolbar toolbar;
+    private DrawerLayout drawerLayout;
+    private RelativeLayout parentLayout;
     private Author thisUser;
+    private boolean viewCreated = false;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -90,22 +83,20 @@ public class HomeFragment extends Fragment implements ClickInterface {
 
         initialiseAdapter();
 
-        FloatingActionButton fab = getActivity().findViewById(R.id.floatingActionButton);
-        fab.setVisibility(View.GONE);
-        fab.setOnClickListener((v) -> {
-            addPostToFeed(v);
+
+        drawerLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                fab.setVisibility(View.GONE);
+                return false;
+            }
         });
 
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (!connectionAvailable()) {
-                    showSnackBar("Please check your internet connection", R.id.frame_home_fragment, Snackbar.LENGTH_LONG);
-                }
-                handler.postDelayed(this, 10000);
-            }
-        }, 1000);
+
+        if (!connectionAvailable()) {
+            showSnackBar("Please check your internet connection", R.id.frame_home_fragment, Snackbar.LENGTH_LONG);
+        }
+
         databaseReference.addChildEventListener(new ChildEventListener() {
 
             @Override
@@ -114,12 +105,19 @@ public class HomeFragment extends Fragment implements ClickInterface {
                     event = eventDataSnapshot.getValue(Event.class);
                     event.setEventId(eventDataSnapshot.getKey());
                     addPost(event);
+                    hideProgress();
+                    if (viewCreated)
+                        fab.setVisibility(View.VISIBLE);
                 }
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
+                for (DataSnapshot eventDataSnapshot : dataSnapshot.getChildren()) {
+                    event = eventDataSnapshot.getValue(Event.class);
+                    event.setEventId(eventDataSnapshot.getKey());
+                    addPost(event, Integer.parseInt(eventDataSnapshot.getKey()));
+                }
             }
 
             @Override
@@ -137,12 +135,11 @@ public class HomeFragment extends Fragment implements ClickInterface {
                 Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+
+        viewCreated = true;
     }
 
     private void initialiseAdapter() {
-//        Author eventAuthor = new Author("1234", "Night Show", null, R.drawable.profile_pic6);
-//        event = new Event("123", "Night Show at Mercury", "Night Show at Mercury has a jam packed line-up", eventAuthor, LocalDateTime.of(2019, Month.MAY, 3, 16, 30), new Venue("Mercury Live"), R.drawable.party_4);
-//        addPost(event);
         adapter = new NewsFeedAdapter(getActivity(), eventList, clickInterface, thisUser);
         feed.setAdapter(adapter);
         layoutManager = new LinearLayoutManager(getActivity());
@@ -150,6 +147,7 @@ public class HomeFragment extends Fragment implements ClickInterface {
     }
 
     public void recyclerViewOnClick(int position) {
+        fab.setVisibility(View.GONE);
         Intent intent = new Intent(getActivity(), PostActivity.class);
         intent.putExtra("Event", eventList.get(position));
         startActivity(intent);
@@ -158,6 +156,14 @@ public class HomeFragment extends Fragment implements ClickInterface {
     public void addPost(@NotNull Event event) {
         if (event.getAuthor() != null)
             eventList.add(event);
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    public void addPost(@NotNull Event event, int index) {
+        if (event.getAuthor() != null)
+            eventList.set(index, event);
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
@@ -179,6 +185,9 @@ public class HomeFragment extends Fragment implements ClickInterface {
     public void onResume() {
         super.onResume();
         adapter.notifyDataSetChanged();
+        if (!connectionAvailable()) {
+            showSnackBar("Please check your internet connection", R.id.frame_home_fragment, Snackbar.LENGTH_LONG);
+        }
     }
 
     public void initialiseControls() {
@@ -191,6 +200,7 @@ public class HomeFragment extends Fragment implements ClickInterface {
         drawerLayout = getActivity().findViewById(R.id.drawerLayout);
         clickInterface = this;
         layoutProgress = getActivity().findViewById(R.id.layout_progress);
+        fab = getActivity().findViewById(R.id.floatingActionButton);
         feed = getActivity().findViewById(R.id.listNewsFeed);
     }
 
@@ -213,23 +223,6 @@ public class HomeFragment extends Fragment implements ClickInterface {
 
     public void getEvent() {
 
-        doneAdding = false;
-
-        databaseReference.child("Event").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot eventDataSnapshot : dataSnapshot.getChildren()) {
-                    event = eventDataSnapshot.getValue(Event.class);
-                    event.setEventId(eventDataSnapshot.getKey());
-                    addPost(event);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
     }
 
@@ -253,6 +246,13 @@ public class HomeFragment extends Fragment implements ClickInterface {
         Snackbar.make(contextView, message, length).show();
     }
 
+    public void showProgress() {
+        layoutProgress.setVisibility(View.VISIBLE);
+    }
+
+    public void hideProgress() {
+        layoutProgress.setVisibility(View.GONE);
+    }
 
 }
 

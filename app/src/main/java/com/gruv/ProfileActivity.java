@@ -10,7 +10,10 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -22,16 +25,20 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.gruv.com.gruv.PostedEventsAdapter;
 import com.gruv.com.gruv.PromotedEventsAdapter;
 import com.gruv.interfaces.ClickInterface;
 import com.gruv.interfaces.SecondClickInterface;
 import com.gruv.models.Author;
 import com.gruv.models.Event;
-import com.gruv.models.Venue;
 
-import java.time.LocalDateTime;
-import java.time.Month;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,11 +55,16 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
     private TextView textFullName, textUsername;
     private Author thisUser;
     private RecyclerView recyclerPostedEvents, recyclerPromotedEvents;
-    private List<Event> eventList = new ArrayList<>();
+    private List<Event> eventList = new ArrayList<>(), promotedEvents = new ArrayList<>();
     private ConstraintLayout appBarLayout;
     private MaterialButton buttonBack;
     private ClickInterface postedEventsListener;
     private SecondClickInterface promotedEventsListener;
+    private FirebaseDatabase database;
+    private DatabaseReference databaseReference;
+    private Event event;
+    private PostedEventsAdapter postedEventsAdapter;
+    private PromotedEventsAdapter promotedEventsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,20 +92,20 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
         recyclerPostedEvents = findViewById(R.id.recyclerPostedEvents);
         recyclerPromotedEvents = findViewById(R.id.recyclerPromotedEvents);
 
-        Event event = new Event("123", "Night Show", "Night Show at Mercury has a jam packed line-up", thisUser, LocalDateTime.of(2019, Month.MAY, 3, 16, 30), new Venue("Mercury Live"), R.drawable.party_4);
-        eventList.add(event);
-        eventList.add(event);
-        eventList.add(event);
-        Event event2 = new Event("124", "Deep Brew Sundaze", thisUser, LocalDateTime.of(2019, Month.DECEMBER, 16, 19, 0), new Venue("Roof Garden Bar"), "Deep Brew is set at the sunset of the roof garden bar. Situated in the heart of Port Elizabeth, it is an event to enjoy, and maybe throw an after party at the end of it all. The Indian Ocean is named after India (Oceanus Orientalis Indicus) since at least 1515. India, then, is the Greek/Roman name for the \"region of the Indus River\".[6]\n\nCalled the Sindhu Mahasagara or the great sea of the Sindhu by the Ancient Indians, this ocean has been variously called Hindu Ocean, Indic Ocean, etc. in various languages. The Indian Ocean was also known earlier as the Eastern Ocean, a term was still in use during the mid-18th century (see map).[6] Conversely, when China explored the Indian Ocean in the 15th century they called it the \"Western Oceans\".", null, null, R.drawable.party);
-        eventList.add(event2);
-        eventList.add(event2);
-        eventList.add(event2);
+//        event = new Event("123", "Night Show", "Night Show at Mercury has a jam packed line-up", thisUser, LocalDateTime.of(2019, Month.MAY, 3, 16, 30), new Venue("Mercury Live"), R.drawable.party_4);
+//        eventList.add(event);
+//        eventList.add(event);
+//        eventList.add(event);
+//        Event event2 = new Event("124", "Deep Brew Sundaze", thisUser, LocalDateTime.of(2019, Month.DECEMBER, 16, 19, 0), new Venue("Roof Garden Bar"), "Deep Brew is set at the sunset of the roof garden bar. Situated in the heart of Port Elizabeth, it is an event to enjoy, and maybe throw an after party at the end of it all. The Indian Ocean is named after India (Oceanus Orientalis Indicus) since at least 1515. India, then, is the Greek/Roman name for the \"region of the Indus River\".[6]\n\nCalled the Sindhu Mahasagara or the great sea of the Sindhu by the Ancient Indians, this ocean has been variously called Hindu Ocean, Indic Ocean, etc. in various languages. The Indian Ocean was also known earlier as the Eastern Ocean, a term was still in use during the mid-18th century (see map).[6] Conversely, when China explored the Indian Ocean in the 15th century they called it the \"Western Oceans\".", null, null, R.drawable.party);
+//        eventList.add(event2);
+//        eventList.add(event2);
+//        eventList.add(event2);
 
-        PromotedEventsAdapter promotedEventsAdapter = new PromotedEventsAdapter(eventList, postedEventsListener);
+        promotedEventsAdapter = new PromotedEventsAdapter(eventList, postedEventsListener);
         recyclerPostedEvents.setAdapter(promotedEventsAdapter);
         recyclerPostedEvents.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-        PostedEventsAdapter postedEventsAdapter = new PostedEventsAdapter(eventList, promotedEventsListener);
+        postedEventsAdapter = new PostedEventsAdapter(eventList, promotedEventsListener);
         recyclerPromotedEvents.setAdapter(postedEventsAdapter);
         recyclerPromotedEvents.setLayoutManager(new LinearLayoutManager(this));
 
@@ -111,6 +123,43 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
                 collapseToolbar();
             }
         });
+
+        databaseReference.addChildEventListener(new ChildEventListener() {
+
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                for (DataSnapshot eventDataSnapshot : dataSnapshot.getChildren()) {
+                    event = eventDataSnapshot.getValue(Event.class);
+                    event.setEventId(eventDataSnapshot.getKey());
+                    addPost(event);
+//                    hideProgress();
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                for (DataSnapshot eventDataSnapshot : dataSnapshot.getChildren()) {
+                    event = eventDataSnapshot.getValue(Event.class);
+                    event.setEventId(eventDataSnapshot.getKey());
+                    addPost(event, Integer.parseInt(eventDataSnapshot.getKey()));
+                }
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getApplicationContext(), databaseError.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
 
@@ -124,10 +173,29 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
         profilePicToolbar = findViewById(R.id.profilePicToolbar);
         profilePicSmall = findViewById(R.id.imageSmallProfilePic);
 
+
+        database = FirebaseDatabase.getInstance();
+        databaseReference = database.getReference();
+
         //set static resource
         profilePicToolbar.setTitle(thisUser.getName());
     }
 
+    public void addPost(@NotNull Event event) {
+        if (event.getAuthor() != null)
+            eventList.add(event);
+        if (postedEventsAdapter != null) {
+            postedEventsAdapter.notifyDataSetChanged();
+        }
+    }
+
+    public void addPost(@NotNull Event event, int index) {
+        if (event.getAuthor() != null)
+            eventList.set(index, event);
+        if (postedEventsAdapter != null) {
+            postedEventsAdapter.notifyDataSetChanged();
+        }
+    }
 //    private void setUser() {
 //        thisUser = new Author(currentUser.getUid(), "This User", null, R.drawable.profile_pic5);
 //        thisUser.setEmail(currentUser.getEmail());

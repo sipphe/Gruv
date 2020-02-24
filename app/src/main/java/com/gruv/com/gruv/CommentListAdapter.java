@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.bumptech.glide.Glide;
 import com.gruv.R;
 import com.gruv.models.Comment;
 
@@ -45,6 +46,7 @@ public class CommentListAdapter extends ArrayAdapter<String> {
         TextView textAuthor = rowView.findViewById(R.id.textEventAuthor);
         TextView textComment = rowView.findViewById(R.id.textComment);
 
+        Glide.with(context).load(commentList.get(position).getAuthor().getAvatar()).into(profilePic);
 //        profilePic.setImageResource(commentList.get(position).getAuthor().getProfilePictureId());
         textAuthor.setText(commentList.get(position).getAuthor().getName());
         textComment.setText(commentList.get(position).getCommentText());
