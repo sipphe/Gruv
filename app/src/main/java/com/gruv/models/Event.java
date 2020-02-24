@@ -18,6 +18,7 @@ public class Event implements Serializable {
     private ArrayList<Like> likes;
     private Integer imagePostId;
     private String eventDateString;
+    private String imagePostUrl;
 
     public Event() {
     }
@@ -150,6 +151,14 @@ public class Event implements Serializable {
     public void setEventDateString(String eventDateString) {
         convertDate(eventDateString);
         this.eventDateString = eventDateString;
+    }
+
+    public String getImagePostUrl() {
+        return imagePostUrl;
+    }
+
+    public void setImagePostUrl(String imagePostUrl) {
+        this.imagePostUrl = imagePostUrl;
     }
 
     @Override

@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.gruv.R;
 import com.gruv.interfaces.ClickInterface;
 import com.gruv.models.Author;
@@ -28,8 +29,10 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
     private List<Event> eventList;
     private Author thisUser;
     private Like like;
+    private Context context;
 
-    public NewsFeedAdapter(List<Event> eventList, ClickInterface listener, Author thisUser) {
+    public NewsFeedAdapter(@NonNull Context context, List<Event> eventList, ClickInterface listener, Author thisUser) {
+        this.context = context;
         this.eventList = eventList;
         this.listener = listener;
         this.thisUser = thisUser;
@@ -82,6 +85,8 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
         else
             textLikeCount.setText(event.getLikes().size() + "");
 
+        Glide.with(context).load(event.getImagePostUrl()).centerCrop().into(imagePost);
+        Glide.with(context).load(event.getAuthor().getAvatar()).centerCrop().into(imageProfilePic);
         //imageProfilePic.setImageResource(event.getAuthor().getProfilePictureId());
         //imagePost.setImageResource(event.getImagePostId());
 

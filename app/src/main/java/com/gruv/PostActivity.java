@@ -18,9 +18,12 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.gruv.com.gruv.CommentListAdapter;
 import com.gruv.models.Author;
 import com.gruv.models.Comment;
@@ -33,6 +36,8 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PostActivity extends AppCompatActivity {
+    private FirebaseAuth authenticateObj;
+    private FirebaseUser currentUser;
     ConstraintLayout appBarLayout;
     ConstraintLayout layoutDesc;
     ConstraintLayout layoutLikeComment;
@@ -64,7 +69,7 @@ public class PostActivity extends AppCompatActivity {
     Boolean liked = false;
     Like thisLike;
     CommentListAdapter adapter;
-    Author currentUser;
+    private Author thisUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +77,8 @@ public class PostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_post);
         postEvent = (Event) getIntent().getSerializableExtra("Event");
 
-        currentUser = getAuthor();
         initialiseControls();
+        setCurrentUser();
         setTransparentStatusBar();
         setTopPadding(getStatusBarHeight());
         setPost();
@@ -178,12 +183,15 @@ public class PostActivity extends AppCompatActivity {
 
     }
 
-    private Author getAuthor() {
-        //TODO get authorCode
-        return new Author("1234", "This User", null, R.drawable.profile_pic6);
+    private void setCurrentUser() {
+        thisUser = new Author(currentUser.getUid(), currentUser.getDisplayName(), null, R.drawable.profile_pic4);
+        if (currentUser.getPhotoUrl() != null)
+            thisUser.setAvatar(currentUser.getPhotoUrl().toString());
+        thisUser.setEmail(currentUser.getEmail());
     }
 
     public void initialiseControls() {
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
         toolbar = findViewById(R.id.main_app_toolbar);
         buttonReadMore = findViewById(R.id.buttonReadMore);
         commentList = findViewById(R.id.listComments);
@@ -226,8 +234,11 @@ public class PostActivity extends AppCompatActivity {
         likeCount = findViewById(R.id.textViewLikeCount);
         commentCount = findViewById(R.id.textviewCommentCount);
 
+        Glide.with(this).load(postEvent.getImagePostUrl()).into(postPic);
+        Glide.with(this).load(postEvent.getAuthor().getAvatar()).into(imageProfilePicture);
+
         //postPic.setImageResource(postEvent.getImagePostId());
-        //imageProfilePicture.setImageResource(postEvent.getAuthor().getProfilePictureId());
+        //imageProfilePicture.setImageResource(postEvent.setCurrentUser().getProfilePictureId());
         eventTitle = postEvent.getEventName();
         textEventTitle.setText(eventTitle);
         textAuthor.setText("by " + postEvent.getAuthor().getName());
@@ -266,12 +277,12 @@ public class PostActivity extends AppCompatActivity {
 
     public void addComment(String commentText) {
         int newCommentId;
-        if (postEvent.getComments() != null)
+        if (postEvent.getComments().get(postEvent.getComments().size() - 1).getCommentId() != null)
             newCommentId = Integer.parseInt(postEvent.getComments().get(postEvent.getComments().size() - 1).getCommentId()) + 1;
         else
             newCommentId = 0;
 
-        Comment comment = new Comment(newCommentId + "", postEvent.getEventId(), commentText, currentUser);
+        Comment comment = new Comment(newCommentId + "", postEvent.getEventId(), commentText, thisUser);
 
         postEvent.addComment(comment);
         setComments();
