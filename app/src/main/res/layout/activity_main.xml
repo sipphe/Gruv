@@ -95,16 +95,18 @@
             app:layout_constraintBottom_toTopOf="@+id/nav_view"
             app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/floatingActionButton"
-            android:layout_width="40dp"
+            android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="90dp"
-            android:clickable="true"
+            android:layout_marginBottom="@dimen/eighty"
             app:elevation="8dp"
+            android:text="new posts"
+            android:visibility="gone"
+            app:icon="@drawable/ic_keyboard_arrow_down_white_24dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/nav_view"
             android:layout_width="match_parent"
