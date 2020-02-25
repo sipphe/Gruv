@@ -5,10 +5,12 @@ import androidx.annotation.NonNull;
 import com.stfalcon.chatkit.commons.models.IUser;
 
 import java.io.Serializable;
+import java.util.Map;
 
 public class Author implements IUser, Serializable {
     private String id, email, name, avatar;
     private Integer profilePictureId;
+    private Map<String, String> events;
 
     public Author() {
 
@@ -63,5 +65,13 @@ public class Author implements IUser, Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Map<String, String> getEvents() {
+        return events;
+    }
+
+    public void setEvents(Map<String, String> events) {
+        this.events = events;
     }
 }

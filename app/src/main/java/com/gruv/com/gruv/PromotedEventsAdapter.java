@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.gruv.R;
 import com.gruv.interfaces.ClickInterface;
 import com.gruv.models.Event;
@@ -22,8 +23,10 @@ public class PromotedEventsAdapter extends RecyclerView.Adapter<PromotedEventsAd
 
     private final ClickInterface listener;
     private List<Event> eventList;
+    private Context context;
 
-    public PromotedEventsAdapter(List<Event> eventList, ClickInterface listener) {
+    public PromotedEventsAdapter(Context context, List<Event> eventList, ClickInterface listener) {
+        this.context = context;
         this.eventList = eventList;
         this.listener = listener;
     }
@@ -49,7 +52,8 @@ public class PromotedEventsAdapter extends RecyclerView.Adapter<PromotedEventsAd
         CircleImageView imagePost = viewHolder.imagePost;
         TextView textTitle = viewHolder.textTitle;
 
-        imagePost.setImageResource(event.getImagePostId());
+        Glide.with(context).load(event.getImagePostUrl()).into(imagePost);
+//        imagePost.setImageResource(event.getImagePostId());
         if (event.getEventName().length() > 11)
             textTitle.setText(event.getEventName().substring(0, 11) + "...");
         else

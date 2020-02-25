@@ -10,7 +10,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,6 +29,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.gruv.com.gruv.PostedEventsAdapter;
 import com.gruv.com.gruv.PromotedEventsAdapter;
 import com.gruv.interfaces.ClickInterface;
@@ -101,11 +101,11 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
 //        eventList.add(event2);
 //        eventList.add(event2);
 
-        promotedEventsAdapter = new PromotedEventsAdapter(eventList, postedEventsListener);
+        promotedEventsAdapter = new PromotedEventsAdapter(this, eventList, postedEventsListener);
         recyclerPostedEvents.setAdapter(promotedEventsAdapter);
         recyclerPostedEvents.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-        postedEventsAdapter = new PostedEventsAdapter(eventList, promotedEventsListener);
+        postedEventsAdapter = new PostedEventsAdapter(this, eventList, promotedEventsListener);
         recyclerPromotedEvents.setAdapter(postedEventsAdapter);
         recyclerPromotedEvents.setLayoutManager(new LinearLayoutManager(this));
 
@@ -123,11 +123,10 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
                 collapseToolbar();
             }
         });
-
         databaseReference.addChildEventListener(new ChildEventListener() {
-
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
                 for (DataSnapshot eventDataSnapshot : dataSnapshot.getChildren()) {
                     event = eventDataSnapshot.getValue(Event.class);
                     event.setEventId(eventDataSnapshot.getKey());
@@ -138,10 +137,12 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
                 for (DataSnapshot eventDataSnapshot : dataSnapshot.getChildren()) {
-                    event = eventDataSnapshot.getValue(Event.class);
-                    event.setEventId(eventDataSnapshot.getKey());
-                    addPost(event, Integer.parseInt(eventDataSnapshot.getKey()));
+                    //      if (eventDataSnapshot.child())
+//                    event = eventDataSnapshot.getValue(Event.class);
+//                    event.setEventId(eventDataSnapshot.getKey());
+//                    addPost(event, Integer.parseInt(eventDataSnapshot.getKey()));
                 }
             }
 
@@ -157,9 +158,25 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(getApplicationContext(), databaseError.getMessage(), Toast.LENGTH_LONG).show();
+
             }
         });
+
+        databaseReference.child("author").child(currentUser.getUid()).child("events").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                thisUser.setEvents((Map<String, String>)dataSnapshot.getValue());
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
     }
 
 
@@ -196,10 +213,11 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
             postedEventsAdapter.notifyDataSetChanged();
         }
     }
-//    private void setUser() {
-//        thisUser = new Author(currentUser.getUid(), "This User", null, R.drawable.profile_pic5);
-//        thisUser.setEmail(currentUser.getEmail());
-//    }
+
+    private void setUser() {
+        thisUser = new Author(currentUser.getUid(), "This User", null, R.drawable.profile_pic5);
+        thisUser.setEmail(currentUser.getEmail());
+    }
 
     public void setTransparentStatusBar() {
         Window w = getWindow();
