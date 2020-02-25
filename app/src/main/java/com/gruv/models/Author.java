@@ -5,12 +5,12 @@ import androidx.annotation.NonNull;
 import com.stfalcon.chatkit.commons.models.IUser;
 
 import java.io.Serializable;
-import java.util.Map;
+import java.util.List;
 
 public class Author implements IUser, Serializable {
-    private String id, email, name, avatar;
+    private String id, email, name, avatar, bio, site;
     private Integer profilePictureId;
-    private Map<String, String> events;
+    private List<String> events, promotedEvents, following, followers;
 
     public Author() {
 
@@ -67,11 +67,51 @@ public class Author implements IUser, Serializable {
         this.email = email;
     }
 
-    public Map<String, String> getEvents() {
+    public List<String> getEvents() {
         return events;
     }
 
-    public void setEvents(Map<String, String> events) {
+    public void setEvents(List<String> events) {
         this.events = events;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getSite() {
+        return site;
+    }
+
+    public void setSite(String site) {
+        this.site = site;
+    }
+
+    public List<String> getPromotedEvents() {
+        return promotedEvents;
+    }
+
+    public void setPromotedEvents(List<String> promotedEvents) {
+        this.promotedEvents = promotedEvents;
+    }
+
+    public List<String> getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(List<String> following) {
+        this.following = following;
+    }
+
+    public List<String> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(List<String> followers) {
+        this.followers = followers;
     }
 }

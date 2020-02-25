@@ -52,17 +52,18 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
     private Toolbar toolbar, profilePicToolbar;
     private ImageView profilePic;
     private CircleImageView profilePicSmall;
-    private TextView textFullName, textUsername;
+    private TextView textFullName, textEventCount, textFollowers, textFollowing, textBio;
     private Author thisUser;
     private RecyclerView recyclerPostedEvents, recyclerPromotedEvents;
-    private List<Event> eventList = new ArrayList<>(), promotedEvents = new ArrayList<>();
+    private List<Event> postedEvents = new ArrayList<>(), promotedEvents = new ArrayList<>();
     private ConstraintLayout appBarLayout;
-    private MaterialButton buttonBack;
+    private MaterialButton buttonBack, buttonSiteLink;
     private ClickInterface postedEventsListener;
     private SecondClickInterface promotedEventsListener;
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
     private Event event;
+    private ConstraintLayout layoutError;
     private PostedEventsAdapter postedEventsAdapter;
     private PromotedEventsAdapter promotedEventsAdapter;
 
@@ -84,28 +85,23 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
         postedEventsListener = this;
         promotedEventsListener = this;
 
-        loadAndSetPicture(Uri.parse(thisUser.getAvatar()), profilePic);
-        loadAndSetPicture(Uri.parse(thisUser.getAvatar()), profilePicSmall);
-        textFullName.setText(thisUser.getName());
-        textUsername.setText(currentUser.getEmail());
+        setUserDetails();
 
-        recyclerPostedEvents = findViewById(R.id.recyclerPostedEvents);
-        recyclerPromotedEvents = findViewById(R.id.recyclerPromotedEvents);
 
 //        event = new Event("123", "Night Show", "Night Show at Mercury has a jam packed line-up", thisUser, LocalDateTime.of(2019, Month.MAY, 3, 16, 30), new Venue("Mercury Live"), R.drawable.party_4);
-//        eventList.add(event);
-//        eventList.add(event);
-//        eventList.add(event);
+//        postedEvents.add(event);
+//        postedEvents.add(event);
+//        postedEvents.add(event);
 //        Event event2 = new Event("124", "Deep Brew Sundaze", thisUser, LocalDateTime.of(2019, Month.DECEMBER, 16, 19, 0), new Venue("Roof Garden Bar"), "Deep Brew is set at the sunset of the roof garden bar. Situated in the heart of Port Elizabeth, it is an event to enjoy, and maybe throw an after party at the end of it all. The Indian Ocean is named after India (Oceanus Orientalis Indicus) since at least 1515. India, then, is the Greek/Roman name for the \"region of the Indus River\".[6]\n\nCalled the Sindhu Mahasagara or the great sea of the Sindhu by the Ancient Indians, this ocean has been variously called Hindu Ocean, Indic Ocean, etc. in various languages. The Indian Ocean was also known earlier as the Eastern Ocean, a term was still in use during the mid-18th century (see map).[6] Conversely, when China explored the Indian Ocean in the 15th century they called it the \"Western Oceans\".", null, null, R.drawable.party);
-//        eventList.add(event2);
-//        eventList.add(event2);
-//        eventList.add(event2);
+//        postedEvents.add(event2);
+//        postedEvents.add(event2);
+//        postedEvents.add(event2);
 
-        promotedEventsAdapter = new PromotedEventsAdapter(this, eventList, postedEventsListener);
+        promotedEventsAdapter = new PromotedEventsAdapter(this, promotedEvents, postedEventsListener);
         recyclerPostedEvents.setAdapter(promotedEventsAdapter);
         recyclerPostedEvents.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-        postedEventsAdapter = new PostedEventsAdapter(this, eventList, promotedEventsListener);
+        postedEventsAdapter = new PostedEventsAdapter(this, postedEvents, promotedEventsListener);
         recyclerPromotedEvents.setAdapter(postedEventsAdapter);
         recyclerPromotedEvents.setLayoutManager(new LinearLayoutManager(this));
 
@@ -117,32 +113,135 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
             }
         });
 
+        buttonSiteLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openLink(thisUser.getSite());
+            }
+        });
         scrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
             @Override
             public void onScrollChanged() {
                 collapseToolbar();
             }
         });
+
+        databaseReference.child("author").child(currentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                thisUser = dataSnapshot.getValue(Author.class);
+                thisUser.setId(dataSnapshot.getKey());
+                getEvents();
+                setUserDetails();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
+    private void setUserDetails() {
+        loadAndSetPicture(Uri.parse(thisUser.getAvatar()), profilePic);
+        loadAndSetPicture(Uri.parse(thisUser.getAvatar()), profilePicSmall);
+        textFullName.setText(thisUser.getName());
+
+        try {
+            if (thisUser.getBio() != null) {
+                textBio.setVisibility(View.VISIBLE);
+                textBio.setText(thisUser.getBio());
+            } else
+                textBio.setVisibility(View.GONE);
+
+            if (thisUser.getSite() != null) {
+                {
+                    String display = "";
+                    buttonSiteLink.setVisibility(View.VISIBLE);
+                    if (thisUser.getSite().substring(0, 8).equals("https://"))
+                        display = thisUser.getSite().substring(8);
+                    else if (thisUser.getSite().substring(0, 7).equals("http://"))
+                        display = thisUser.getSite().substring(7);
+
+                    if (display.substring(0, 4).equals("www."))
+                        display = display.substring(4);
+
+                    if (display.length() < 20)
+                        buttonSiteLink.setText(display);
+                    else
+                        buttonSiteLink.setText(display.substring(0, 20) + "...");
+                }
+            } else
+                buttonSiteLink.setVisibility(View.GONE);
+
+            if (thisUser.getFollowers() != null)
+                textFollowers.setText(Integer.toString(thisUser.getFollowers().size()));
+
+            if (thisUser.getFollowing() != null)
+                textFollowing.setText(Integer.toString(thisUser.getFollowing().size()));
+
+            if (thisUser.getEvents() != null) {
+                textEventCount.setText(thisUser.getEvents().size() + " events");
+            }
+
+            checkEvents();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void getEvents() {
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
+                int count = 0;
                 for (DataSnapshot eventDataSnapshot : dataSnapshot.getChildren()) {
-                    event = eventDataSnapshot.getValue(Event.class);
-                    event.setEventId(eventDataSnapshot.getKey());
-                    addPost(event);
-//                    hideProgress();
+                    if (thisUser.getEvents() != null) {
+                        if (count < thisUser.getEvents().size()) {
+                            if (eventDataSnapshot.getKey().equals(thisUser.getEvents().get(count))) {
+                                event = eventDataSnapshot.getValue(Event.class);
+                                event.setEventId(eventDataSnapshot.getKey());
+                                addPost(event);
+                            }
+                        }
+                    }
+                    if (thisUser.getPromotedEvents() != null) {
+                        if (count < thisUser.getPromotedEvents().size()) {
+                            if (eventDataSnapshot.getKey().equals(thisUser.getPromotedEvents().get(count))) {
+                                event = eventDataSnapshot.getValue(Event.class);
+                                event.setEventId(eventDataSnapshot.getKey());
+                                addPromotedPost(event);
+                            }
+                        }
+                        count++;
+                    }
                 }
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
+                int count = 0;
                 for (DataSnapshot eventDataSnapshot : dataSnapshot.getChildren()) {
-                    //      if (eventDataSnapshot.child())
-//                    event = eventDataSnapshot.getValue(Event.class);
-//                    event.setEventId(eventDataSnapshot.getKey());
-//                    addPost(event, Integer.parseInt(eventDataSnapshot.getKey()));
+                    if (count < thisUser.getEvents().size()) {
+                        if (eventDataSnapshot.getKey().equals(thisUser.getEvents().get(count))) {
+                            event = eventDataSnapshot.getValue(Event.class);
+                            event.setEventId(eventDataSnapshot.getKey());
+                            addPost(event, Integer.parseInt(eventDataSnapshot.getKey()));
+                        }
+                    }
+
+                    if (count < thisUser.getPromotedEvents().size()) {
+                        if (eventDataSnapshot.getKey().equals(thisUser.getPromotedEvents().get(count))) {
+                            event = eventDataSnapshot.getValue(Event.class);
+                            event.setEventId(eventDataSnapshot.getKey());
+                            addPromotedPost(event, Integer.parseInt(eventDataSnapshot.getKey()));
+                        }
+                    }
+                    count++;
                 }
             }
 
@@ -162,34 +261,26 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
             }
         });
 
-        databaseReference.child("author").child(currentUser.getUid()).child("events").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                thisUser.setEvents((Map<String, String>)dataSnapshot.getValue());
-
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-
     }
-
 
     private void initialiseControls() {
         profilePic = findViewById(R.id.imageViewPostPicture);
         textFullName = findViewById(R.id.textName);
-        textUsername = findViewById(R.id.userName);
+        textEventCount = findViewById(R.id.textEventCount);
         buttonBack = findViewById(R.id.buttonBack);
         scrollView = findViewById(R.id.scrollViewProfile);
         toolbar = findViewById(R.id.main_app_toolbar);
         profilePicToolbar = findViewById(R.id.profilePicToolbar);
         profilePicSmall = findViewById(R.id.imageSmallProfilePic);
+        textBio = findViewById(R.id.textBio);
+        textFollowers = findViewById(R.id.textViewFollwersCount);
+        textFollowing = findViewById(R.id.textViewFollowingCount);
+        buttonSiteLink = findViewById(R.id.buttonSiteLink);
+        layoutError = findViewById(R.id.layoutError);
 
+
+        recyclerPostedEvents = findViewById(R.id.recyclerPostedEvents);
+        recyclerPromotedEvents = findViewById(R.id.recyclerPromotedEvents);
 
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference();
@@ -200,7 +291,7 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
 
     public void addPost(@NotNull Event event) {
         if (event.getAuthor() != null)
-            eventList.add(event);
+            postedEvents.add(event);
         if (postedEventsAdapter != null) {
             postedEventsAdapter.notifyDataSetChanged();
         }
@@ -208,9 +299,33 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
 
     public void addPost(@NotNull Event event, int index) {
         if (event.getAuthor() != null)
-            eventList.set(index, event);
+            postedEvents.set(index, event);
         if (postedEventsAdapter != null) {
             postedEventsAdapter.notifyDataSetChanged();
+        }
+    }
+
+    public void addPromotedPost(@NotNull Event event) {
+        if (event.getAuthor() != null)
+            promotedEvents.add(event);
+        if (promotedEventsAdapter != null) {
+            promotedEventsAdapter.notifyDataSetChanged();
+        }
+    }
+
+    public void addPromotedPost(@NotNull Event event, int index) {
+        if (event.getAuthor() != null)
+            promotedEvents.set(index, event);
+        if (promotedEventsAdapter != null) {
+            promotedEventsAdapter.notifyDataSetChanged();
+        }
+    }
+
+    public void checkEvents() {
+        if (thisUser.getEvents() == null || thisUser.getEvents().isEmpty()) {
+            layoutError.setVisibility(View.VISIBLE);
+        } else {
+            layoutError.setVisibility(View.GONE);
         }
     }
 
@@ -243,13 +358,13 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
 
     public void recyclerViewOnClick(int position) {
         Intent intent = new Intent(this, PostActivity.class);
-        intent.putExtra("Event", eventList.get(position));
+        intent.putExtra("Event", postedEvents.get(position));
         startActivity(intent);
     }
 
     public void recyclerViewPostOnClick(int position) {
         Intent intent = new Intent(this, PostActivity.class);
-        intent.putExtra("Event", eventList.get(position));
+        intent.putExtra("Event", postedEvents.get(position));
         startActivity(intent);
     }
 
@@ -279,5 +394,12 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
 
     public void loadAndSetPicture(Uri uri, ImageView imageView) {
         Glide.with(this).load(uri).centerCrop().into(imageView);
+    }
+
+    public void openLink(String url) {
+        if (!url.startsWith("http://") && !url.startsWith("https://"))
+            url = "http://" + url;
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(browserIntent);
     }
 }

@@ -115,6 +115,17 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/twenty"
+                    android:layout_marginBottom="@dimen/twenty"
+                    android:elevation="@dimen/eight"
+                    android:text="Edit Profile"
+                    android:textColor="@color/colorAccent"
+                    app:layout_constraintBottom_toTopOf="@+id/layoutUserName"
+                    app:layout_constraintEnd_toEndOf="parent" />
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/layoutUserName"
                     android:layout_width="match_parent"
@@ -123,32 +134,109 @@
                     android:elevation="@dimen/twelve"
                     app:layout_constraintTop_toBottomOf="@+id/imageViewPostPicture">
 
-                    <TextView
-                        android:id="@+id/textName"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/constraintLayout"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/thirty_two"
-                        android:layout_marginTop="@dimen/twelve"
-                        android:text="User Name"
-                        android:textColor="@color/white"
-                        android:textSize="20sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-
-                    <TextView
-                        android:id="@+id/userName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/thirty_two"
-                        android:layout_marginBottom="@dimen/sixteen"
-                        android:text="username"
-                        android:textColor="@color/colorPrimaryLight"
-                        android:textSize="@dimen/text_size"
+                        android:layout_height="match_parent"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/textName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/thirty_two"
+                            android:layout_marginTop="@dimen/twelve"
+                            android:text="User Name"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
 
+                        <TextView
+                            android:id="@+id/textEventCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/thirty_two"
+                            android:layout_marginBottom="@dimen/sixteen"
+                            android:text="0 events"
+                            android:textColor="@color/colorPrimaryLight"
+                            android:textSize="@dimen/text_size"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/layoutFollowers"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/twenty"
+                        android:layout_marginBottom="@dimen/four"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/textViewFollwersCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/twenty_eight"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/textViewFollowers"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/zero"
+                            android:text="Followers"
+                            android:textColor="@color/white"
+                            android:textSize="15dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/textViewFollwersCount" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/layoutFollowing"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="115dp"
+                        android:layout_marginEnd="@dimen/twenty"
+                        android:layout_marginBottom="@dimen/four"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/layoutFollowers"
+                        app:layout_constraintStart_toEndOf="@+id/constraintLayout"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/textViewFollowingCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/twenty_eight"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/textViewFollowing"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/zero"
+                            android:text="Following"
+                            android:textColor="@color/white"
+                            android:textSize="15dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/textViewFollowingCount" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -168,6 +256,42 @@
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layoutBio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/eight"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/layoutPostedEvents">
+
+                    <TextView
+                        android:id="@+id/textBio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/sixteen"
+                        android:layout_marginEnd="@dimen/sixteen"
+                        android:text="Bio"
+                        android:textColor="@color/blackDN"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/buttonSiteLink"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="site"
+                        android:textAllCaps="false"
+                        android:textColor="@color/blackDN"
+                        app:icon="@drawable/ic_site_black_24dp"
+                        app:iconTint="@color/blackDN"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textBio"
+                        app:strokeColor="@color/blackDN" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
                 <TextView
                     android:id="@+id/textPromotedEvents"
                     android:layout_width="wrap_content"
@@ -177,7 +301,7 @@
                     android:text="All Events"
                     android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/layoutPostedEvents" />
+                    app:layout_constraintTop_toBottomOf="@+id/layoutBio" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerPromotedEvents"
@@ -186,6 +310,37 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textPromotedEvents" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layoutError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/recyclerPromotedEvents">
+
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
+                        android:layout_marginTop="@dimen/forty"
+                        android:paddingBottom="@dimen/twenty"
+                        android:src="@drawable/ic_mode_edit_black_24dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/thirty_two"
+                        android:layout_marginEnd="@dimen/thirty_two"
+                        android:text="You haven't posted any events yet. Tap on '+' to add one"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </ScrollView>

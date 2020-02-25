@@ -292,6 +292,7 @@ public class MainActivity extends AppCompatActivity {
         if (currentUser.getPhotoUrl() != null)
             thisUser.setAvatar(currentUser.getPhotoUrl().toString());
         thisUser.setEmail(currentUser.getEmail());
+
     }
 
     public void loadAndSetDrawerPicture(Uri uri, ImageView imageView) {

@@ -30,6 +30,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.gruv.com.gruv.NewsFeedAdapter;
 import com.gruv.interfaces.ClickInterface;
 import com.gruv.models.Author;
@@ -59,7 +60,7 @@ public class HomeFragment extends Fragment implements ClickInterface {
     private Event event;
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
-    private RelativeLayout parentLayout;
+    private RelativeLayout parentLayout, layoutError;
     private Author thisUser;
     private boolean viewCreated = false;
 
@@ -97,6 +98,29 @@ public class HomeFragment extends Fragment implements ClickInterface {
             showSnackBar("Please check your internet connection", R.id.frame_home_fragment, Snackbar.LENGTH_LONG);
         }
 
+        getAuthor();
+
+
+        viewCreated = true;
+    }
+
+    private void getAuthor() {
+        databaseReference.child("author").child(currentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                thisUser = dataSnapshot.getValue(Author.class);
+                thisUser.setId(dataSnapshot.getKey());
+                getEvents();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void getEvents() {
         databaseReference.addChildEventListener(new ChildEventListener() {
 
             @Override
@@ -104,12 +128,22 @@ public class HomeFragment extends Fragment implements ClickInterface {
 
                 for (DataSnapshot eventDataSnapshot : dataSnapshot.getChildren()) {
 
-                    event = eventDataSnapshot.getValue(Event.class);
-                    event.setEventId(eventDataSnapshot.getKey());
-                    addPost(event);
-                    hideProgress();
-                    if (viewCreated)
-                        fab.setVisibility(View.VISIBLE);
+                    if (thisUser.getFollowing() != null) {
+
+                        event = eventDataSnapshot.getValue(Event.class);
+                        for (int i = 0; i < thisUser.getFollowing().size(); i++) {
+                            if (event.getAuthor() != null) {
+                                if (thisUser.getFollowing().get(i).equals(event.getAuthor().getId())) {
+
+                                    event.setEventId(eventDataSnapshot.getKey());
+                                    addPost(event);
+                                    hideProgress();
+                                    if (viewCreated)
+                                        fab.setVisibility(View.VISIBLE);
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
@@ -137,8 +171,18 @@ public class HomeFragment extends Fragment implements ClickInterface {
                 Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+        checkEvents();
+    }
 
-        viewCreated = true;
+
+    public void checkEvents() {
+        if (thisUser.getEvents() == null || thisUser.getEvents().isEmpty()) {
+            hideProgress();
+            layoutError.setVisibility(View.VISIBLE);
+        } else {
+            layoutError.setVisibility(View.GONE);
+        }
+
     }
 
     private void initialiseAdapter() {
@@ -186,6 +230,10 @@ public class HomeFragment extends Fragment implements ClickInterface {
     @Override
     public void onResume() {
         super.onResume();
+        showProgress();
+        eventList.clear();
+        getAuthor();
+        getEvents();
         adapter.notifyDataSetChanged();
         if (!connectionAvailable()) {
             showSnackBar("Please check your internet connection", R.id.frame_home_fragment, Snackbar.LENGTH_LONG);
@@ -204,6 +252,7 @@ public class HomeFragment extends Fragment implements ClickInterface {
         layoutProgress = getActivity().findViewById(R.id.layout_progress);
         fab = getActivity().findViewById(R.id.floatingActionButton);
         feed = getActivity().findViewById(R.id.listNewsFeed);
+        layoutError = getActivity().findViewById(R.id.layoutError);
     }
 
     public void startPostActivity(int position) {
@@ -217,10 +266,12 @@ public class HomeFragment extends Fragment implements ClickInterface {
     }
 
     public void setCurrentUser() {
-        thisUser = new Author(currentUser.getUid(), currentUser.getDisplayName(), null, R.drawable.profile_pic4);
-        if (currentUser.getPhotoUrl() != null)
-            thisUser.setAvatar(currentUser.getPhotoUrl().toString());
-        thisUser.setEmail(currentUser.getEmail());
+        if (currentUser != null) {
+            thisUser = new Author(currentUser.getUid(), currentUser.getDisplayName(), null, R.drawable.profile_pic4);
+            if (currentUser.getPhotoUrl() != null)
+                thisUser.setAvatar(currentUser.getPhotoUrl().toString());
+            thisUser.setEmail(currentUser.getEmail());
+        }
     }
 
     public void getEvent() {
@@ -255,6 +306,7 @@ public class HomeFragment extends Fragment implements ClickInterface {
     public void hideProgress() {
         layoutProgress.setVisibility(View.GONE);
     }
+
 
 }
 
