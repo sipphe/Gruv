@@ -101,7 +101,9 @@ public class HomeFragment extends Fragment implements ClickInterface {
 
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
                 for (DataSnapshot eventDataSnapshot : dataSnapshot.getChildren()) {
+
                     event = eventDataSnapshot.getValue(Event.class);
                     event.setEventId(eventDataSnapshot.getKey());
                     addPost(event);

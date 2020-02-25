@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.gruv.R;
 import com.gruv.interfaces.SecondClickInterface;
 import com.gruv.models.Event;
@@ -24,8 +25,10 @@ public class PostedEventsAdapter extends RecyclerView.Adapter<PostedEventsAdapte
 
     private final SecondClickInterface listener;
     private List<Event> eventList;
+    private Context context;
 
-    public PostedEventsAdapter(List<Event> eventList, SecondClickInterface listener) {
+    public PostedEventsAdapter(Context context, List<Event> eventList, SecondClickInterface listener) {
+        this.context = context;
         this.eventList = eventList;
         this.listener = listener;
     }
@@ -74,8 +77,10 @@ public class PostedEventsAdapter extends RecyclerView.Adapter<PostedEventsAdapte
         else
             textLikeCount.setText(event.getComments().size() + "");
 
-        imageProfilePic.setImageResource(event.getAuthor().getProfilePictureId());
-        imagePost.setImageResource(event.getImagePostId());
+        Glide.with(context).load(event.getImagePostUrl()).into(imagePost);
+        Glide.with(context).load(event.getAuthor().getAvatar()).into(imageProfilePic);
+//        imageProfilePic.setImageResource(event.getAuthor().getProfilePictureId());
+//        imagePost.setImageResource(event.getImagePostId());
 
     }
 
