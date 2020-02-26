@@ -62,7 +62,10 @@ public class HomeFragment extends Fragment implements ClickInterface {
     private DrawerLayout drawerLayout;
     private RelativeLayout parentLayout, layoutError;
     private Author thisUser;
+    View view;
     private boolean viewCreated = false;
+    Bundle savedInstance;
+    private List<String> followingEventIds;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -77,7 +80,8 @@ public class HomeFragment extends Fragment implements ClickInterface {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-
+        this.view = view;
+        this.savedInstance = savedInstanceState;
         initialiseControls();
         setCurrentUser();
 //        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.app_name, R.string.app_name);
@@ -97,20 +101,24 @@ public class HomeFragment extends Fragment implements ClickInterface {
         if (!connectionAvailable()) {
             showSnackBar("Please check your internet connection", R.id.frame_home_fragment, Snackbar.LENGTH_LONG);
         }
-
+        showProgress();
         getAuthor();
 
 
-        viewCreated = true;
+        //viewCreated = true;
     }
 
     private void getAuthor() {
-        databaseReference.child("author").child(currentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        eventList.clear();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
+        databaseReference.child("author").child(thisUser.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 thisUser = dataSnapshot.getValue(Author.class);
                 thisUser.setId(dataSnapshot.getKey());
-                getEvents();
+                getFollowingsEventIds();
             }
 
             @Override
@@ -121,62 +129,56 @@ public class HomeFragment extends Fragment implements ClickInterface {
     }
 
     public void getEvents() {
-        databaseReference.addChildEventListener(new ChildEventListener() {
+        if (followingEventIds != null) {
+            for (String eventId : followingEventIds) {
+                databaseReference.child("Event").addChildEventListener(new ChildEventListener() {
 
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                for (DataSnapshot eventDataSnapshot : dataSnapshot.getChildren()) {
-
-                    if (thisUser.getFollowing() != null) {
-
-                        event = eventDataSnapshot.getValue(Event.class);
-                        for (int i = 0; i < thisUser.getFollowing().size(); i++) {
-                            if (event.getAuthor() != null) {
-                                if (thisUser.getFollowing().get(i).equals(event.getAuthor().getId())) {
-
-                                    event.setEventId(eventDataSnapshot.getKey());
-                                    addPost(event);
-                                    hideProgress();
-                                    if (viewCreated)
-                                        fab.setVisibility(View.VISIBLE);
-                                }
-                            }
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                        if (dataSnapshot.getKey().equals(eventId)) {
+                            event = dataSnapshot.getValue(Event.class);
+                            event.setEventId(dataSnapshot.getKey());
+                            addPost(event);
+                            checkEvents();
+                            hideProgress();
                         }
                     }
-                }
+
+
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                        if (dataSnapshot.getKey().equals(eventId)) {
+                            event = dataSnapshot.getValue(Event.class);
+                            event.setEventId(dataSnapshot.getKey());
+                            addPost(event, Integer.parseInt(eventId));
+                            checkEvents();
+                            hideProgress();
+                        }
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
             }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                for (DataSnapshot eventDataSnapshot : dataSnapshot.getChildren()) {
-                    event = eventDataSnapshot.getValue(Event.class);
-                    event.setEventId(eventDataSnapshot.getKey());
-                    addPost(event, Integer.parseInt(eventDataSnapshot.getKey()));
-                }
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+        }
         checkEvents();
     }
 
 
     public void checkEvents() {
-        if (thisUser.getEvents() == null || thisUser.getEvents().isEmpty()) {
+        if (eventList == null || eventList.isEmpty()) {
             hideProgress();
             layoutError.setVisibility(View.VISIBLE);
         } else {
@@ -185,7 +187,28 @@ public class HomeFragment extends Fragment implements ClickInterface {
 
     }
 
+    public void getFollowingsEventIds() {
+
+        if (thisUser.getFollowing() != null) {
+            for (String following : thisUser.getFollowing()) {
+                databaseReference.child("author").child(following).child("events").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        followingEventIds = (List<String>) dataSnapshot.getValue();
+                        getEvents();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        }
+    }
+
     private void initialiseAdapter() {
+        eventList.clear();
         adapter = new NewsFeedAdapter(getActivity(), eventList, clickInterface, thisUser);
         feed.setAdapter(adapter);
         layoutManager = new LinearLayoutManager(getActivity());
@@ -200,8 +223,14 @@ public class HomeFragment extends Fragment implements ClickInterface {
     }
 
     public void addPost(@NotNull Event event) {
-        if (event.getAuthor() != null)
-            eventList.add(event);
+        if (event.getAuthor() != null) {
+            if (eventList.isEmpty())
+                eventList.add(event);
+            else {
+                if (event.getEventId() != eventList.get(eventList.size() - 1).getEventId())
+                    eventList.add(event);
+            }
+        }
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
@@ -221,7 +250,7 @@ public class HomeFragment extends Fragment implements ClickInterface {
         v = feed.getChildAt(0);
         int top = (v == null) ? 0 : (v.getTop() - feed.getPaddingTop());
 
-        getEvent();
+//        getEvent();
 
         // restore index and position
         layoutManager.scrollToPositionWithOffset(index, top);
@@ -230,11 +259,7 @@ public class HomeFragment extends Fragment implements ClickInterface {
     @Override
     public void onResume() {
         super.onResume();
-        showProgress();
-        eventList.clear();
-        getAuthor();
-        getEvents();
-        adapter.notifyDataSetChanged();
+        onViewCreated(view, savedInstance);
         if (!connectionAvailable()) {
             showSnackBar("Please check your internet connection", R.id.frame_home_fragment, Snackbar.LENGTH_LONG);
         }

@@ -31,9 +31,9 @@ public final class R {
         public static final int layout_order = 0x7f030246;
         public static final int layout_wrapBefore = 0x7f030249;
         public static final int maxLine = 0x7f030279;
-        public static final int showDivider = 0x7f0302e0;
-        public static final int showDividerHorizontal = 0x7f0302e1;
-        public static final int showDividerVertical = 0x7f0302e2;
+        public static final int showDivider = 0x7f0302e1;
+        public static final int showDividerHorizontal = 0x7f0302e2;
+        public static final int showDividerVertical = 0x7f0302e3;
     }
     public static final class id {
         private id() {}
@@ -58,7 +58,7 @@ public final class R {
     public static final class styleable {
         private styleable() {}
 
-        public static final int[] FlexboxLayout = { 0x7f03002a, 0x7f03002b, 0x7f030136, 0x7f030137, 0x7f030138, 0x7f030181, 0x7f030182, 0x7f0301f8, 0x7f030279, 0x7f0302e0, 0x7f0302e1, 0x7f0302e2 };
+        public static final int[] FlexboxLayout = { 0x7f03002a, 0x7f03002b, 0x7f030136, 0x7f030137, 0x7f030138, 0x7f030181, 0x7f030182, 0x7f0301f8, 0x7f030279, 0x7f0302e1, 0x7f0302e2, 0x7f0302e3 };
         public static final int FlexboxLayout_alignContent = 0;
         public static final int FlexboxLayout_alignItems = 1;
         public static final int FlexboxLayout_dividerDrawable = 2;

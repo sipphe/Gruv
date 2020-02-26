@@ -179,8 +179,7 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
             if (thisUser.getFollowers() != null)
                 textFollowers.setText(Integer.toString(thisUser.getFollowers().size()));
 
-            if (thisUser.getFollowing() != null)
-                textFollowing.setText(Integer.toString(thisUser.getFollowing().size()));
+            textFollowing.setText(Integer.toString(thisUser.getFollowingCount()));
 
             if (thisUser.getEvents() != null) {
                 textEventCount.setText(thisUser.getEvents().size() + " events");

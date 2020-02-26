@@ -11,6 +11,7 @@ public class Author implements IUser, Serializable {
     private String id, email, name, avatar, bio, site;
     private Integer profilePictureId;
     private List<String> events, promotedEvents, following, followers;
+    private int followingCount;
 
     public Author() {
 
@@ -113,5 +114,12 @@ public class Author implements IUser, Serializable {
 
     public void setFollowers(List<String> followers) {
         this.followers = followers;
+    }
+
+    public int getFollowingCount() {
+        if (following != null)
+            return following.size() - 1;
+        else
+            return 0;
     }
 }
