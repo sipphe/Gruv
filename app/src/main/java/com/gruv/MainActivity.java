@@ -298,6 +298,10 @@ public class MainActivity extends AppCompatActivity {
     public void loadAndSetDrawerPicture(Uri uri, ImageView imageView) {
         Glide.with(this).load(uri).centerCrop().into(imageView);
     }
+
+    public void loadAndSetDrawerPicture(Uri uri, ImageView imageView) {
+        Glide.with(this).load(uri).centerCrop().into(imageView);
+    }
 }
 
 
