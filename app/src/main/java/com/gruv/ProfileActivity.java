@@ -145,8 +145,13 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
     }
 
     private void setUserDetails() {
-        loadAndSetPicture(Uri.parse(thisUser.getAvatar()), profilePic);
-        loadAndSetPicture(Uri.parse(thisUser.getAvatar()), profilePicSmall);
+        if (thisUser.getAvatar() != null) {
+            loadAndSetPicture(Uri.parse(thisUser.getAvatar()), profilePic);
+            loadAndSetPicture(Uri.parse(thisUser.getAvatar()), profilePicSmall);
+        } else {
+            profilePic.setImageResource(R.drawable.ic_account_circle_black_140dp);
+            profilePicSmall.setImageResource(R.drawable.ic_account_circle_black_140dp);
+        }
         textFullName.setText(thisUser.getName());
 
         try {

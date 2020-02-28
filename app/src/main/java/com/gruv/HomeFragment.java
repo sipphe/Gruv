@@ -102,7 +102,9 @@ public class HomeFragment extends Fragment implements ClickInterface {
             showSnackBar("Please check your internet connection", R.id.frame_home_fragment, Snackbar.LENGTH_LONG);
         }
         showProgress();
-        getAuthor();
+
+        if (thisUser != null)
+            getAuthor();
 
 
         //viewCreated = true;
@@ -113,12 +115,15 @@ public class HomeFragment extends Fragment implements ClickInterface {
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
+
         databaseReference.child("author").child(thisUser.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                thisUser = dataSnapshot.getValue(Author.class);
-                thisUser.setId(dataSnapshot.getKey());
-                getFollowingsEventIds();
+                if (dataSnapshot.exists()) {
+                    thisUser = dataSnapshot.getValue(Author.class);
+                    thisUser.setId(dataSnapshot.getKey());
+                    getFollowingsEventIds();
+                }
             }
 
             @Override

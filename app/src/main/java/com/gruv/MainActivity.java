@@ -222,11 +222,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void addToolbar(Toolbar toelbar) {
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toelbar, R.string.app_name, R.string.app_name);
+    public void addToolbar(Toolbar toolbar) {
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name, R.string.app_name);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
-        toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
+        this.toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
     }
 
     public void searchBarToggle(Boolean showSearch) {
@@ -296,12 +296,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loadAndSetDrawerPicture(Uri uri, ImageView imageView) {
-        Glide.with(this).load(uri).centerCrop().into(imageView);
+        if (uri != null)
+            Glide.with(this).load(uri).centerCrop().into(imageView);
+        else
+            imageView.setImageResource(R.drawable.ic_account_circle_black_140dp);
     }
 
-    public void loadAndSetDrawerPicture(Uri uri, ImageView imageView) {
-        Glide.with(this).load(uri).centerCrop().into(imageView);
-    }
 }
 
 

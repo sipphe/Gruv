@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
@@ -34,6 +35,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -41,6 +45,10 @@ import com.google.firebase.storage.UploadTask;
 import com.gruv.models.Author;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -57,6 +65,8 @@ public class LandingActivity extends AppCompatActivity {
     private FirebaseUser currentUser;
     private FirebaseStorage storage;
     private StorageReference storageReference;
+    Boolean updateDBSuccess;
+    String url = null;
     private TextInputLayout layoutEmailText, layoutPasswordText, layoutPasswordTextRegister, layoutEmailRegisterText;
     private TextInputEditText textEmail, textPassword, editTextEmail, editTextPassword, editTextName, editTextConfirmPassword;
     private TextView textSignUp, textForgotPassword, textViewSignUp;
@@ -68,6 +78,10 @@ public class LandingActivity extends AppCompatActivity {
     private Author thisUser = new Author();
     private final int PICK_IMAGE_REQUEST = 71;
     private boolean emailCorrect, passwordCorrect;
+    private FirebaseDatabase database;
+    private DatabaseReference databaseReference;
+    private String email;
+    private String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,7 +151,6 @@ public class LandingActivity extends AppCompatActivity {
                 validatePassword(editable, layoutPasswordText, buttonSignIn);
             }
         });
-
 
 
         editTextEmail.addTextChangedListener(new TextWatcher() {
@@ -238,7 +251,6 @@ public class LandingActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 uploadImage();
-                finish();
             }
         });
 
@@ -400,6 +412,8 @@ public class LandingActivity extends AppCompatActivity {
         //firebase
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
+        database = FirebaseDatabase.getInstance();
+        databaseReference = database.getReference();
     }
 
     public void showSnackBar(String message, Integer layout, Integer length) {
@@ -447,8 +461,8 @@ public class LandingActivity extends AppCompatActivity {
         layoutRegister.setVisibility(View.VISIBLE);
 
         String name = editTextName.getText().toString().trim();
-        String email = editTextEmail.getText().toString().trim();
-        String password = editTextPassword.getText().toString().trim();
+        email = editTextEmail.getText().toString().trim();
+        password = editTextPassword.getText().toString().trim();
         String confirmPassword = editTextConfirmPassword.getText().toString().trim();
 
         showProgressBar();
@@ -483,20 +497,7 @@ public class LandingActivity extends AppCompatActivity {
                                                 .build();
 
                                         currentUser.updateProfile(profileUpdates);
-                                        authenticateObj.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                                if (task.isSuccessful()) {
-                                                    hideProgressBar();
-                                                    currentUser = authenticateObj.getCurrentUser();
-                                                } else {
-                                                    hideProgressBar();
-                                                    showSnackBar("Something went wrong", R.id.layoutParent, Snackbar.LENGTH_SHORT);
-                                                }
-                                            }
-                                        });
-                                        layoutRegister.setVisibility(View.GONE);
-                                        layoutAddPicture.setVisibility(View.VISIBLE);
+                                        updateDB(false);
 
                                     } else {
                                         hideProgressBar();
@@ -513,6 +514,53 @@ public class LandingActivity extends AppCompatActivity {
             showSnackBar("Check internet connection", R.id.layoutParent, Snackbar.LENGTH_SHORT);
         }
     }
+
+    private void updateDB(boolean loadPictureDone) {
+        Map<String, Object> user = new HashMap<>();
+        List<String> following = new ArrayList<>();
+        following.add(thisUser.getId());
+        thisUser.setFollowing(following);
+        if (currentUser.getPhotoUrl() != null)
+            thisUser.setAvatar(currentUser.getPhotoUrl().toString());
+        user.put(thisUser.getId(), thisUser);
+
+        databaseReference.child("author").updateChildren(user, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+
+                if (databaseError != null) {
+                    updateDBSuccess = false;
+                    showSnackBar(databaseError.getMessage(), R.id.layoutParent, Snackbar.LENGTH_LONG);
+
+                } else {
+                    if (!loadPictureDone)
+                        loginAndNavigateToPicture();
+                    else
+                        finish();
+                }
+            }
+        });
+
+
+    }
+
+    private void loginAndNavigateToPicture() {
+        authenticateObj.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    hideProgressBar();
+                    currentUser = authenticateObj.getCurrentUser();
+                } else {
+                    hideProgressBar();
+                    showSnackBar("Something went wrong", R.id.layoutParent, Snackbar.LENGTH_SHORT);
+                }
+            }
+        });
+        layoutRegister.setVisibility(View.GONE);
+        layoutAddPicture.setVisibility(View.VISIBLE);
+    }
+
 
     private void showProgressBar() {
         progressLanding.setVisibility(View.VISIBLE);
@@ -563,11 +611,10 @@ public class LandingActivity extends AppCompatActivity {
                             ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
-                                    String url = uri.toString();
+                                    url = uri.toString();
                                     updateUser(uri, progressDialog);
                                 }
                             });
-
 
 
                             showSnackBar("Done!", R.id.layoutParent, Snackbar.LENGTH_LONG);
@@ -605,6 +652,8 @@ public class LandingActivity extends AppCompatActivity {
                         progressDialog.setVisibility(View.INVISIBLE);
                         if (!task.isSuccessful()) {
                             showSnackBar("Couldn't update picture", R.id.layoutParent, Snackbar.LENGTH_SHORT);
+                        } else {
+                            updateDB(true);
                         }
                     }
                 });
