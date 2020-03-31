@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/eighty"
-        android:visibility="visible"
+        android:visibility="gone"
         tools:context=".HomeFragment">
 
         <ImageView

@@ -84,8 +84,7 @@ public class HomeFragment extends Fragment implements ClickInterface {
         this.savedInstance = savedInstanceState;
         initialiseControls();
         setCurrentUser();
-//        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.app_name, R.string.app_name);
-
+//      ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.app_name, R.string.app_name);
         initialiseAdapter();
 
 
@@ -178,7 +177,6 @@ public class HomeFragment extends Fragment implements ClickInterface {
                 });
             }
         }
-        checkEvents();
     }
 
 
@@ -205,7 +203,7 @@ public class HomeFragment extends Fragment implements ClickInterface {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
+//
                     }
                 });
             }
@@ -254,9 +252,7 @@ public class HomeFragment extends Fragment implements ClickInterface {
         int index = layoutManager.findFirstVisibleItemPosition();
         v = feed.getChildAt(0);
         int top = (v == null) ? 0 : (v.getTop() - feed.getPaddingTop());
-
 //        getEvent();
-
         // restore index and position
         layoutManager.scrollToPositionWithOffset(index, top);
     }

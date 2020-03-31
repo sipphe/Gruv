@@ -138,14 +138,8 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
         map.getUiSettings().setCompassEnabled(true);
         map.getUiSettings().setMapToolbarEnabled(true);
         //Initialize Google Play Services
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(getActivity(),
-                    Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
-                buildGoogleApiClient();
-                map.setMyLocationEnabled(true);
-            }
-        } else {
             buildGoogleApiClient();
             map.setMyLocationEnabled(true);
         }

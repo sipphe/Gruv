@@ -205,17 +205,18 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
                 int count = 0;
                 for (DataSnapshot eventDataSnapshot : dataSnapshot.getChildren()) {
                     if (thisUser.getEvents() != null) {
-                        if (count < thisUser.getEvents().size()) {
-                            if (eventDataSnapshot.getKey().equals(thisUser.getEvents().get(count))) {
+                        for (String postedEvent : thisUser.getEvents()) {
+                            if (eventDataSnapshot.getKey().equals(postedEvent)) {
                                 event = eventDataSnapshot.getValue(Event.class);
                                 event.setEventId(eventDataSnapshot.getKey());
                                 addPost(event);
                             }
+
                         }
                     }
                     if (thisUser.getPromotedEvents() != null) {
-                        if (count < thisUser.getPromotedEvents().size()) {
-                            if (eventDataSnapshot.getKey().equals(thisUser.getPromotedEvents().get(count))) {
+                        for (String promotedEvent : thisUser.getPromotedEvents()) {
+                            if (eventDataSnapshot.getKey().equals(promotedEvent)) {
                                 event = eventDataSnapshot.getValue(Event.class);
                                 event.setEventId(eventDataSnapshot.getKey());
                                 addPromotedPost(event);

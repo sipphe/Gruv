@@ -267,7 +267,6 @@ public class MainActivity extends AppCompatActivity {
         TextView descriptor = view.findViewById(R.id.textDescriptor);
         imageProfilePicture = view.findViewById(R.id.imageProfilePic);
         drawerLayout.closeDrawer(GravityCompat.START);
-        Uri uri = null;
         currentUser = authenticateObj.getCurrentUser();
         if (currentUser != null) {
             signedIn = true;
