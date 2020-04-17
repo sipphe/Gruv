@@ -199,7 +199,7 @@ public class LandingActivity extends AppCompatActivity {
         buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO Add sign up authorisation code
+                //sign up authorisation code
                 registerUserWithEmailAndPassword();
                 //finish();
             }
@@ -307,10 +307,15 @@ public class LandingActivity extends AppCompatActivity {
                                 currentUser = authenticateObj.getCurrentUser();
                                 hideProgressBar();
                                 finish();
-                            } else {
-                                hideProgressBar();
-                                showSnackBar("Incorrect email or password", R.id.layoutParent, Snackbar.LENGTH_SHORT);
                             }
+                            task.addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    hideProgressBar();
+                                    showSnackBar("Something went wrong", R.id.layoutParent, Snackbar.LENGTH_SHORT);
+                                    e.printStackTrace();
+                                }
+                            });
                         }
                     });
                 } catch (Exception e) {

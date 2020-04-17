@@ -57,7 +57,7 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
     private RecyclerView recyclerPostedEvents, recyclerPromotedEvents;
     private List<Event> postedEvents = new ArrayList<>(), promotedEvents = new ArrayList<>();
     private ConstraintLayout appBarLayout;
-    private MaterialButton buttonBack, buttonSiteLink;
+    EditProfileBottomSheet bottomSheet;
     private ClickInterface postedEventsListener;
     private SecondClickInterface promotedEventsListener;
     private FirebaseDatabase database;
@@ -66,10 +66,13 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
     private ConstraintLayout layoutError;
     private PostedEventsAdapter postedEventsAdapter;
     private PromotedEventsAdapter promotedEventsAdapter;
+    Bundle savedInstanceState;
+    private MaterialButton buttonBack, buttonSiteLink, buttonEditProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.savedInstanceState = savedInstanceState;
         setContentView(R.layout.activity_profile);
         authenticateObj = FirebaseAuth.getInstance();
         currentUser = authenticateObj.getCurrentUser();
@@ -88,15 +91,6 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
         setUserDetails();
 
 
-//        event = new Event("123", "Night Show", "Night Show at Mercury has a jam packed line-up", thisUser, LocalDateTime.of(2019, Month.MAY, 3, 16, 30), new Venue("Mercury Live"), R.drawable.party_4);
-//        postedEvents.add(event);
-//        postedEvents.add(event);
-//        postedEvents.add(event);
-//        Event event2 = new Event("124", "Deep Brew Sundaze", thisUser, LocalDateTime.of(2019, Month.DECEMBER, 16, 19, 0), new Venue("Roof Garden Bar"), "Deep Brew is set at the sunset of the roof garden bar. Situated in the heart of Port Elizabeth, it is an event to enjoy, and maybe throw an after party at the end of it all. The Indian Ocean is named after India (Oceanus Orientalis Indicus) since at least 1515. India, then, is the Greek/Roman name for the \"region of the Indus River\".[6]\n\nCalled the Sindhu Mahasagara or the great sea of the Sindhu by the Ancient Indians, this ocean has been variously called Hindu Ocean, Indic Ocean, etc. in various languages. The Indian Ocean was also known earlier as the Eastern Ocean, a term was still in use during the mid-18th century (see map).[6] Conversely, when China explored the Indian Ocean in the 15th century they called it the \"Western Oceans\".", null, null, R.drawable.party);
-//        postedEvents.add(event2);
-//        postedEvents.add(event2);
-//        postedEvents.add(event2);
-
         promotedEventsAdapter = new PromotedEventsAdapter(this, promotedEvents, postedEventsListener);
         recyclerPostedEvents.setAdapter(promotedEventsAdapter);
         recyclerPostedEvents.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -113,6 +107,13 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
             }
         });
 
+        buttonEditProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheet = new EditProfileBottomSheet(thisUser, ProfileActivity.this);
+                bottomSheet.show(getSupportFragmentManager(), "edit profile");
+            }
+        });
         buttonSiteLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -149,8 +150,8 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
             loadAndSetPicture(Uri.parse(thisUser.getAvatar()), profilePic);
             loadAndSetPicture(Uri.parse(thisUser.getAvatar()), profilePicSmall);
         } else {
-            profilePic.setImageResource(R.drawable.ic_account_circle_black_140dp);
-            profilePicSmall.setImageResource(R.drawable.ic_account_circle_black_140dp);
+            profilePic.setImageResource(R.drawable.ic_account_circle_white_140dp);
+            profilePicSmall.setImageResource(R.drawable.ic_account_circle_white_140dp);
         }
         textFullName.setText(thisUser.getName());
 
@@ -165,18 +166,29 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
                 {
                     String display = "";
                     buttonSiteLink.setVisibility(View.VISIBLE);
-                    if (thisUser.getSite().substring(0, 8).equals("https://"))
-                        display = thisUser.getSite().substring(8);
-                    else if (thisUser.getSite().substring(0, 7).equals("http://"))
-                        display = thisUser.getSite().substring(7);
 
-                    if (display.substring(0, 4).equals("www."))
-                        display = display.substring(4);
+                    display = thisUser.getSite();
+                    if (thisUser.getSite().length() >= 8) {
+                        if (thisUser.getSite().substring(0, 8).equals("https://"))
+                            display = thisUser.getSite().substring(8);
+                        else if (thisUser.getSite().substring(0, 7).equals("http://"))
+                            display = thisUser.getSite().substring(7);
+                        else
+                            display = thisUser.getSite();
+
+                    }
+
+                    if (display.length() >= 4) {
+                        if (display.substring(0, 4).equals("www."))
+                            display = display.substring(4);
+                    }
 
                     if (display.length() < 20)
                         buttonSiteLink.setText(display);
                     else
                         buttonSiteLink.setText(display.substring(0, 20) + "...");
+                    if (display.equals(""))
+                        buttonSiteLink.setVisibility(View.GONE);
                 }
             } else
                 buttonSiteLink.setVisibility(View.GONE);
@@ -229,24 +241,31 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                int count = 0;
-                for (DataSnapshot eventDataSnapshot : dataSnapshot.getChildren()) {
-                    if (count < thisUser.getEvents().size()) {
-                        if (eventDataSnapshot.getKey().equals(thisUser.getEvents().get(count))) {
-                            event = eventDataSnapshot.getValue(Event.class);
-                            event.setEventId(eventDataSnapshot.getKey());
-                            addPost(event, Integer.parseInt(eventDataSnapshot.getKey()));
-                        }
-                    }
+                {
 
-                    if (count < thisUser.getPromotedEvents().size()) {
-                        if (eventDataSnapshot.getKey().equals(thisUser.getPromotedEvents().get(count))) {
-                            event = eventDataSnapshot.getValue(Event.class);
-                            event.setEventId(eventDataSnapshot.getKey());
-                            addPromotedPost(event, Integer.parseInt(eventDataSnapshot.getKey()));
+                    int count = 0;
+                    for (DataSnapshot eventDataSnapshot : dataSnapshot.getChildren()) {
+                        if (thisUser.getEvents() != null) {
+                            for (String postedEvent : thisUser.getEvents()) {
+                                if (eventDataSnapshot.getKey().equals(postedEvent)) {
+                                    event = eventDataSnapshot.getValue(Event.class);
+                                    event.setEventId(eventDataSnapshot.getKey());
+                                    addPost(event);
+                                }
+
+                            }
+                        }
+                        if (thisUser.getPromotedEvents() != null) {
+                            for (String promotedEvent : thisUser.getPromotedEvents()) {
+                                if (eventDataSnapshot.getKey().equals(promotedEvent)) {
+                                    event = eventDataSnapshot.getValue(Event.class);
+                                    event.setEventId(eventDataSnapshot.getKey());
+                                    addPromotedPost(event);
+                                }
+                            }
+                            count++;
                         }
                     }
-                    count++;
                 }
             }
 
@@ -281,6 +300,7 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
         textFollowers = findViewById(R.id.textViewFollwersCount);
         textFollowing = findViewById(R.id.textViewFollowingCount);
         buttonSiteLink = findViewById(R.id.buttonSiteLink);
+        buttonEditProfile = findViewById(R.id.buttonEditProfile);
         layoutError = findViewById(R.id.layoutError);
 
 
@@ -406,5 +426,16 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
             url = "http://" + url;
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(browserIntent);
+    }
+
+    public void onBottomSheetDismiss() {
+        this.thisUser = bottomSheet.thisUser;
+        setUserDetails();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
     }
 }

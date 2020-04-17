@@ -6,7 +6,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -84,18 +83,16 @@ public class HomeFragment extends Fragment implements ClickInterface {
         this.savedInstance = savedInstanceState;
         initialiseControls();
         setCurrentUser();
-//      ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.app_name, R.string.app_name);
         initialiseAdapter();
 
 
-        drawerLayout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                fab.setVisibility(View.GONE);
-                return false;
-            }
-        });
-
+//        drawerLayout.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                fab.setVisibility(View.GONE);
+//                return false;
+//            }
+//        });
 
         if (!connectionAvailable()) {
             showSnackBar("Please check your internet connection", R.id.frame_home_fragment, Snackbar.LENGTH_LONG);
@@ -121,7 +118,16 @@ public class HomeFragment extends Fragment implements ClickInterface {
                 if (dataSnapshot.exists()) {
                     thisUser = dataSnapshot.getValue(Author.class);
                     thisUser.setId(dataSnapshot.getKey());
-                    getFollowingsEventIds();
+                    assert thisUser.getFollowing() != null;
+                    if (thisUser.getFollowing() != null) {
+                        if (thisUser.getFollowing().size() != 1) {
+                            getFollowingsEventIds();
+                        } else {
+                            checkEvents();
+                            hideProgress();
+                        }
+                    }
+
                 }
             }
 
@@ -143,9 +149,9 @@ public class HomeFragment extends Fragment implements ClickInterface {
                             event = dataSnapshot.getValue(Event.class);
                             event.setEventId(dataSnapshot.getKey());
                             addPost(event);
-                            checkEvents();
-                            hideProgress();
                         }
+                        checkEvents();
+                        hideProgress();
                     }
 
 
@@ -155,9 +161,9 @@ public class HomeFragment extends Fragment implements ClickInterface {
                             event = dataSnapshot.getValue(Event.class);
                             event.setEventId(dataSnapshot.getKey());
                             addPost(event, Integer.parseInt(eventId));
-                            checkEvents();
-                            hideProgress();
                         }
+                        checkEvents();
+                        hideProgress();
                     }
 
                     @Override
@@ -192,22 +198,22 @@ public class HomeFragment extends Fragment implements ClickInterface {
 
     public void getFollowingsEventIds() {
 
-        if (thisUser.getFollowing() != null) {
-            for (String following : thisUser.getFollowing()) {
-                databaseReference.child("author").child(following).child("events").addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        followingEventIds = (List<String>) dataSnapshot.getValue();
-                        getEvents();
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+        for (String following : thisUser.getFollowing()) {
+            databaseReference.child("author").child(following).child("events").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    followingEventIds = (List<String>) dataSnapshot.getValue();
+                    getEvents();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 //
-                    }
-                });
-            }
+                }
+            });
         }
+
     }
 
     private void initialiseAdapter() {

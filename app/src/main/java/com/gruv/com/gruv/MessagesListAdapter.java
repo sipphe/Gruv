@@ -20,7 +20,7 @@ public class MessagesListAdapter extends ArrayAdapter<String> {
 
     public MessagesListAdapter(Activity context, String[] senderName, String[] messagePreview, String[] messageTime, Integer[] imgid) {
         super(context, R.layout.message_list, senderName);
-        // TODO Auto-generated constructor stub
+        //Auto-generated constructor stub
 
         this.context=context;
         this.senderName=senderName;

@@ -263,6 +263,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         View view = drawer.getHeaderView(0);
 
+        uri = null;
         TextView name = view.findViewById(R.id.textUsername);
         TextView descriptor = view.findViewById(R.id.textDescriptor);
         imageProfilePicture = view.findViewById(R.id.imageProfilePic);
@@ -274,6 +275,8 @@ public class MainActivity extends AppCompatActivity {
             descriptor.setText(currentUser.getDisplayName());
             if (currentUser.getPhotoUrl() != null) {
                 uri = currentUser.getPhotoUrl();
+                loadAndSetDrawerPicture(uri, imageProfilePicture);
+            } else {
                 loadAndSetDrawerPicture(uri, imageProfilePicture);
             }
         } else {
@@ -298,7 +301,7 @@ public class MainActivity extends AppCompatActivity {
         if (uri != null)
             Glide.with(this).load(uri).centerCrop().into(imageView);
         else
-            imageView.setImageResource(R.drawable.ic_account_circle_black_140dp);
+            imageView.setImageResource(R.drawable.ic_account_circle_white_140dp);
     }
 
 }

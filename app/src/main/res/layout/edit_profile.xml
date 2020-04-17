@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layoutParentEdit"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/top_corner_radius">
+
+    <ScrollView
+        android:id="@+id/nestedScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/twelve"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imagePicture"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:layout_marginTop="@dimen/twenty"
+                android:src="@drawable/ic_account_circle_black_always"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:id="@+id/fabChoose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_mode_edit_black_always"
+                android:elevation="@dimen/twelve"
+                android:foregroundGravity="center"
+                android:scaleType="center"
+                android:text="edit"
+                app:layout_constraintBottom_toBottomOf="@+id/imagePicture"
+                app:layout_constraintEnd_toEndOf="@+id/imagePicture"
+                app:layout_constraintStart_toStartOf="@+id/imagePicture" />
+
+            <ImageButton
+                android:id="@+id/buttonRemovePicture"
+                android:layout_width="@dimen/thirty_two"
+                android:layout_height="@dimen/thirty_two"
+                android:src="@drawable/ic_close_black_24dp"
+                app:layout_constraintEnd_toEndOf="@+id/imagePicture"
+                app:layout_constraintTop_toTopOf="@+id/imagePicture" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textLayoutName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/thirty_two"
+                android:hint="name"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fabChoose">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textInputName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLength="20" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textLayoutBio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="bio"
+                    android:maxLength="60"
+                    android:paddingTop="@dimen/twelve">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/textInputBio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textLayoutSite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="site"
+                android:paddingTop="@dimen/twelve"
+                app:layout_constraintTop_toBottomOf="@+id/textLayoutName">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textInputSite"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textLayoutEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/email_input"
+                android:paddingTop="@dimen/twelve"
+                app:layout_constraintTop_toBottomOf="@+id/textLayoutSite">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textInputEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonSave"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/twelve"
+                android:text="save"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textLayoutEmail" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonCancel"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/twelve"
+                android:text="cancel"
+                app:layout_constraintEnd_toStartOf="@id/buttonSave"
+                app:layout_constraintTop_toBottomOf="@+id/textLayoutEmail" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/progressEditProfile"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/twelve"
+        android:indeterminateOnly="true"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/progressEditProfilePercentage"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/scrollViewMain"
+        app:layout_constraintStart_toStartOf="@+id/scrollViewMain" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

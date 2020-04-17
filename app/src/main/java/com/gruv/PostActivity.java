@@ -277,9 +277,12 @@ public class PostActivity extends AppCompatActivity {
 
     public void addComment(String commentText) {
         int newCommentId;
-        if (postEvent.getComments().get(postEvent.getComments().size() - 1).getCommentId() != null)
-            newCommentId = Integer.parseInt(postEvent.getComments().get(postEvent.getComments().size() - 1).getCommentId()) + 1;
-        else
+        if (postEvent.getComments() != null) {
+            if (postEvent.getComments().get(postEvent.getComments().size() - 1).getCommentId() != null)
+                newCommentId = Integer.parseInt(postEvent.getComments().get(postEvent.getComments().size() - 1).getCommentId()) + 1;
+            else
+                newCommentId = 0;
+        } else
             newCommentId = 0;
 
         Comment comment = new Comment(newCommentId + "", postEvent.getEventId(), commentText, thisUser);

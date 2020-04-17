@@ -31,6 +31,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorControlNormal">@color/white</item>
         <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="android:colorControlActivated">@color/colorAccent</item>
     </style>
     <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
         <item name="android:fontFamily">sans-serif-light</item>

@@ -116,6 +116,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonEditProfile"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -126,6 +127,7 @@
                     android:textColor="@color/colorAccent"
                     app:layout_constraintBottom_toTopOf="@+id/layoutUserName"
                     app:layout_constraintEnd_toEndOf="parent" />
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/layoutUserName"
                     android:layout_width="match_parent"
@@ -268,8 +270,7 @@
                         android:id="@+id/textBio"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/sixteen"
-                        android:layout_marginEnd="@dimen/sixteen"
+                        android:layout_margin="@dimen/sixteen"
                         android:text="Bio"
                         android:textColor="@color/blackDN"
                         app:layout_constraintStart_toStartOf="parent"
@@ -280,6 +281,7 @@
                         style="@style/Widget.MaterialComponents.Button.TextButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/eight"
                         android:text="site"
                         android:textAllCaps="false"
                         android:textColor="@color/blackDN"
@@ -335,6 +337,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/thirty_two"
                         android:layout_marginEnd="@dimen/thirty_two"
+                        android:padding="@dimen/twelve"
+                        android:paddingBottom="@dimen/fifty_six"
                         android:text="You haven't posted any events yet. Tap on '+' to add one"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -344,4 +348,11 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/thirty_two"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
