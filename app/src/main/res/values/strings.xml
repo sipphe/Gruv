@@ -6,6 +6,7 @@
     <string name="title_messages">Messages</string>
 
     <string name="error_404">Can\'t find anything...</string>
+    <string name="error_404_home">Can\'t find anything here. Follow someone and see what you get...</string>
     <string name="error_404_2">There\'s nothing here...</string>
 
     //Facebook

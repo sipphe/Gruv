@@ -442,6 +442,7 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment {
                         dismiss();
                     } else
                         dismiss();
+                    profileActivity.onBottomSheetDismiss();
                 }
             }
         });

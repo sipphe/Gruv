@@ -146,11 +146,17 @@
 
                         <TextView
                             android:id="@+id/textName"
-                            android:layout_width="wrap_content"
+                            android:layout_width="190dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/thirty_two"
                             android:layout_marginTop="@dimen/twelve"
                             android:text="User Name"
+                            android:ellipsize="marquee"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
+                            android:marqueeRepeatLimit="marquee_forever"
+                            android:scrollHorizontally="true"
+                            android:singleLine="true"
                             android:textColor="@color/white"
                             android:textSize="20sp"
                             app:layout_constraintStart_toStartOf="parent"
@@ -208,12 +214,10 @@
                         android:id="@+id/layoutFollowing"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="115dp"
                         android:layout_marginEnd="@dimen/twenty"
                         android:layout_marginBottom="@dimen/four"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/layoutFollowers"
-                        app:layout_constraintStart_toEndOf="@+id/constraintLayout"
                         app:layout_constraintTop_toTopOf="parent">
 
                         <TextView

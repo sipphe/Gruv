@@ -120,12 +120,12 @@ public class HomeFragment extends Fragment implements ClickInterface {
                     thisUser.setId(dataSnapshot.getKey());
                     assert thisUser.getFollowing() != null;
                     if (thisUser.getFollowing() != null) {
-                        if (thisUser.getFollowing().size() != 1) {
+//                        if (thisUser.getFollowing().size() != 1) {
                             getFollowingsEventIds();
-                        } else {
-                            checkEvents();
-                            hideProgress();
-                        }
+//                        } else {
+//                            checkEvents();
+//                            hideProgress();
+//                        }
                     }
 
                 }
@@ -168,20 +168,35 @@ public class HomeFragment extends Fragment implements ClickInterface {
 
                     @Override
                     public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
+                        if (dataSnapshot.getKey().equals(eventId)) {
+                            event = dataSnapshot.getValue(Event.class);
+                            event.setEventId(dataSnapshot.getKey());
+                            addPost(event, Integer.parseInt(eventId));
+                        }
+                        checkEvents();
+                        hideProgress();
                     }
 
                     @Override
                     public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
+                        if (dataSnapshot.getKey().equals(eventId)) {
+                            event = dataSnapshot.getValue(Event.class);
+                            event.setEventId(dataSnapshot.getKey());
+                            addPost(event, Integer.parseInt(eventId));
+                        }
+                        checkEvents();
+                        hideProgress();
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                         Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_LONG).show();
+                        checkEvents();
                     }
                 });
             }
+        } else {
+            checkEvents();
         }
     }
 
