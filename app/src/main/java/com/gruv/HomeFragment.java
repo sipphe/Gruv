@@ -261,8 +261,29 @@ public class HomeFragment extends Fragment implements ClickInterface {
     }
 
     public void addPost(@NotNull Event event, int index) {
-        if (event.getAuthor() != null)
-            eventList.set(index, event);
+        if (event.getAuthor() != null) {
+            if (eventList.isEmpty())
+                eventList.add(event);
+            else {
+//                if (event.getEventId() != postedEvents.get(postedEvents.size() - 1).getEventId())
+                int count = 0;
+                for (Event listValue : eventList) {
+                    if (listValue.getEventId().equals(Integer.toString(index))) {
+                        eventList.set(count, event);
+                        break;
+                    }
+                    count++;
+                }
+            }
+        }
+//        if (event.getAuthor() != null) {
+//            if (eventList.isEmpty())
+//                eventList.add(event);
+//            else {
+//                if (event.getEventId() != eventList.get(eventList.size() - 1).getEventId())
+//                    eventList.set(index, event);
+//            }
+//        }
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }

@@ -1,13 +1,20 @@
 package com.gruv;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -22,6 +29,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -40,7 +49,9 @@ import com.gruv.models.Event;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -68,6 +79,8 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
     private PromotedEventsAdapter promotedEventsAdapter;
     Bundle savedInstanceState;
     private MaterialButton buttonBack, buttonSiteLink, buttonEditProfile;
+    private ImageButton buttonMore;
+    private FloatingActionButton fabAdd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,17 +96,26 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
         initialiseControls();
         setTransparentStatusBar();
         setTopPadding(getStatusBarHeight());
+        int padding = 0;
+//        boolean hasMenuKey = ViewConfiguration.get(this).hasPermanentMenuKey();
+        boolean hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
+        if (hasBackKey) {
+            setBottomPadding(getStatusBarHeight());
+        }
 
 
         postedEventsListener = this;
         promotedEventsListener = this;
 
+        getAuthor();
         setUserDetails();
 
 
         promotedEventsAdapter = new PromotedEventsAdapter(this, promotedEvents, postedEventsListener);
         recyclerPostedEvents.setAdapter(promotedEventsAdapter);
-        recyclerPostedEvents.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        recyclerPostedEvents.setLayoutManager(new
+
+                LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
         postedEventsAdapter = new PostedEventsAdapter(this, postedEvents, promotedEventsListener);
         recyclerPromotedEvents.setAdapter(postedEventsAdapter);
@@ -120,13 +142,38 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
                 openLink(thisUser.getSite());
             }
         });
-        scrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+        scrollView.getViewTreeObserver().
+
+                addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+                    @Override
+                    public void onScrollChanged() {
+                        collapseToolbar();
+                    }
+                });
+
+        buttonMore.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onScrollChanged() {
-                collapseToolbar();
+            public void onClick(View v) {
+                PopupMenu popupMenu = new PopupMenu(ProfileActivity.this, buttonMore);
+                popupMenu.getMenuInflater().inflate(R.menu.profile_menu, popupMenu.getMenu());
+                popupMenu.setGravity(Gravity.RIGHT);
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        showSnackBar(item.toString(), Snackbar.LENGTH_LONG);
+                        return true;
+                    }
+                });
+
+                popupMenu.show();
             }
         });
 
+
+    }
+
+
+    private void getAuthor() {
         databaseReference.child("author").child(currentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -138,11 +185,8 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
-
-
     }
 
     private void setUserDetails() {
@@ -221,6 +265,11 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
                             if (eventDataSnapshot.getKey().equals(postedEvent)) {
                                 event = eventDataSnapshot.getValue(Event.class);
                                 event.setEventId(eventDataSnapshot.getKey());
+                                if (event.getAuthor().getId().equals(thisUser.getId())) {
+                                    event.setAuthor(thisUser);
+                                    updateEvent(event.getEventId());
+                                }
+
                                 addPost(event);
                             }
 
@@ -250,7 +299,7 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
                                 if (eventDataSnapshot.getKey().equals(postedEvent)) {
                                     event = eventDataSnapshot.getValue(Event.class);
                                     event.setEventId(eventDataSnapshot.getKey());
-                                    addPost(event);
+                                    addPost(event, Integer.parseInt(event.getEventId()));
                                 }
 
                             }
@@ -260,7 +309,7 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
                                 if (eventDataSnapshot.getKey().equals(promotedEvent)) {
                                     event = eventDataSnapshot.getValue(Event.class);
                                     event.setEventId(eventDataSnapshot.getKey());
-                                    addPromotedPost(event);
+                                    addPromotedPost(event, Integer.parseInt(event.getEventId()));
                                 }
                             }
                             count++;
@@ -287,6 +336,28 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
 
     }
 
+    private void updateEvent(String eventId) {
+        Map<String, Object> user = new HashMap<>();
+        user.put("author", thisUser);
+        databaseReference.child("Event").child(eventId).updateChildren(user, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    // TODO Add error code
+                    showSnackBar("Something went wrong", Snackbar.LENGTH_LONG);
+                }
+//               else {
+//
+//               }
+            }
+        });
+    }
+
+    public void showSnackBar(String message, Integer length) {
+        View rootView = getWindow().getDecorView().findViewById(android.R.id.content);
+        Snackbar.make(rootView, message, length).show();
+    }
+
     private void initialiseControls() {
         profilePic = findViewById(R.id.imageViewPostPicture);
         textFullName = findViewById(R.id.textName);
@@ -302,6 +373,8 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
         buttonSiteLink = findViewById(R.id.buttonSiteLink);
         buttonEditProfile = findViewById(R.id.buttonEditProfile);
         layoutError = findViewById(R.id.layoutError);
+        buttonMore = findViewById(R.id.buttonMore);
+        fabAdd = findViewById(R.id.fabAdd);
 
 
         recyclerPostedEvents = findViewById(R.id.recyclerPostedEvents);
@@ -323,11 +396,29 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
     }
 
     public void addPost(@NotNull Event event, int index) {
-        if (event.getAuthor() != null)
-            postedEvents.set(index, event);
+        if (event.getAuthor() != null) {
+            if (postedEvents.isEmpty())
+                postedEvents.add(event);
+            else {
+//                if (event.getEventId() != postedEvents.get(postedEvents.size() - 1).getEventId())
+                int count = 0;
+                for (Event listValue : postedEvents) {
+                    if (listValue.getEventId().equals(Integer.toString(index))) {
+                        postedEvents.set(count, event);
+                        break;
+                    }
+                    count++;
+                }
+            }
+        }
         if (postedEventsAdapter != null) {
             postedEventsAdapter.notifyDataSetChanged();
         }
+//        if (event.getAuthor() != null)
+//            postedEvents.set(index, event);
+//        if (postedEventsAdapter != null) {
+//            postedEventsAdapter.notifyDataSetChanged();
+//        }
     }
 
     public void addPromotedPost(@NotNull Event event) {
@@ -339,11 +430,29 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
     }
 
     public void addPromotedPost(@NotNull Event event, int index) {
-        if (event.getAuthor() != null)
-            promotedEvents.set(index, event);
+        if (event.getAuthor() != null) {
+            if (promotedEvents.isEmpty())
+                promotedEvents.add(event);
+            else {
+//                if (event.getEventId() != postedEvents.get(postedEvents.size() - 1).getEventId())
+                int count = 0;
+                for (Event listValue : promotedEvents) {
+                    if (listValue.getEventId().equals(index)) {
+                        promotedEvents.set(count, event);
+                        break;
+                    }
+                    count++;
+                }
+            }
+        }
         if (promotedEventsAdapter != null) {
             promotedEventsAdapter.notifyDataSetChanged();
         }
+//        if (event.getAuthor() != null)
+//            promotedEvents.set(index, event);
+//        if (promotedEventsAdapter != null) {
+//            promotedEventsAdapter.notifyDataSetChanged();
+//        }
     }
 
     public void checkEvents() {
@@ -381,9 +490,18 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
         appBarLayout.setPadding(0, topPadding, 0, 0);
     }
 
+    public void setBottomPadding(int bottomPadding) {
+        ScrollView scrollView = findViewById(R.id.scrollViewProfile);
+        final float scale = getResources().getDisplayMetrics().density;
+        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) fabAdd.getLayoutParams();
+        params.setMargins(0, 0, (int) (32 * scale + 0.5f), (int) (bottomPadding + (32 * scale + 0.5f)));
+        fabAdd.setLayoutParams(params);
+        scrollView.setPadding(0, 0, 0, bottomPadding);
+    }
+
     public void recyclerViewOnClick(int position) {
         Intent intent = new Intent(this, PostActivity.class);
-        intent.putExtra("Event", postedEvents.get(position));
+        intent.putExtra("Event", promotedEvents.get(position));
         startActivity(intent);
     }
 
@@ -431,11 +549,24 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
     public void onBottomSheetDismiss() {
         this.thisUser = bottomSheet.thisUser;
         setUserDetails();
+        for (Event postedEvent : postedEvents) {
+            updateEvent(postedEvent.getEventId());
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+    public boolean hasNavBar(Resources resources) {
+        int id = resources.getIdentifier("config_showNavigationBar", "bool", "android");
+        return id > 0 && resources.getBoolean(id);
     }
 }

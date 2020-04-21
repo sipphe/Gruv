@@ -94,6 +94,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
+            android:id="@+id/layoutEverything"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fillViewport="true"
@@ -150,13 +151,13 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/thirty_two"
                             android:layout_marginTop="@dimen/twelve"
-                            android:text="User Name"
                             android:ellipsize="marquee"
                             android:focusable="true"
                             android:focusableInTouchMode="true"
                             android:marqueeRepeatLimit="marquee_forever"
                             android:scrollHorizontally="true"
                             android:singleLine="true"
+                            android:text="User Name"
                             android:textColor="@color/white"
                             android:textSize="20sp"
                             app:layout_constraintStart_toStartOf="parent"
@@ -350,13 +351,18 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </LinearLayout>
-    </ScrollView>
 
+        </LinearLayout>
+
+
+    </ScrollView>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/thirty_two"
+        android:src="@drawable/ic_add_black_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

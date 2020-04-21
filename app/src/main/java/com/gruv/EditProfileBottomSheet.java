@@ -4,21 +4,25 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -32,6 +36,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -48,9 +53,7 @@ import com.gruv.models.Author;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -60,7 +63,7 @@ import static android.app.Activity.RESULT_OK;
 public class EditProfileBottomSheet extends BottomSheetDialogFragment {
     private final ProfileActivity profileActivity;
     public Author thisUser;
-    MaterialAlertDialogBuilder builder;
+    public static MaterialAlertDialogBuilder builder;
     CircleImageView imageView;
     Fragment fragment = this;
     private FirebaseAuth authenticateObj;
@@ -71,6 +74,7 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment {
     private FirebaseStorage storage;
     private FirebaseDatabase database;
     private TextInputEditText textInputName, textInputBio, textInputSite, textInputEmail;
+    private TextInputLayout textLayoutEmail;
     private ImageButton imageRemovePicture;
     private ProgressBar progressBar;
     private Uri filePath;
@@ -109,6 +113,7 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment {
         textInputBio = v.findViewById(R.id.textInputBio);
         textInputSite = v.findViewById(R.id.textInputSite);
         textInputEmail = v.findViewById(R.id.textInputEmail);
+        textLayoutEmail = v.findViewById(R.id.textLayoutEmail);
         progressBar = v.findViewById(R.id.progressEditProfile);
         imageRemovePicture = v.findViewById(R.id.buttonRemovePicture);
 
@@ -166,7 +171,43 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment {
                         .start(getContext(), EditProfileBottomSheet.this);
             }
         });
+
+        textInputEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                validateEmail(s, textLayoutEmail, buttonSave);
+            }
+        });
         return v;
+    }
+
+    public void validateEmail(Editable s, TextInputLayout layout, MaterialButton button) {
+        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-zA-Z._-]+[a-zA-Z._-]";
+        // onClick of button perform this simplest code.
+        boolean emailCorrect;
+        boolean passwordCorrect;
+        if (!s.toString().trim().matches(emailPattern)) {
+            emailCorrect = false;
+            layout.setError("Invalid email");
+            button.setClickable(false);
+            button.setTextColor(ContextCompat.getColor(getContext(), (R.color.grey)));
+        } else {
+            layout.setError(null);
+            button.setClickable(true);
+            button.setTextColor(ContextCompat.getColor(getContext(), (R.color.colorPrimary)));
+
+        }
     }
 
     private void updateEmail() {
@@ -174,20 +215,57 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment {
         builder.setTitle("Enter your password");
         builder.setMessage("Changing your email requires you to re-enter your password");
 
-
         // Set up the input
-        final EditText input = new EditText(getContext());
+        final TextInputEditText input = new TextInputEditText(getContext());
         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        builder.setView(input);
+        TextInputLayout layout = new TextInputLayout(getContext());
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 132);
+        layout.setPadding(30, 30, 30, 30);
+        input.setLayoutParams(params);
+        layout.setEndIconMode(TextInputLayout.END_ICON_PASSWORD_TOGGLE);
+        input.setTextColor(Color.BLACK);
+        input.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                validatePassword(s, layout);
+            }
+        });
+        if (input.getParent() != null) {
+            ((ViewGroup) input.getParent()).removeView(input);
+        }
+        layout.addView(input);
+        params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 160);
+        layout.setLayoutParams(params);
+
+        builder.setView(layout);
         // Set up the buttons
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String password = input.getText().toString();
-                loginAndUpdateEmail(password);
-
+                if (password.length() <= 6)
+                    if (!password.isEmpty()) {
+                        hideProgress();
+                        dismiss();
+                        showSnackBar("That password is too short", Snackbar.LENGTH_LONG);
+                    } else {
+                        hideProgress();
+                        dismiss();
+                        showSnackBar("Enter Password", Snackbar.LENGTH_SHORT);
+                    }
+                else
+                    loginAndUpdateEmail(password);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -197,9 +275,17 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment {
                 hideProgress();
             }
         });
-
         builder.show();
+    }
 
+
+    public void validatePassword(Editable editable, TextInputLayout layout) {
+        if (editable.length() < 6) {
+            layout.setError("Password must have more than 6 characters");
+        } else {
+            layout.setError(null);
+
+        }
     }
 
 
@@ -225,59 +311,53 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment {
             currentUser = authenticateObj.getCurrentUser();
 
 
-            if (!password.isEmpty()) {
-                try {
-                    authenticateObj.signInWithEmailAndPassword(thisUser.getEmail(), password).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
+            try {
+                authenticateObj.signInWithEmailAndPassword(thisUser.getEmail(), password).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
 
-                            if (task.isSuccessful()) {
-                                currentUser = authenticateObj.getCurrentUser();
-                                thisUser.setEmail(textInputEmail.getText().toString());
-                                currentUser.updateEmail(thisUser.getEmail()).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        hideProgress();
-                                        showSnackBar(e.getMessage(), Snackbar.LENGTH_SHORT);
-                                    }
-                                });
-                                if (pictureChanged) {
-                                    uploadImage(storageReference);
-                                } else {
-                                    updateDB(false);
-                                }
-                                hideProgress();
-                            }
-
-                            task.addOnFailureListener(new OnFailureListener() {
+                        if (task.isSuccessful()) {
+                            currentUser = authenticateObj.getCurrentUser();
+                            thisUser.setEmail(textInputEmail.getText().toString());
+                            currentUser.updateEmail(thisUser.getEmail()).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     hideProgress();
-                                    if (e.getClass().equals(FirebaseAuthInvalidCredentialsException.class)) {
-                                        showSnackBar("Incorrect password", Snackbar.LENGTH_SHORT);
-                                    } else {
-                                        showSnackBar(e.getMessage(), Snackbar.LENGTH_SHORT);
-                                    }
-                                    dismiss();
-                                    e.printStackTrace();
+                                    showSnackBar(e.getMessage(), Snackbar.LENGTH_SHORT);
                                 }
                             });
+                            if (pictureChanged) {
+                                uploadImage(storageReference);
+                            } else {
+                                updateDB(false);
+                            }
+                            hideProgress();
+                        }
+
+                        task.addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                hideProgress();
+                                if (e.getClass().equals(FirebaseAuthInvalidCredentialsException.class)) {
+                                    showSnackBar("Incorrect password", Snackbar.LENGTH_SHORT);
+                                } else {
+                                    showSnackBar(e.getMessage(), Snackbar.LENGTH_SHORT);
+                                }
+                                dismiss();
+                                e.printStackTrace();
+                            }
+                        });
 //                            } else {
 //                                hideProgress();
 //                                showSnackBar("Incorrect password", R.id.layoutParentEdit, Snackbar.LENGTH_SHORT);
 //                            }
-                        }
-                    });
-                } catch (Exception e) {
-                    hideProgress();
-                    dismiss();
-                    showSnackBar("Something went wrong", Snackbar.LENGTH_SHORT);
-                    e.printStackTrace();
-                }
-            } else {
+                    }
+                });
+            } catch (Exception e) {
                 hideProgress();
                 dismiss();
-                showSnackBar("Enter Password", Snackbar.LENGTH_SHORT);
+                showSnackBar("Something went wrong", Snackbar.LENGTH_SHORT);
+                e.printStackTrace();
             }
         } else {
             hideProgress();
@@ -291,16 +371,13 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment {
     }
 
     private void setUserAndUpdateDb() {
-        if (!textInputName.getText().equals(""))
-            thisUser.setName(textInputName.getText().toString());
-        if (!textInputBio.getText().equals(""))
-            thisUser.setBio(textInputBio.getText().toString());
-        if (!textInputSite.getText().equals(""))
-            thisUser.setSite(textInputSite.getText().toString());
-//        if (!textInputEmail.getText().toString().equals("")) {
-//            updateEmail();
-//        } else
-        if (!textInputEmail.getText().toString().equals(thisUser.getEmail())) {
+        if (!textInputName.getText().toString().trim().equals(""))
+            thisUser.setName(textInputName.getText().toString().trim());
+        if (!textInputBio.getText().toString().trim().equals(""))
+            thisUser.setBio(textInputBio.getText().toString().trim());
+        if (!textInputSite.getText().toString().trim().equals(""))
+            thisUser.setSite(textInputSite.getText().toString().trim());
+        if (!textInputEmail.getText().toString().trim().equals(thisUser.getEmail())) {
             updateEmail();
         } else {
             if (pictureChanged) {
@@ -309,7 +386,6 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment {
                 updateDB(false);
             }
         }
-//            thisUser.setEmail(textInputEmail.getText() + "");
     }
 
     public void setCurrentUser() {
@@ -422,9 +498,6 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment {
 
     private void updateDB(boolean loadPictureDone) {
         Map<String, Object> user = new HashMap<>();
-        List<String> following = new ArrayList<>();
-        following.add(thisUser.getId());
-        thisUser.setFollowing(following);
         if (currentUser.getPhotoUrl() != null)
             thisUser.setAvatar(currentUser.getPhotoUrl().toString());
         user.put(thisUser.getId(), thisUser);
@@ -446,6 +519,12 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment {
                 }
             }
         });
+
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(thisUser.getName())
+                .build();
+
+        currentUser.updateProfile(profileUpdates);
     }
 
     @Override
@@ -462,4 +541,6 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment {
         progressBar.setVisibility(View.GONE);
 
     }
+
+
 }
