@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Event implements Serializable {
@@ -15,7 +16,7 @@ public class Event implements Serializable {
     private LocalDateTime eventDate;
     private Venue venue;
     private ArrayList<Comment> comments;
-    private ArrayList<Like> likes;
+    private HashMap<String, Like> likes;
     private Integer imagePostId;
     private String eventDateString;
     private String imagePostUrl;
@@ -116,19 +117,22 @@ public class Event implements Serializable {
         }
     }
 
-    public List<Like> getLikes() {
+    public HashMap<String, Like> getLikes() {
         return likes;
     }
 
-    public void setLikes(ArrayList<Like> likes) {
+    public void setLikes(HashMap<String, Like> likes) {
         this.likes = likes;
     }
 
     public void addLike(Like like) {
         if (this.likes == null) {
-            this.likes = new ArrayList<>();
+            this.likes = new HashMap<>();
+        } else {
+
         }
-        this.likes.add(like);
+
+        this.likes.put(like.getLikeId(), like);
     }
 
     public void removeLike(Like like) {

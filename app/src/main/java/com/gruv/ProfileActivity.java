@@ -56,7 +56,6 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileActivity extends AppCompatActivity implements ClickInterface, SecondClickInterface {
-
     private FirebaseAuth authenticateObj;
     private FirebaseUser currentUser;
     private ScrollView scrollView;
@@ -68,7 +67,7 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
     private RecyclerView recyclerPostedEvents, recyclerPromotedEvents;
     private List<Event> postedEvents = new ArrayList<>(), promotedEvents = new ArrayList<>();
     private ConstraintLayout appBarLayout;
-    EditProfileBottomSheet bottomSheet;
+    private EditProfileBottomSheet bottomSheet;
     private ClickInterface postedEventsListener;
     private SecondClickInterface promotedEventsListener;
     private FirebaseDatabase database;
@@ -77,7 +76,7 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
     private ConstraintLayout layoutError;
     private PostedEventsAdapter postedEventsAdapter;
     private PromotedEventsAdapter promotedEventsAdapter;
-    Bundle savedInstanceState;
+    private Bundle savedInstanceState;
     private MaterialButton buttonBack, buttonSiteLink, buttonEditProfile;
     private ImageButton buttonMore;
     private FloatingActionButton fabAdd;
@@ -117,7 +116,7 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
 
                 LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-        postedEventsAdapter = new PostedEventsAdapter(this, postedEvents, promotedEventsListener);
+        postedEventsAdapter = new PostedEventsAdapter(this, this, thisUser, postedEvents, promotedEventsListener);
         recyclerPromotedEvents.setAdapter(postedEventsAdapter);
         recyclerPromotedEvents.setLayoutManager(new LinearLayoutManager(this));
 
@@ -160,6 +159,7 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
+                        //TODO Add menu code
                         showSnackBar(item.toString(), Snackbar.LENGTH_LONG);
                         return true;
                     }

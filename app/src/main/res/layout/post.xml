@@ -47,13 +47,13 @@
                     android:layout_width="34dp"
                     android:layout_height="27dp"
                     android:src="@drawable/sunshine"
-                    app:layout_constraintEnd_toStartOf="@+id/imageComments"
+                    app:layout_constraintEnd_toStartOf="@+id/imageComment"
                     app:layout_constraintHorizontal_bias="0.952"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
-                    android:id="@+id/imageComments"
+                    android:id="@+id/imageComment"
                     android:layout_width="34dp"
                     android:layout_height="27dp"
                     android:src="@drawable/ic_menu_white_24dp"

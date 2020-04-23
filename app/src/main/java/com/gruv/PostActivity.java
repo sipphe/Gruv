@@ -1,6 +1,7 @@
 package com.gruv;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.Window;
@@ -36,39 +37,38 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PostActivity extends AppCompatActivity {
-    private FirebaseAuth authenticateObj;
     private FirebaseUser currentUser;
-    ConstraintLayout appBarLayout;
-    ConstraintLayout layoutDesc;
-    ConstraintLayout layoutLikeComment;
-    ConstraintLayout layoutAddComment;
-    LinearLayout layoutProgress;
-    Toolbar toolbar;
-    Event postEvent;
-    String eventTitle;
-    ImageView postPic;
-    CircleImageView imageProfilePicture;
-    MaterialButton backImage;
-    MaterialButton buttonReadMore;
-    MaterialButton buttonAddComment;
-    ImageButton buttonLike;
-    ImageButton buttonCloseComment;
-    ImageButton buttonSend;
-    TextView textEventTitle;
-    TextView textAuthor;
-    TextView textDay;
-    TextView textMonth;
-    TextView textEventDescription;
-    TextView textVenue;
-    TextView likeCount, commentCount;
-    TextInputLayout textLayoutAddComment;
-    TextInputEditText editTextAddComment;
-    ListView commentList;
-    ScrollView scrollView;
-    NestedScrollView scrollViewComments;
-    Boolean liked = false;
-    Like thisLike;
-    CommentListAdapter adapter;
+    private ConstraintLayout appBarLayout;
+    private ConstraintLayout layoutDesc;
+    private ConstraintLayout layoutLikeComment;
+    private ConstraintLayout layoutAddComment;
+    private LinearLayout layoutProgress;
+    private Toolbar toolbar;
+    private Event postEvent;
+    private String eventTitle;
+    private ImageView postPic;
+    private CircleImageView imageProfilePicture;
+    private MaterialButton backImage;
+    private MaterialButton buttonReadMore;
+    private MaterialButton buttonAddComment;
+    private ImageButton buttonLike;
+    private ImageButton buttonCloseComment;
+    private ImageButton buttonSend;
+    private TextView textEventTitle;
+    private TextView textAuthor;
+    private TextView textDay;
+    private TextView textMonth;
+    private TextView textEventDescription;
+    private TextView textVenue;
+    private TextView likeCount, commentCount;
+    private TextInputLayout textLayoutAddComment;
+    private TextInputEditText editTextAddComment;
+    private ListView commentList;
+    private ScrollView scrollView;
+    private NestedScrollView scrollViewComments;
+    private Boolean liked = false;
+    private Like thisLike;
+    private CommentListAdapter adapter;
     private Author thisUser;
 
     @Override
@@ -94,6 +94,7 @@ public class PostActivity extends AppCompatActivity {
         }
 
         setComments();
+
 
         scrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
             @Override
@@ -152,10 +153,7 @@ public class PostActivity extends AppCompatActivity {
         buttonAddComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                layoutLikeComment.setVisibility(View.INVISIBLE);
-                layoutAddComment.setVisibility(View.VISIBLE);
-                scrollView.fullScroll(View.FOCUS_DOWN);
-                editTextAddComment.requestFocus();
+                requestCommentSectionFocus();
             }
         });
 
@@ -181,6 +179,14 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+
+    private void requestCommentSectionFocus() {
+        layoutLikeComment.setVisibility(View.INVISIBLE);
+        layoutAddComment.setVisibility(View.VISIBLE);
+        scrollView.fullScroll(View.FOCUS_DOWN);
+        editTextAddComment.requestFocus();
     }
 
     private void setCurrentUser() {
@@ -321,6 +327,16 @@ public class PostActivity extends AppCompatActivity {
                 }
             }
         });
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (getIntent().hasExtra("CommentClicked")) {
+                    requestCommentSectionFocus();
+                }
+            }
+        }, 1000);
+
     }
 
     public void setTransparentStatusBar() {

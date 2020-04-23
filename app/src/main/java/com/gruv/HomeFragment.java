@@ -233,7 +233,7 @@ public class HomeFragment extends Fragment implements ClickInterface {
 
     private void initialiseAdapter() {
         eventList.clear();
-        adapter = new NewsFeedAdapter(getActivity(), eventList, clickInterface, thisUser);
+        adapter = new NewsFeedAdapter(getActivity(), getActivity(), eventList, clickInterface, thisUser);
         feed.setAdapter(adapter);
         layoutManager = new LinearLayoutManager(getActivity());
         feed.setLayoutManager(layoutManager);

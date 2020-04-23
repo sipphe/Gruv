@@ -12,7 +12,7 @@ public class Like implements Serializable {
 
     public Like(String eventId, Author author) {
         this.eventId = eventId;
-        this.likeId = getId();
+//        this.likeId = getId();
         this.author = author;
     }
 
@@ -35,6 +35,10 @@ public class Like implements Serializable {
 
     public void setAuthor(Author author) {
         this.author = author;
+    }
+
+    public void setLikeId(String likeId) {
+        this.likeId = likeId;
     }
 
     public String getId() {

@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:2:1-98:12
-INJECTED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:2:1-98:12
-INJECTED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:2:1-98:12
-INJECTED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:2:1-98:12
+ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:2:1-96:12
+INJECTED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:2:1-96:12
+INJECTED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:2:1-96:12
+INJECTED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:2:1-96:12
 MERGED from [com.theartofdev.edmodo:android-image-cropper:2.8.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\c65a6d3221a418caa3ebbdd8c82b9d5a\jetified-android-image-cropper-2.8.0\AndroidManifest.xml:2:1-11:12
 MERGED from [com.github.stfalcon:chatkit:0.3.3] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\1a206cf19a18d31ac4c0cf0d2cf63ed9\jetified-chatkit-0.3.3\AndroidManifest.xml:2:1-9:12
 MERGED from [com.firebaseui:firebase-ui-auth:6.0.2] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\bc3a7966895110d0959dc40f300014c0\jetified-firebase-ui-auth-6.0.2\AndroidManifest.xml:2:1-109:12
@@ -98,16 +98,16 @@ MERGED from [com.google.android:flexbox:1.0.0] C:\Users\s987216\.gradle\caches\t
 MERGED from [androidx.annotation:annotation-experimental:1.0.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\3c4e1ee2723f333527f5983d5c9b73ff\jetified-annotation-experimental-1.0.0\AndroidManifest.xml:17:1-24:12
 MERGED from [com.google.firebase:firebase-database-collection:17.0.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\d619de1e9e20a12a3fda730585e012a7\jetified-firebase-database-collection-17.0.0\AndroidManifest.xml:2:1-7:12
 MERGED from [com.android.installreferrer:installreferrer:1.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\b67ae3243aedd641b4f336e82cbcc4d5\jetified-installreferrer-1.0\AndroidManifest.xml:2:1-13:12
-INJECTED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:2:1-98:12
-INJECTED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:2:1-98:12
-INJECTED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:2:1-98:12
+INJECTED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:2:1-96:12
+INJECTED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:2:1-96:12
+INJECTED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:2:1-96:12
 	package
 		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:5:5-23
 		INJECTED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml
 		INJECTED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml
 	android:versionName
 		INJECTED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:2:1-98:12
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:2:1-96:12
 		INJECTED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml
 	xmlns:tools
 		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:4:5-51
@@ -115,7 +115,7 @@ INJECTED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidMa
 		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:3:5-61
 	android:versionCode
 		INJECTED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:2:1-98:12
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:2:1-96:12
 		INJECTED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml
 	xmlns:android
 		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:2:11-69
@@ -160,11 +160,11 @@ ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManif
 	android:name
 		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:14:22-78
 dist:module
-ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:17:5-40
+ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:16:5-40
 	dist:instant
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:17:18-37
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:16:18-37
 application
-ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:19:5-96:19
+ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:18:5-94:19
 MERGED from [com.firebaseui:firebase-ui-auth:6.0.2] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\bc3a7966895110d0959dc40f300014c0\jetified-firebase-ui-auth-6.0.2\AndroidManifest.xml:15:5-107:19
 MERGED from [com.firebaseui:firebase-ui-auth:6.0.2] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\bc3a7966895110d0959dc40f300014c0\jetified-firebase-ui-auth-6.0.2\AndroidManifest.xml:15:5-107:19
 MERGED from [com.google.android.material:material:1.2.0-alpha05] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\fabbd535dd511e86bad49e81aae7d989\material-1.2.0-alpha05\AndroidManifest.xml:22:5-20
@@ -262,54 +262,58 @@ MERGED from [com.android.installreferrer:installreferrer:1.0] C:\Users\s987216\.
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.2.0] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\cf23515831a30cf8e0e5ff774beb1451\core-1.2.0\AndroidManifest.xml:24:18-86
 	android:supportsRtl
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:24:9-35
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:23:9-35
 	android:label
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:22:9-41
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:21:9-41
 	android:roundIcon
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:23:9-54
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:22:9-54
 	android:icon
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:21:9-43
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:20:9-43
 	android:allowBackup
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:20:9-35
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:19:9-35
 	android:theme
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:25:9-40
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:24:9-40
+activity#com.gruv.UserActivity
+ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:25:9-59
+	android:name
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:25:19-47
 activity#com.gruv.ProfileActivity
-ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:27:9-30:46
+ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:26:9-29:46
 	android:label
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:29:13-34
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:28:13-34
 	android:launchMode
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:30:13-43
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:29:13-43
 	android:name
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:28:13-44
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:27:13-44
 activity#com.gruv.GenericIdpActivity
-ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:31:9-56
+ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:30:9-56
 	android:name
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:31:19-53
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:30:19-53
 activity#com.gruv.BaseActivity
-ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:32:9-50
+ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:31:9-50
 	android:name
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:32:19-47
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:31:19-47
 meta-data#com.facebook.sdk.ApplicationId
-ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:34:9-37:45
+ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:33:9-36:45
 MERGED from [com.firebaseui:firebase-ui-auth:6.0.2] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\bc3a7966895110d0959dc40f300014c0\jetified-firebase-ui-auth-6.0.2\AndroidManifest.xml:19:9-21:63
 MERGED from [com.firebaseui:firebase-ui-auth:6.0.2] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\bc3a7966895110d0959dc40f300014c0\jetified-firebase-ui-auth-6.0.2\AndroidManifest.xml:19:9-21:63
 	tools:replace
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:37:13-42
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:36:13-42
 	android:value
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:36:13-52
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:35:13-52
 		REJECTED from [com.firebaseui:firebase-ui-auth:6.0.2] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\bc3a7966895110d0959dc40f300014c0\jetified-firebase-ui-auth-6.0.2\AndroidManifest.xml:21:13-60
 	android:name
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:35:13-58
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:34:13-58
 activity#com.gruv.FacebookLoginActivity
-ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:39:9-42:48
+ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:38:9-41:48
 	android:label
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:42:13-45
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:41:13-45
 	android:configChanges
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:41:13-96
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:40:13-96
 	android:name
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:40:13-50
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:39:13-50
 activity#com.facebook.CustomTabActivity
-ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:43:9-54:20
+ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:42:9-53:20
 MERGED from [com.firebaseui:firebase-ui-auth:6.0.2] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\bc3a7966895110d0959dc40f300014c0\jetified-firebase-ui-auth-6.0.2\AndroidManifest.xml:88:9-100:20
 MERGED from [com.firebaseui:firebase-ui-auth:6.0.2] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\bc3a7966895110d0959dc40f300014c0\jetified-firebase-ui-auth-6.0.2\AndroidManifest.xml:88:9-100:20
 MERGED from [com.facebook.android:facebook-common:5.15.3] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\51dc8207724a571bc8a7e63562c5ea27\jetified-facebook-common-5.15.3\AndroidManifest.xml:35:9-49:20
@@ -317,89 +321,89 @@ MERGED from [com.facebook.android:facebook-common:5.15.3] C:\Users\s987216\.grad
 	tools:node
 		ADDED from [com.facebook.android:facebook-common:5.15.3] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\51dc8207724a571bc8a7e63562c5ea27\jetified-facebook-common-5.15.3\AndroidManifest.xml:38:13-31
 	android:exported
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:45:13-36
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:44:13-36
 	tools:ignore
 		ADDED from [com.firebaseui:firebase-ui-auth:6.0.2] C:\Users\s987216\.gradle\caches\transforms-2\files-2.1\bc3a7966895110d0959dc40f300014c0\jetified-firebase-ui-auth-6.0.2\AndroidManifest.xml:91:13-45
 	android:name
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:44:13-58
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:43:13-58
 intent-filter#action:name:android.intent.action.VIEW+category:name:android.intent.category.BROWSABLE+category:name:android.intent.category.DEFAULT+data:scheme:@string/fb_login_protocol_scheme
-ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:46:13-53:29
+ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:45:13-52:29
 action#android.intent.action.VIEW
-ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:47:17-69
+ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:46:17-69
 	android:name
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:47:25-66
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:46:25-66
 category#android.intent.category.DEFAULT
-ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:49:17-76
+ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:48:17-76
 	android:name
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:49:27-73
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:48:27-73
 category#android.intent.category.BROWSABLE
-ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:50:17-78
+ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:49:17-78
 	android:name
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:50:27-75
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:49:27-75
 data
-ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:52:17-75
+ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:51:17-75
 	android:scheme
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:52:23-72
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:51:23-72
 activity#com.theartofdev.edmodo.cropper.CropImageActivity
-ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:55:9-57:59
+ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:54:9-56:59
 	android:theme
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:57:13-56
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:56:13-56
 	android:name
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:56:13-76
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:55:13-76
 meta-data#com.google.android.geo.API_KEY
-ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:67:9-69:55
+ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:65:9-67:55
 	android:value
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:69:13-52
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:67:13-52
 	android:name
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:68:13-58
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:66:13-58
 activity#com.gruv.MapsActivity
-ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:71:9-73:59
+ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:69:9-71:59
 	android:label
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:73:13-56
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:71:13-56
 	android:name
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:72:13-41
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:70:13-41
 activity#com.gruv.MainActivity
-ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:74:9-83:20
+ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:72:9-81:20
 	android:label
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:76:13-45
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:74:13-45
 	android:launchMode
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:77:13-43
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:75:13-43
 	android:name
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:75:13-41
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:73:13-41
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:78:13-82:29
+ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:76:13-80:29
 action#android.intent.action.MAIN
-ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:79:17-69
+ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:77:17-69
 	android:name
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:79:25-66
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:77:25-66
 category#android.intent.category.LAUNCHER
-ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:81:17-77
+ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:79:17-77
 	android:name
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:81:27-74
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:79:27-74
 activity#com.gruv.LandingActivity
-ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:84:9-87:46
+ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:82:9-85:46
 	android:label
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:86:13-45
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:84:13-45
 	android:launchMode
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:87:13-43
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:85:13-43
 	android:name
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:85:13-44
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:83:13-44
 activity#com.gruv.ChatActivity
-ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:88:9-91:46
+ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:86:9-89:46
 	android:label
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:90:13-37
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:88:13-37
 	android:launchMode
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:91:13-43
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:89:13-43
 	android:name
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:89:13-41
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:87:13-41
 activity#com.gruv.PostActivity
-ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:92:9-95:46
+ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:90:9-93:46
 	android:label
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:94:13-34
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:92:13-34
 	android:launchMode
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:95:13-43
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:93:13-43
 	android:name
-		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:93:13-41
+		ADDED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml:91:13-41
 uses-sdk
 INJECTED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Users\s987216\AndroidStudioProjects\Gruv\app\src\main\AndroidManifest.xml
