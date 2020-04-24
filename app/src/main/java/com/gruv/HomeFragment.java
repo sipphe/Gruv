@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -38,6 +39,7 @@ import com.gruv.models.Event;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -48,7 +50,7 @@ public class HomeFragment extends Fragment implements ClickInterface {
     private FirebaseAuth authenticateObj;
     private FirebaseUser currentUser;
     public NewsFeedAdapter adapter;
-    private List<Event> eventList = new ArrayList<>();
+    ConstraintLayout layoutAuthor;
     ExtendedFloatingActionButton fab;
     private ClickInterface clickInterface;
     private RecyclerView feed;
@@ -60,6 +62,7 @@ public class HomeFragment extends Fragment implements ClickInterface {
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private RelativeLayout parentLayout, layoutError;
+    private List<Event> eventList;
     private Author thisUser;
     View view;
     private boolean viewCreated = false;
@@ -81,6 +84,9 @@ public class HomeFragment extends Fragment implements ClickInterface {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         this.view = view;
         this.savedInstance = savedInstanceState;
+
+        eventList = new ArrayList<>();
+
         initialiseControls();
         setCurrentUser();
         initialiseAdapter();
@@ -121,7 +127,7 @@ public class HomeFragment extends Fragment implements ClickInterface {
                     assert thisUser.getFollowing() != null;
                     if (thisUser.getFollowing() != null) {
 //                        if (thisUser.getFollowing().size() != 1) {
-                            getFollowingsEventIds();
+                        getFollowingsEventIds();
 //                        } else {
 //                            checkEvents();
 //                            hideProgress();
@@ -147,7 +153,7 @@ public class HomeFragment extends Fragment implements ClickInterface {
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                         if (dataSnapshot.getKey().equals(eventId)) {
                             event = dataSnapshot.getValue(Event.class);
-                            event.setEventId(dataSnapshot.getKey());
+                            event.setEventID(dataSnapshot.getKey());
                             addPost(event);
                         }
                         checkEvents();
@@ -159,7 +165,7 @@ public class HomeFragment extends Fragment implements ClickInterface {
                     public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                         if (dataSnapshot.getKey().equals(eventId)) {
                             event = dataSnapshot.getValue(Event.class);
-                            event.setEventId(dataSnapshot.getKey());
+                            event.setEventID(dataSnapshot.getKey());
                             addPost(event, Integer.parseInt(eventId));
                         }
                         checkEvents();
@@ -170,7 +176,7 @@ public class HomeFragment extends Fragment implements ClickInterface {
                     public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.getKey().equals(eventId)) {
                             event = dataSnapshot.getValue(Event.class);
-                            event.setEventId(dataSnapshot.getKey());
+                            event.setEventID(dataSnapshot.getKey());
                             addPost(event, Integer.parseInt(eventId));
                         }
                         checkEvents();
@@ -181,7 +187,7 @@ public class HomeFragment extends Fragment implements ClickInterface {
                     public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                         if (dataSnapshot.getKey().equals(eventId)) {
                             event = dataSnapshot.getValue(Event.class);
-                            event.setEventId(dataSnapshot.getKey());
+                            event.setEventID(dataSnapshot.getKey());
                             addPost(event, Integer.parseInt(eventId));
                         }
                         checkEvents();
@@ -251,9 +257,11 @@ public class HomeFragment extends Fragment implements ClickInterface {
             if (eventList.isEmpty())
                 eventList.add(event);
             else {
-                if (event.getEventId() != eventList.get(eventList.size() - 1).getEventId())
+                if (event.getEventID() != eventList.get(eventList.size() - 1).getEventID())
                     eventList.add(event);
             }
+
+            Collections.sort(eventList);
         }
         if (adapter != null) {
             adapter.notifyDataSetChanged();
@@ -268,7 +276,7 @@ public class HomeFragment extends Fragment implements ClickInterface {
 //                if (event.getEventId() != postedEvents.get(postedEvents.size() - 1).getEventId())
                 int count = 0;
                 for (Event listValue : eventList) {
-                    if (listValue.getEventId().equals(Integer.toString(index))) {
+                    if (listValue.getEventID().equals(Integer.toString(index))) {
                         eventList.set(count, event);
                         break;
                     }

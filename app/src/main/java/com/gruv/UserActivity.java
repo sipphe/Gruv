@@ -1,7 +1,10 @@
 package com.gruv;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -9,6 +12,7 @@ import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
@@ -49,6 +53,7 @@ import com.gruv.models.Event;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +66,7 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
     private FirebaseUser currentUser;
     private ScrollView scrollView;
     private Toolbar toolbar, profilePicToolbar;
-    private ImageView profilePic;
+    private ImageView profilePic, imageVerified;
     private CircleImageView profilePicSmall;
     private TextView textFullName, textEventCount, textFollowers, textFollowing, textBio;
     private Author thisUser, selectedUser;
@@ -73,7 +78,7 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
     private Event event;
-    private ConstraintLayout layoutError;
+    private ConstraintLayout layoutError, layoutUser;
     private PostedEventsAdapter postedEventsAdapter;
     private PromotedEventsAdapter promotedEventsAdapter;
     private MaterialButton buttonBack, buttonSiteLink, buttonFollow, buttonUnfollow;
@@ -162,25 +167,34 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
         buttonFollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addFollowingFollower();
+                if (connectionAvailable())
+                    addFollowingFollower();
+                else
+                    showSnackBar("Check internet connection", Snackbar.LENGTH_LONG);
             }
         });
 
         buttonUnfollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    if (thisUser.getFollowing() != null) {
-                        for (String following : thisUser.getFollowing())
-                            if (following.equals(selectedUser.getId())) {
-                                removeFollowingFollower();
-                            }
+                if (connectionAvailable()) {
+                    try {
+                        if (thisUser.getFollowing() != null) {
+                            for (String following : thisUser.getFollowing())
+                                if (following.equals(selectedUser.getId())) {
+                                    removeFollowingFollower();
+                                }
+                        }
+                    } catch (ConcurrentModificationException e) {
+                        e.printStackTrace();
                     }
-                } catch (ConcurrentModificationException e) {
-                    e.printStackTrace();
-                }
+                } else
+                    showSnackBar("Check internet connection", Snackbar.LENGTH_LONG);
+
             }
         });
+
+
     }
 
     private void addFollowingFollower() {
@@ -266,6 +280,20 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
         });
     }
 
+    private boolean connectionAvailable() {
+        boolean connected = false;
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+
+        if (activeNetwork != null) {
+            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                connected = true;
+            } else {
+                connected = activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE;
+            }
+        }
+        return connected;
+    }
 
     private void getAuthors() {
         databaseReference.child("author").child(thisUser.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -296,7 +324,7 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
     }
 
     private void setSelectedUserDetails() {
-        if (thisUser.getFollowing() != null) {
+        if (thisUser.getFollowingCount() != 0) {
             for (String following : thisUser.getFollowing()) {
                 if (following.equals(selectedUser.getId())) {
                     buttonFollow.setVisibility(View.GONE);
@@ -314,8 +342,21 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
             profilePic.setImageResource(R.drawable.ic_account_circle_white_140dp);
             profilePicSmall.setImageResource(R.drawable.ic_account_circle_white_140dp);
         }
-        textFullName.setText(selectedUser.getName());
 
+        textFullName.setText(selectedUser.getName());
+        ViewGroup.LayoutParams params = textFullName.getLayoutParams();
+        if (selectedUser.getName().length() > 15) {
+            params.width = (int) (160 * Resources.getSystem().getDisplayMetrics().density);
+            textFullName.setLayoutParams(params);
+        } else {
+            params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+        }
+
+        if (selectedUser.isVerified()) {
+            imageVerified.setVisibility(View.VISIBLE);
+        } else {
+            imageVerified.setVisibility(View.GONE);
+        }
         try {
             if (selectedUser.getBio() != null) {
                 textBio.setVisibility(View.VISIBLE);
@@ -383,13 +424,13 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
                         for (String postedEvent : selectedUser.getEvents()) {
                             if (eventDataSnapshot.getKey().equals(postedEvent)) {
                                 event = eventDataSnapshot.getValue(Event.class);
-                                event.setEventId(eventDataSnapshot.getKey());
+                                event.setEventID(eventDataSnapshot.getKey());
                                 if (event.getAuthor().getId().equals(selectedUser.getId())) {
                                     event.setAuthor(selectedUser);
-                                    updateEvent(event.getEventId());
+                                    updateEvent(event.getEventID());
                                 }
-
                                 addPost(event);
+                                checkEvents();
                             }
 
                         }
@@ -398,7 +439,7 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
                         for (String promotedEvent : selectedUser.getPromotedEvents()) {
                             if (eventDataSnapshot.getKey().equals(promotedEvent)) {
                                 event = eventDataSnapshot.getValue(Event.class);
-                                event.setEventId(eventDataSnapshot.getKey());
+                                event.setEventID(eventDataSnapshot.getKey());
                                 addPromotedPost(event);
                             }
                         }
@@ -417,8 +458,8 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
                             for (String postedEvent : selectedUser.getEvents()) {
                                 if (eventDataSnapshot.getKey().equals(postedEvent)) {
                                     event = eventDataSnapshot.getValue(Event.class);
-                                    event.setEventId(eventDataSnapshot.getKey());
-                                    addPost(event, Integer.parseInt(event.getEventId()));
+                                    event.setEventID(eventDataSnapshot.getKey());
+                                    addPost(event, Integer.parseInt(event.getEventID()));
                                 }
 
                             }
@@ -427,8 +468,8 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
                             for (String promotedEvent : thisUser.getPromotedEvents()) {
                                 if (eventDataSnapshot.getKey().equals(promotedEvent)) {
                                     event = eventDataSnapshot.getValue(Event.class);
-                                    event.setEventId(eventDataSnapshot.getKey());
-                                    addPromotedPost(event, Integer.parseInt(event.getEventId()));
+                                    event.setEventID(eventDataSnapshot.getKey());
+                                    addPromotedPost(event, Integer.parseInt(event.getEventID()));
                                 }
                             }
                             count++;
@@ -476,6 +517,7 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
 
     private void initialiseControls() {
         profilePic = findViewById(R.id.imageViewPostPicture);
+        imageVerified = findViewById(R.id.imageVerified);
         textFullName = findViewById(R.id.textName);
         textEventCount = findViewById(R.id.textEventCount);
         buttonBack = findViewById(R.id.buttonBack);
@@ -490,6 +532,7 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
         buttonFollow = findViewById(R.id.buttonFollow);
         buttonUnfollow = findViewById(R.id.butttonUnfollow);
         layoutError = findViewById(R.id.layoutError);
+        layoutUser = findViewById(R.id.layoutUser);
         buttonMore = findViewById(R.id.buttonMore);
         fabAdd = findViewById(R.id.fabAdd);
 
@@ -505,8 +548,10 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
     }
 
     public void addPost(@NotNull Event event) {
-        if (event.getAuthor() != null)
+        if (event.getAuthor() != null) {
             postedEvents.add(event);
+            Collections.sort(postedEvents);
+        }
         if (postedEventsAdapter != null) {
             postedEventsAdapter.notifyDataSetChanged();
         }
@@ -520,12 +565,13 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
 //                if (event.getEventId() != postedEvents.get(postedEvents.size() - 1).getEventId())
                 int count = 0;
                 for (Event listValue : postedEvents) {
-                    if (listValue.getEventId().equals(Integer.toString(index))) {
+                    if (listValue.getEventID().equals(Integer.toString(index))) {
                         postedEvents.set(count, event);
                         break;
                     }
                     count++;
                 }
+                Collections.sort(postedEvents);
             }
         }
         if (postedEventsAdapter != null) {
@@ -539,8 +585,10 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
     }
 
     public void addPromotedPost(@NotNull Event event) {
-        if (event.getAuthor() != null)
+        if (event.getAuthor() != null) {
             promotedEvents.add(event);
+            Collections.sort(promotedEvents);
+        }
         if (promotedEventsAdapter != null) {
             promotedEventsAdapter.notifyDataSetChanged();
         }
@@ -554,7 +602,7 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
 //                if (event.getEventId() != postedEvents.get(postedEvents.size() - 1).getEventId())
                 int count = 0;
                 for (Event listValue : promotedEvents) {
-                    if (listValue.getEventId().equals(index)) {
+                    if (listValue.getEventID().equals(index)) {
                         promotedEvents.set(count, event);
                         break;
                     }
@@ -573,7 +621,7 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
     }
 
     public void checkEvents() {
-        if (thisUser.getEvents() == null || thisUser.getEvents().isEmpty()) {
+        if (selectedUser.getEvents() == null || selectedUser.getEvents().isEmpty()) {
             layoutError.setVisibility(View.VISIBLE);
         } else {
             layoutError.setVisibility(View.GONE);

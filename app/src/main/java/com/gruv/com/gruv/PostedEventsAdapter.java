@@ -83,10 +83,16 @@ public class PostedEventsAdapter extends RecyclerView.Adapter<PostedEventsAdapte
         TextView textLikeCount = viewHolder.textLikeCount;
         CircleImageView imageProfilePic = viewHolder.imageProfilePic;
         ImageView imagePost = viewHolder.imagePost;
+        ImageView imageVerified = viewHolder.imageVerified;
 
         viewHolder.setLiked(event, thisUser, position);
         titleText.setText(event.getEventName());
         textAuthor.setText(event.getAuthor().getName());
+        if (event.getAuthor().isVerified()) {
+            imageVerified.setVisibility(View.VISIBLE);
+        } else {
+            imageVerified.setVisibility(View.GONE);
+        }
         textDescription.setText(event.getEventDescription());
         textVenue.setText(event.getVenue().getVenueName());
         textDay.setText(event.getEventDate().getDayOfMonth() + "");
@@ -125,6 +131,7 @@ public class PostedEventsAdapter extends RecyclerView.Adapter<PostedEventsAdapte
         CardView cardPost;
         ImageView likeButton;
         ImageView commentButton;
+        ImageView imageVerified;
         boolean liked = false;
 
         public ViewHolder(View itemView) {
@@ -148,6 +155,7 @@ public class PostedEventsAdapter extends RecyclerView.Adapter<PostedEventsAdapte
             cardPost = itemView.findViewById(R.id.card_view_post);
             likeButton = itemView.findViewById(R.id.imageLike);
             commentButton = itemView.findViewById(R.id.imageComment);
+            imageVerified = itemView.findViewById(R.id.imageVerified);
 
             cardPost.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -161,7 +169,7 @@ public class PostedEventsAdapter extends RecyclerView.Adapter<PostedEventsAdapte
                     position = getAdapterPosition();
                     setLiked(eventList.get(position), thisUser, position);
                     if (!liked) {
-                        like.setEventId(eventList.get(position).getEventId());
+                        like.setEventId(eventList.get(position).getEventID());
                         liked = true;
                         addLikeToDB(like, eventList.get(position));
 
@@ -240,11 +248,11 @@ public class PostedEventsAdapter extends RecyclerView.Adapter<PostedEventsAdapte
             database = FirebaseDatabase.getInstance();
             databaseReference = database.getReference();
             Map<String, Object> likeToAdd = new HashMap<>();
-            like.setLikeId(databaseReference.child("Event").child(event.getEventId()).child("likes").push().getKey());
+            like.setLikeId(databaseReference.child("Event").child(event.getEventID()).child("likes").push().getKey());
             event.addLike(like);
             likeToAdd.put(like.getLikeId(), like);
 
-            databaseReference.child("Event").child(event.getEventId()).child("likes").updateChildren(likeToAdd, new DatabaseReference.CompletionListener() {
+            databaseReference.child("Event").child(event.getEventID()).child("likes").updateChildren(likeToAdd, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                     if (databaseError != null) {
@@ -259,7 +267,7 @@ public class PostedEventsAdapter extends RecyclerView.Adapter<PostedEventsAdapte
             database = FirebaseDatabase.getInstance();
             databaseReference = database.getReference();
 
-            databaseReference.child("Event").child(event.getEventId()).child("likes").child(like.getLikeId()).setValue(null)
+            databaseReference.child("Event").child(event.getEventID()).child("likes").child(like.getLikeId()).setValue(null)
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {

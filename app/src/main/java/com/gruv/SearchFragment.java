@@ -176,7 +176,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
                 int count = 0;
                 for (DataSnapshot eventDataSnapshot : dataSnapshot.getChildren()) {
                     event = eventDataSnapshot.getValue(Event.class);
-                    event.setEventId(eventDataSnapshot.getKey());
+                    event.setEventID(eventDataSnapshot.getKey());
                     addPost(event);
                 }
 

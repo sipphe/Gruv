@@ -1,6 +1,8 @@
 package com.gruv.models;
 
-public class Comment extends Event {
+import java.io.Serializable;
+
+public class Comment implements Serializable {
     private String commentId, eventId, commentText;
     private Author author;
 
@@ -44,5 +46,10 @@ public class Comment extends Event {
 
     public void setAuthor(Author author) {
         this.author = author;
+    }
+
+    @Override
+    public String toString() {
+        return author.getName() + ": " + commentText;
     }
 }

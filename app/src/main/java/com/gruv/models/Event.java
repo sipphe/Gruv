@@ -5,27 +5,27 @@ import androidx.annotation.NonNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Event implements Serializable {
+public class Event implements Serializable, Comparable<Event> {
 
-    private String eventId, eventName, eventDescription;
+    private String eventID, eventName, eventDescription;
     private Author author;
     private LocalDateTime eventDate;
     private Venue venue;
-    private ArrayList<Comment> comments;
+    private HashMap<String, Comment> comments;
     private HashMap<String, Like> likes;
     private Integer imagePostId;
     private String eventDateString;
     private String imagePostUrl;
+    private String datePosted;
 
     public Event() {
     }
 
-    public Event(@NonNull String eventId, @NonNull String eventName, String eventDescription, Author author, @NonNull LocalDateTime eventDate, Venue venue, Integer imagePostId) {
-        this.eventId = eventId;
+    public Event(@NonNull String eventID, @NonNull String eventName, String eventDescription, Author author, @NonNull LocalDateTime eventDate, Venue venue, Integer imagePostId) {
+        this.eventID = eventID;
         this.eventName = eventName;
         this.eventDescription = eventDescription;
         this.author = author;
@@ -34,8 +34,8 @@ public class Event implements Serializable {
         this.imagePostId = imagePostId;
     }
 
-    public Event(@NonNull String eventId, @NonNull String eventName, Author author, @NonNull LocalDateTime eventDate, Venue venue, String eventDescription, ArrayList<Comment> comments, List<Like> likes, Integer imagePostId) {
-        this.eventId = eventId;
+    public Event(@NonNull String eventID, @NonNull String eventName, Author author, @NonNull LocalDateTime eventDate, Venue venue, String eventDescription, HashMap<String, Comment> comments, List<Like> likes, Integer imagePostId) {
+        this.eventID = eventID;
         this.eventName = eventName;
         this.author = author;
         this.eventDate = eventDate;
@@ -45,12 +45,12 @@ public class Event implements Serializable {
         this.imagePostId = imagePostId;
     }
 
-    public String getEventId() {
-        return eventId;
+    public String getEventID() {
+        return eventID;
     }
 
-    public void setEventId(String eventId) {
-        this.eventId = eventId;
+    public void setEventID(String eventID) {
+        this.eventID = eventID;
     }
 
     public String getEventName() {
@@ -100,20 +100,20 @@ public class Event implements Serializable {
         this.eventDescription = eventDescription;
     }
 
-    public List<Comment> getComments() {
+    public HashMap<String, Comment> getComments() {
         return comments;
     }
 
-    public void setComments(ArrayList<Comment> comments) {
+    public void setComments(HashMap<String, Comment> comments) {
         this.comments = comments;
     }
 
     public void addComment(Comment comment) {
         if (comments != null) {
-            this.comments.add(comment);
+            this.comments.put(comment.getCommentId(), comment);
         } else {
-            this.comments = new ArrayList<>();
-            this.comments.add(comment);
+            this.comments = new HashMap<>();
+            this.comments.put(comment.getCommentId(), comment);
         }
     }
 
@@ -128,10 +128,7 @@ public class Event implements Serializable {
     public void addLike(Like like) {
         if (this.likes == null) {
             this.likes = new HashMap<>();
-        } else {
-
         }
-
         this.likes.put(like.getLikeId(), like);
     }
 
@@ -161,6 +158,14 @@ public class Event implements Serializable {
         return imagePostUrl;
     }
 
+    public String getDatePosted() {
+        return datePosted;
+    }
+
+    public void setDatePosted(String datePosted) {
+        this.datePosted = datePosted;
+    }
+
     public void setImagePostUrl(String imagePostUrl) {
         this.imagePostUrl = imagePostUrl;
     }
@@ -172,4 +177,8 @@ public class Event implements Serializable {
                 + ", by " + author.getName();
     }
 
+    @Override
+    public int compareTo(Event o) {
+        return datePosted.compareTo(o.datePosted);
+    }
 }

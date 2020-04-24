@@ -10,6 +10,7 @@ import java.util.List;
 public class Author implements IUser, Serializable {
     private String id, email, name, avatar, bio, site;
     private Integer profilePictureId;
+    private boolean verified = false;
     private List<String> events, promotedEvents, following, followers;
     private int followingCount;
 
@@ -50,6 +51,18 @@ public class Author implements IUser, Serializable {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
+    }
+
+    public void setFollowingCount(int followingCount) {
+        this.followingCount = followingCount;
     }
 
     public Integer getProfilePictureId() {

@@ -133,6 +133,7 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/butttonUnfollow"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:visibility="invisible"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/twenty"
@@ -140,7 +141,6 @@
                     android:elevation="@dimen/eight"
                     android:text="Unfollow"
                     android:textColor="@color/colorAccent"
-                    android:visibility="invisible"
                     app:layout_constraintBottom_toTopOf="@+id/layoutUserName"
                     app:layout_constraintEnd_toEndOf="parent" />
 
@@ -153,29 +153,44 @@
                     app:layout_constraintTop_toBottomOf="@+id/imageViewPostPicture">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/constraintLayout"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/layoutUser"
+                        android:layout_width="220dp"
                         android:layout_height="match_parent"
                         app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/layoutFollowing"
+                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0">
 
                         <TextView
                             android:id="@+id/textName"
-                            android:layout_width="190dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/thirty_two"
                             android:layout_marginTop="@dimen/twelve"
-                            android:ellipsize="marquee"
+                            android:ellipsize="end"
                             android:focusable="true"
                             android:focusableInTouchMode="true"
-                            android:marqueeRepeatLimit="marquee_forever"
+                            android:marqueeRepeatLimit="1"
                             android:scrollHorizontally="true"
                             android:singleLine="true"
                             android:text="User Name"
                             android:textColor="@color/white"
                             android:textSize="20sp"
                             app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageView
+                            android:id="@+id/imageVerified"
+                            android:layout_width="@dimen/twenty"
+                            android:layout_height="@dimen/twenty"
+                            android:layout_marginStart="@dimen/four"
+                            android:layout_marginTop="@dimen/sixteen"
+                            android:src="@drawable/verified_48dp"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toBottomOf="@+id/textName"
+                            app:layout_constraintStart_toEndOf="@+id/textName"
                             app:layout_constraintTop_toTopOf="parent" />
 
 

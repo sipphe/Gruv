@@ -64,7 +64,6 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-
         // Inflate the custom layout
         View eventView = inflater.inflate(R.layout.post, parent, false);
         ViewHolder viewHolder = new ViewHolder(eventView);
@@ -87,10 +86,16 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
         TextView textLikeCount = viewHolder.textLikeCount;
         CircleImageView imageProfilePic = viewHolder.imageProfilePic;
         ImageView imagePost = viewHolder.imagePost;
+        ImageView imageVerified = viewHolder.imageVerified;
 
         viewHolder.setLiked(event, thisUser, position);
         titleText.setText(event.getEventName());
         textAuthor.setText(event.getAuthor().getName());
+        if (event.getAuthor().isVerified()) {
+            imageVerified.setVisibility(View.VISIBLE);
+        } else {
+            imageVerified.setVisibility(View.GONE);
+        }
         textDescription.setText(event.getEventDescription());
         textVenue.setText(event.getVenue().getVenueName());
         textDay.setText(event.getEventDate().getDayOfMonth() + "");
@@ -116,6 +121,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public int position;
+        ImageView imageVerified;
         TextView titleText;
         TextView textAuthor;
         TextView textDescription;
@@ -154,6 +160,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
             likeButton = itemView.findViewById(R.id.imageLike);
             commentButton = itemView.findViewById(R.id.imageComment);
             layoutUser = itemView.findViewById(R.id.layoutAuthor);
+            imageVerified = itemView.findViewById(R.id.imageVerified);
 
             cardPost.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -167,7 +174,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
                     position = getAdapterPosition();
                     setLiked(eventList.get(position), thisUser, position);
                     if (!liked) {
-                        like.setEventId(eventList.get(position).getEventId());
+                        like.setEventId(eventList.get(position).getEventID());
                         liked = true;
                         addLikeToDB(like, eventList.get(position));
 
@@ -262,11 +269,11 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
             database = FirebaseDatabase.getInstance();
             databaseReference = database.getReference();
             Map<String, Object> likeToAdd = new HashMap<>();
-            like.setLikeId(databaseReference.child("Event").child(event.getEventId()).child("likes").push().getKey());
+            like.setLikeId(databaseReference.child("Event").child(event.getEventID()).child("likes").push().getKey());
             event.addLike(like);
             likeToAdd.put(like.getLikeId(), like);
 
-            databaseReference.child("Event").child(event.getEventId()).child("likes").updateChildren(likeToAdd, new DatabaseReference.CompletionListener() {
+            databaseReference.child("Event").child(event.getEventID()).child("likes").updateChildren(likeToAdd, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                     if (databaseError != null) {
@@ -281,7 +288,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
             database = FirebaseDatabase.getInstance();
             databaseReference = database.getReference();
 
-            databaseReference.child("Event").child(event.getEventId()).child("likes").child(like.getLikeId()).setValue(null)
+            databaseReference.child("Event").child(event.getEventID()).child("likes").child(like.getLikeId()).setValue(null)
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {

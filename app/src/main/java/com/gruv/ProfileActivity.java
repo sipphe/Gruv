@@ -9,6 +9,7 @@ import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
@@ -80,6 +81,7 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
     private MaterialButton buttonBack, buttonSiteLink, buttonEditProfile;
     private ImageButton buttonMore;
     private FloatingActionButton fabAdd;
+    private ImageView imageVerified;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -198,7 +200,19 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
             profilePicSmall.setImageResource(R.drawable.ic_account_circle_white_140dp);
         }
         textFullName.setText(thisUser.getName());
+        ViewGroup.LayoutParams params = textFullName.getLayoutParams();
+        if (thisUser.getName().length() > 15) {
+            params.width = (int) (160 * Resources.getSystem().getDisplayMetrics().density);
+            textFullName.setLayoutParams(params);
+        } else {
+            params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+        }
 
+        if (thisUser.isVerified()) {
+            imageVerified.setVisibility(View.VISIBLE);
+        } else {
+            imageVerified.setVisibility(View.GONE);
+        }
         try {
             if (thisUser.getBio() != null) {
                 textBio.setVisibility(View.VISIBLE);
@@ -264,10 +278,10 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
                         for (String postedEvent : thisUser.getEvents()) {
                             if (eventDataSnapshot.getKey().equals(postedEvent)) {
                                 event = eventDataSnapshot.getValue(Event.class);
-                                event.setEventId(eventDataSnapshot.getKey());
+                                event.setEventID(eventDataSnapshot.getKey());
                                 if (event.getAuthor().getId().equals(thisUser.getId())) {
                                     event.setAuthor(thisUser);
-                                    updateEvent(event.getEventId());
+                                    updateEvent(event.getEventID());
                                 }
 
                                 addPost(event);
@@ -279,7 +293,7 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
                         for (String promotedEvent : thisUser.getPromotedEvents()) {
                             if (eventDataSnapshot.getKey().equals(promotedEvent)) {
                                 event = eventDataSnapshot.getValue(Event.class);
-                                event.setEventId(eventDataSnapshot.getKey());
+                                event.setEventID(eventDataSnapshot.getKey());
                                 addPromotedPost(event);
                             }
                         }
@@ -298,8 +312,8 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
                             for (String postedEvent : thisUser.getEvents()) {
                                 if (eventDataSnapshot.getKey().equals(postedEvent)) {
                                     event = eventDataSnapshot.getValue(Event.class);
-                                    event.setEventId(eventDataSnapshot.getKey());
-                                    addPost(event, Integer.parseInt(event.getEventId()));
+                                    event.setEventID(eventDataSnapshot.getKey());
+                                    addPost(event, Integer.parseInt(event.getEventID()));
                                 }
 
                             }
@@ -308,8 +322,8 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
                             for (String promotedEvent : thisUser.getPromotedEvents()) {
                                 if (eventDataSnapshot.getKey().equals(promotedEvent)) {
                                     event = eventDataSnapshot.getValue(Event.class);
-                                    event.setEventId(eventDataSnapshot.getKey());
-                                    addPromotedPost(event, Integer.parseInt(event.getEventId()));
+                                    event.setEventID(eventDataSnapshot.getKey());
+                                    addPromotedPost(event, Integer.parseInt(event.getEventID()));
                                 }
                             }
                             count++;
@@ -375,6 +389,7 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
         layoutError = findViewById(R.id.layoutError);
         buttonMore = findViewById(R.id.buttonMore);
         fabAdd = findViewById(R.id.fabAdd);
+        imageVerified = findViewById(R.id.imageVerified);
 
 
         recyclerPostedEvents = findViewById(R.id.recyclerPostedEvents);
@@ -403,7 +418,7 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
 //                if (event.getEventId() != postedEvents.get(postedEvents.size() - 1).getEventId())
                 int count = 0;
                 for (Event listValue : postedEvents) {
-                    if (listValue.getEventId().equals(Integer.toString(index))) {
+                    if (listValue.getEventID().equals(Integer.toString(index))) {
                         postedEvents.set(count, event);
                         break;
                     }
@@ -437,7 +452,7 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
 //                if (event.getEventId() != postedEvents.get(postedEvents.size() - 1).getEventId())
                 int count = 0;
                 for (Event listValue : promotedEvents) {
-                    if (listValue.getEventId().equals(index)) {
+                    if (listValue.getEventID().equals(index)) {
                         promotedEvents.set(count, event);
                         break;
                     }
@@ -550,7 +565,7 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
         this.thisUser = bottomSheet.thisUser;
         setUserDetails();
         for (Event postedEvent : postedEvents) {
-            updateEvent(postedEvent.getEventId());
+            updateEvent(postedEvent.getEventID());
         }
     }
 

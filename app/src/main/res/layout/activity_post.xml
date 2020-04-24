@@ -363,6 +363,7 @@
                     android:id="@+id/scrollViewComments"
                     android:layout_width="match_parent"
                     android:layout_height="360dp"
+                    android:layout_marginTop="16dp"
                     android:fillViewport="true"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/layoutSeperator">
@@ -372,12 +373,10 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <ListView
+                        <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/listComments"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:clipToPadding="false"
-                            android:divider="@null"
                             android:listSelector="@android:color/transparent"
                             android:nestedScrollingEnabled="true"
                             android:paddingBottom="?attr/actionBarSize"

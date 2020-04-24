@@ -1,7 +1,9 @@
 package com.gruv;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.Window;
@@ -9,22 +11,31 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.gruv.com.gruv.CommentListAdapter;
 import com.gruv.models.Author;
 import com.gruv.models.Comment;
@@ -32,7 +43,9 @@ import com.gruv.models.Event;
 import com.gruv.models.Like;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -63,22 +76,33 @@ public class PostActivity extends AppCompatActivity {
     private TextView likeCount, commentCount;
     private TextInputLayout textLayoutAddComment;
     private TextInputEditText editTextAddComment;
-    private ListView commentList;
+    List<String> commentKeys = new ArrayList<>();
     private ScrollView scrollView;
     private NestedScrollView scrollViewComments;
     private Boolean liked = false;
     private Like thisLike;
     private CommentListAdapter adapter;
     private Author thisUser;
+    Author author;
+    private RecyclerView recyclerComments;
+    private ConstraintLayout layoutAuthor;
+    private FirebaseDatabase database;
+    private DatabaseReference databaseReference;
+    private HashMap<String, Comment> comments;
+    private LinearLayoutManager layoutManager;
+    private Comment comment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
         postEvent = (Event) getIntent().getSerializableExtra("Event");
-
+        if (comments != null)
+            comments.clear();
+        comments = postEvent.getComments();
         initialiseControls();
         setCurrentUser();
+        initialiseAdapter();
         setTransparentStatusBar();
         setTopPadding(getStatusBarHeight());
         setPost();
@@ -92,8 +116,14 @@ public class PostActivity extends AppCompatActivity {
         } else {
             buttonReadMore.setVisibility(View.GONE);
         }
-
-        setComments();
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                layoutProgress.setVisibility(View.VISIBLE);
+                getAuthorAndUpdateEvent();
+            }
+        });
+        thread.start();
 
 
         scrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
@@ -107,14 +137,14 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onScrollChanged() {
 
-                if (scrollViewComments.getChildAt(0).getBottom()
-                        <= (scrollViewComments.getHeight() + scrollViewComments.getScrollY())) {
-                    //scroll view is at bottom
-                    layoutProgress.setVisibility(View.VISIBLE);
-                } else {
-                    //scroll view is not at bottom
-                    layoutProgress.setVisibility(View.GONE);
-                }
+//                if (scrollViewComments.getChildAt(0).getBottom()
+//                        <= (scrollViewComments.getHeight() + scrollViewComments.getScrollY())) {
+//                    //scroll view is at bottom
+//                    layoutProgress.setVisibility(View.VISIBLE);
+//                } else {
+//                    //scroll view is not at bottom
+//                    layoutProgress.setVisibility(View.GONE);
+//                }
             }
         });
 
@@ -172,13 +202,39 @@ public class PostActivity extends AppCompatActivity {
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addComment(editTextAddComment.getText().toString().trim());
-                editTextAddComment.getText().clear();
-                layoutAddComment.setVisibility(View.INVISIBLE);
-                layoutLikeComment.setVisibility(View.VISIBLE);
+                if (!editTextAddComment.getText().toString().trim().equals("")) {
+                    addComment(editTextAddComment.getText().toString().trim());
+                    editTextAddComment.getText().clear();
+                    layoutAddComment.setVisibility(View.INVISIBLE);
+                    layoutLikeComment.setVisibility(View.VISIBLE);
+                }
             }
         });
 
+        layoutAuthor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!postEvent.getAuthor().getId().equals(thisUser.getId())) {
+                    Intent intent = new Intent(PostActivity.this, UserActivity.class);
+                    intent.putExtra("selectedUser", postEvent.getAuthor());
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(PostActivity.this, ProfileActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+
+    }
+
+    private void initialiseAdapter() {
+        for (Map.Entry<String, Comment> commentEntry : postEvent.getComments().entrySet()) {
+            commentKeys.add(commentEntry.getKey());
+        }
+        adapter = new CommentListAdapter(this, postEvent, commentKeys, thisUser);
+        recyclerComments.setAdapter(adapter);
+        layoutManager = new LinearLayoutManager(this);
+        recyclerComments.setLayoutManager(layoutManager);
     }
 
 
@@ -200,13 +256,14 @@ public class PostActivity extends AppCompatActivity {
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         toolbar = findViewById(R.id.main_app_toolbar);
         buttonReadMore = findViewById(R.id.buttonReadMore);
-        commentList = findViewById(R.id.listComments);
+        recyclerComments = findViewById(R.id.listComments);
         backImage = findViewById(R.id.buttonBack);
         scrollView = findViewById(R.id.scrollViewProfile);
         scrollViewComments = findViewById(R.id.scrollViewComments);
         appBarLayout = findViewById(R.id.appBarLayout);
         layoutDesc = findViewById(R.id.layoutDescription);
         layoutProgress = findViewById(R.id.layout_progress);
+        layoutAuthor = findViewById(R.id.layoutAuthor);
         layoutLikeComment = findViewById(R.id.layoutLikeComment);
         layoutAddComment = findViewById(R.id.layoutAddComment);
         buttonAddComment = findViewById(R.id.buttonComment);
@@ -215,6 +272,9 @@ public class PostActivity extends AppCompatActivity {
         textLayoutAddComment = findViewById(R.id.textInputLayout);
         editTextAddComment = findViewById(R.id.editTextComment);
         buttonSend = findViewById(R.id.buttonSend);
+
+        database = FirebaseDatabase.getInstance();
+        databaseReference = database.getReference();
     }
 
     private void collapseToolbar() {
@@ -268,31 +328,34 @@ public class PostActivity extends AppCompatActivity {
     }
 
     public void setComments() {
-        List<String> strings = new ArrayList<>();
-        if (postEvent.getComments() != null) {
-            for (int i = 0; i < postEvent.getComments().size(); i++) {
-                strings.add(postEvent.getComments().get(i).getCommentText());
-            }
-
+        commentKeys.clear();
+        for (Map.Entry<String, Comment> commentEntry : postEvent.getComments().entrySet()) {
+            commentKeys.add(commentEntry.getKey());
         }
-        adapter = new CommentListAdapter(this, postEvent.getComments(), strings);
+        if (adapter != null)
+            adapter.notifyDataSetChanged();
 
-
-        commentList.setAdapter(adapter);
+        setPost();
     }
 
     public void addComment(String commentText) {
-        int newCommentId;
-        if (postEvent.getComments() != null) {
-            if (postEvent.getComments().get(postEvent.getComments().size() - 1).getCommentId() != null)
-                newCommentId = Integer.parseInt(postEvent.getComments().get(postEvent.getComments().size() - 1).getCommentId()) + 1;
-            else
-                newCommentId = 0;
-        } else
-            newCommentId = 0;
+        Comment comment = new Comment();
+        Map<String, Object> likeToAdd = new HashMap<>();
+        comment.setCommentId(databaseReference.child("Event").child(postEvent.getEventID()).child("comments").push().getKey());
+        comment.setCommentText(commentText);
+        comment.setAuthor(thisUser);
+        postEvent.addComment(comment);
+        comments.put(comment.getCommentId(), comment);
 
-        Comment comment = new Comment(newCommentId + "", postEvent.getEventId(), commentText, thisUser);
-
+        databaseReference.child("Event").child(postEvent.getEventID()).child("likes").updateChildren(likeToAdd, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    showSnackBar(databaseError.getMessage(), Snackbar.LENGTH_LONG);
+                }
+                setComments();
+            }
+        });
         postEvent.addComment(comment);
         setComments();
         if (postEvent.getComments() != null) {
@@ -353,7 +416,7 @@ public class PostActivity extends AppCompatActivity {
     }
 
     public void addLike(Author author) {
-        thisLike = new Like(postEvent.getEventId(), author);
+        thisLike = new Like(postEvent.getEventID(), author);
         postEvent.addLike(thisLike);
         if (postEvent.getLikes().size() == 1)
             likeCount.setText("1 LIKE");
@@ -367,6 +430,55 @@ public class PostActivity extends AppCompatActivity {
             likeCount.setText("1 LIKE");
         else
             likeCount.setText(postEvent.getLikes().size() + " LIKES");
+    }
+
+    public void showSnackBar(String message, Integer length) {
+        try {
+            View rootView = getWindow().getDecorView().findViewById(android.R.id.content);
+            Snackbar.make(rootView, message, length).show();
+        } catch (Exception e) {
+            Log.w("Snackbar Error", "Couldn't load Snackbar");
+        }
+    }
+
+    private void getAuthorAndUpdateEvent() {
+        comment = new Comment();
+        if (comments != null) {
+            for (Map.Entry<String, Comment> commentEntry : comments.entrySet()) {
+                databaseReference.child("author").child(commentEntry.getValue().getAuthor().getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        author = dataSnapshot.getValue(Author.class);
+                        author.setId(dataSnapshot.getKey());
+                        comment = commentEntry.getValue();
+                        comment.setCommentId(commentEntry.getKey());
+                        postEvent.addComment(commentEntry.getValue());
+                        updateEvent(postEvent.getEventID(), author, comment);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
+                });
+
+            }
+        }
+    }
+
+    private void updateEvent(String eventId, Author author, Comment comment) {
+        Map<String, Object> user = new HashMap<>();
+        user.put("author", author);
+        databaseReference.child("Event").child(eventId).child("comments").child(comment.getCommentId()).updateChildren(user, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                layoutProgress.setVisibility(View.GONE);
+                if (databaseError != null) {
+                    showSnackBar("Something went wrong", Snackbar.LENGTH_LONG);
+                } else {
+                    setComments();
+                }
+            }
+        });
     }
 }
 

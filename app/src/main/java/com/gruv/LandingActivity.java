@@ -31,9 +31,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -168,7 +172,10 @@ public class LandingActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                validateEmail(s, layoutEmailRegisterText, buttonRegister);
+                if (!validateEmail(s, layoutEmailRegisterText, buttonRegister)) {
+                    checkIfEmailExists(s, layoutEmailRegisterText, buttonRegister);
+                }
+
             }
         });
 
@@ -257,6 +264,21 @@ public class LandingActivity extends AppCompatActivity {
 
     }
 
+    private void checkIfEmailExists(Editable s, TextInputLayout layout, MaterialButton button) {
+        authenticateObj.fetchSignInMethodsForEmail(s.toString()).addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
+            @Override
+            public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
+                boolean isNewUser = task.getResult().getSignInMethods().isEmpty();
+                if (!isNewUser) {
+                    emailCorrect = false;
+                    layout.setError("Invalid email");
+                    button.setClickable(false);
+                    button.setTextColor(ContextCompat.getColor(getApplicationContext(), (R.color.grey)));
+                }
+            }
+        });
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -313,7 +335,14 @@ public class LandingActivity extends AppCompatActivity {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     hideProgressBar();
-                                    showSnackBar("Something went wrong", R.id.layoutParent, Snackbar.LENGTH_SHORT);
+                                    if (e.getClass().equals(FirebaseAuthInvalidUserException.class) || e.getClass().equals(FirebaseAuthInvalidCredentialsException.class)) {
+                                        showSnackBar("Incorrect email or password", R.id.layoutParent, Snackbar.LENGTH_SHORT);
+                                    } else if (e.getClass().equals(FirebaseTooManyRequestsException.class)) {
+                                        showSnackBar(e.getMessage(), R.id.layoutParent, Snackbar.LENGTH_SHORT);
+                                    } else {
+                                        showSnackBar("Something went wrong", R.id.layoutParent, Snackbar.LENGTH_SHORT);
+
+                                    }
                                     e.printStackTrace();
                                 }
                             });
@@ -427,7 +456,7 @@ public class LandingActivity extends AppCompatActivity {
         Snackbar.make(contextView, message, length).show();
     }
 
-    public void validateEmail(Editable s, TextInputLayout layout, MaterialButton button) {
+    public boolean validateEmail(Editable s, TextInputLayout layout, MaterialButton button) {
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-zA-Z._-]+[a-zA-Z._-]";
         // onClick of button perform this simplest code.
         if (!s.toString().trim().matches(emailPattern)) {
@@ -435,6 +464,7 @@ public class LandingActivity extends AppCompatActivity {
             layout.setError("Invalid email");
             button.setClickable(false);
             button.setTextColor(ContextCompat.getColor(getApplicationContext(), (R.color.grey)));
+            return false;
         } else {
             emailCorrect = true;
             layout.setError(null);
@@ -442,7 +472,9 @@ public class LandingActivity extends AppCompatActivity {
                 button.setClickable(true);
                 button.setTextColor(ContextCompat.getColor(getApplicationContext(), (R.color.colorPrimary)));
             }
+            return true;
         }
+
     }
 
     public void validatePassword(Editable editable, TextInputLayout layout, MaterialButton button) {
