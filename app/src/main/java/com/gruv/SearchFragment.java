@@ -16,6 +16,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -37,6 +40,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.gruv.com.gruv.SearchListAdapter;
 import com.gruv.models.Author;
 import com.gruv.models.Event;
@@ -67,6 +75,11 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
     private int peekHeight = 700;
     List<Event> events;
     private RecyclerView listSearch;
+    SearchView searchView;
+    private DatabaseReference databaseReference;
+    private FirebaseDatabase database;
+    private Event event;
+    private SearchListAdapter adapter;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -90,12 +103,30 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
 
         mapFragment.getMapAsync(this);
 
+        boolean textChanged = false;
+
+        initialiseControls();
 
         bottom_sheet = getActivity().findViewById(R.id.bottom_sheet);
         sheetBehavior = BottomSheetBehavior.from(bottom_sheet);
         sheetBehavior.setPeekHeight(peekHeight);
         sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         listSearch = getActivity().findViewById(R.id.search_list);
+        searchView = getActivity().findViewById(R.id.searchView);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                search(newText);
+                return false;
+            }
+        });
 
         Author eventAuthor = new Author("1234", "The Grand at Night Show", null, R.drawable.profile_pic5);
         events = new ArrayList<>();
@@ -117,11 +148,69 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
             strings.add(events.get(i).getEventName());
         }
 
-        SearchListAdapter adapter = new SearchListAdapter(getActivity(), events);
+        adapter = new SearchListAdapter(getActivity(), events);
         listSearch.setAdapter(adapter);
         listSearch.setLayoutManager(new LinearLayoutManager(getActivity()));
 
 
+    }
+
+    private void initialiseControls() {
+        bottom_sheet = getActivity().findViewById(R.id.bottom_sheet);
+        sheetBehavior = BottomSheetBehavior.from(bottom_sheet);
+        sheetBehavior.setPeekHeight(peekHeight);
+        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        listSearch = getActivity().findViewById(R.id.search_list);
+        searchView = getActivity().findViewById(R.id.searchView);
+
+        database = FirebaseDatabase.getInstance();
+        databaseReference = database.getReference();
+    }
+
+    private void search(String text) {
+        events.clear();
+        databaseReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                int count = 0;
+                for (DataSnapshot eventDataSnapshot : dataSnapshot.getChildren()) {
+                    event = eventDataSnapshot.getValue(Event.class);
+                    event.setEventId(eventDataSnapshot.getKey());
+                    addPost(event);
+                }
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void addPost(Event event) {
+        if (event.getAuthor() != null)
+            events.add(event);
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+            addMarkersOnMap(events);
+        }
     }
 
     /**
@@ -139,12 +228,16 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
         map.getUiSettings().setMapToolbarEnabled(true);
         //Initialize Google Play Services
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
+                == PackageManager.PERMISSION_GRANTED) {
             buildGoogleApiClient();
             map.setMyLocationEnabled(true);
         }
         map.setPadding(0, 0, 0, peekHeight + 20);
 
+        addMarkersOnMap(events);
+    }
+
+    private void addMarkersOnMap(List<Event> events) {
         for (int i = 0; i < events.size(); i++) {
             if (events.get(i).getVenue().getLatitude() != 0 && events.get(i).getVenue().getLongitude() != 0)
                 map.addMarker(new MarkerOptions().position(new LatLng(events.get(i).getVenue().getLatitude(), events.get(i).getVenue().getLongitude())).title(events.get(i).getEventName()));

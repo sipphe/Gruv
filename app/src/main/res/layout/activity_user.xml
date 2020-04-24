@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ProfileActivity">
+    tools:context=".UserActivity">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -117,7 +117,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/buttonEditProfile"
+                    android:id="@+id/buttonFollow"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -127,6 +127,20 @@
                     android:elevation="@dimen/eight"
                     android:text="Follow"
                     android:textColor="@color/black"
+                    app:layout_constraintBottom_toTopOf="@+id/layoutUserName"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/butttonUnfollow"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/twenty"
+                    android:layout_marginBottom="@dimen/twenty"
+                    android:elevation="@dimen/eight"
+                    android:text="Unfollow"
+                    android:textColor="@color/colorAccent"
+                    android:visibility="invisible"
                     app:layout_constraintBottom_toTopOf="@+id/layoutUserName"
                     app:layout_constraintEnd_toEndOf="parent" />
 
@@ -358,13 +372,5 @@
 
     </ScrollView>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAdd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/thirty_two"
-        android:src="@drawable/ic_add_black_24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

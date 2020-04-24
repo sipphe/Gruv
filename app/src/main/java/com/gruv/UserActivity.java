@@ -49,6 +49,7 @@ import com.gruv.models.Event;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,7 +68,6 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
     private RecyclerView recyclerPostedEvents, recyclerPromotedEvents;
     private List<Event> postedEvents = new ArrayList<>(), promotedEvents = new ArrayList<>();
     private ConstraintLayout appBarLayout;
-    private EditProfileBottomSheet bottomSheet;
     private ClickInterface postedEventsListener;
     private SecondClickInterface promotedEventsListener;
     private FirebaseDatabase database;
@@ -76,8 +76,7 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
     private ConstraintLayout layoutError;
     private PostedEventsAdapter postedEventsAdapter;
     private PromotedEventsAdapter promotedEventsAdapter;
-    private Bundle savedInstanceState;
-    private MaterialButton buttonBack, buttonSiteLink;
+    private MaterialButton buttonBack, buttonSiteLink, buttonFollow, buttonUnfollow;
     private ImageButton buttonMore;
     private FloatingActionButton fabAdd;
 
@@ -85,8 +84,6 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
-        this.savedInstanceState = savedInstanceState;
-        setContentView(R.layout.activity_profile);
         authenticateObj = FirebaseAuth.getInstance();
         currentUser = authenticateObj.getCurrentUser();
         if (currentUser != null) {
@@ -101,7 +98,7 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
         setTopPadding(getStatusBarHeight());
         boolean hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
         if (hasBackKey) {
-            setBottomPadding(getStatusBarHeight());
+            // setBottomPadding(getStatusBarHeight());
         }
 
 
@@ -109,14 +106,12 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
         promotedEventsListener = this;
 
         getAuthors();
-        setUserDetails();
+        setSelectedUserDetails();
 
 
         promotedEventsAdapter = new PromotedEventsAdapter(this, promotedEvents, postedEventsListener);
         recyclerPostedEvents.setAdapter(promotedEventsAdapter);
-        recyclerPostedEvents.setLayoutManager(new
-
-                LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        recyclerPostedEvents.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
         postedEventsAdapter = new PostedEventsAdapter(this, this, thisUser, postedEvents, promotedEventsListener);
         recyclerPromotedEvents.setAdapter(postedEventsAdapter);
@@ -133,7 +128,7 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
         buttonSiteLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openLink(thisUser.getSite());
+                openLink(selectedUser.getSite());
             }
         });
         scrollView.getViewTreeObserver().
@@ -149,7 +144,7 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
             @Override
             public void onClick(View v) {
                 PopupMenu popupMenu = new PopupMenu(UserActivity.this, buttonMore);
-                popupMenu.getMenuInflater().inflate(R.menu.profile_menu, popupMenu.getMenu());
+                popupMenu.getMenuInflater().inflate(R.menu.user_menu, popupMenu.getMenu());
                 popupMenu.setGravity(Gravity.RIGHT);
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
@@ -164,18 +159,134 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
             }
         });
 
+        buttonFollow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addFollowingFollower();
+            }
+        });
 
+        buttonUnfollow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    if (thisUser.getFollowing() != null) {
+                        for (String following : thisUser.getFollowing())
+                            if (following.equals(selectedUser.getId())) {
+                                removeFollowingFollower();
+                            }
+                    }
+                } catch (ConcurrentModificationException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void addFollowingFollower() {
+        List<String> following;
+        if (thisUser.getFollowing() != null) {
+            following = thisUser.getFollowing();
+            following.add(selectedUser.getId());
+            thisUser.setFollowing(following);
+        }
+        Map<String, Object> user = new HashMap<>();
+        user.put(thisUser.getId(), thisUser);
+        databaseReference.child("author").updateChildren(user, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    // TODO Add error code
+                    showSnackBar("Something went wrong", Snackbar.LENGTH_LONG);
+                } else {
+                    showSnackBar("Followed " + selectedUser.getName(), Snackbar.LENGTH_LONG);
+                }
+                setSelectedUserDetails();
+            }
+        });
+
+        if (selectedUser.getFollowers() != null) {
+            List<String> followers = selectedUser.getFollowers();
+            followers.add(thisUser.getId());
+            selectedUser.setFollowers(followers);
+        }
+        user = new HashMap<>();
+        user.put(selectedUser.getId(), selectedUser);
+        databaseReference.child("author").updateChildren(user, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    // TODO Add error code
+                    showSnackBar("Something went wrong", Snackbar.LENGTH_LONG);
+                }
+                setSelectedUserDetails();
+            }
+        });
+    }
+
+    private void removeFollowingFollower() {
+        if (thisUser.getFollowing() != null) {
+            List<String> following = thisUser.getFollowing();
+            following.remove(selectedUser.getId());
+            thisUser.setFollowing(following);
+        }
+        Map<String, Object> user = new HashMap<>();
+        user.put(thisUser.getId(), thisUser);
+        databaseReference.child("author").updateChildren(user, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    // TODO Add error code
+                    showSnackBar("Something went wrong", Snackbar.LENGTH_LONG);
+                } else {
+                    showSnackBar("Unfollowed " + selectedUser.getName(), Snackbar.LENGTH_LONG);
+                }
+                setSelectedUserDetails();
+
+            }
+        });
+
+        if (selectedUser.getFollowers() != null) {
+            List<String> followers = selectedUser.getFollowers();
+            followers.remove(thisUser.getId());
+            selectedUser.setFollowers(followers);
+        }
+        user = new HashMap<>();
+        user.put(selectedUser.getId(), selectedUser);
+        databaseReference.child("author").updateChildren(user, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    // TODO Add error code
+                    showSnackBar("Something went wrong", Snackbar.LENGTH_LONG);
+                }
+                setSelectedUserDetails();
+
+            }
+        });
     }
 
 
     private void getAuthors() {
-        databaseReference.child("author").child(selectedUser.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.child("author").child(thisUser.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 thisUser = dataSnapshot.getValue(Author.class);
                 thisUser.setId(dataSnapshot.getKey());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
+        databaseReference.child("author").child(selectedUser.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                selectedUser = dataSnapshot.getValue(Author.class);
+                selectedUser.setId(dataSnapshot.getKey());
                 getEvents();
-                setUserDetails();
+                setSelectedUserDetails();
             }
 
             @Override
@@ -184,36 +295,45 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
         });
     }
 
-    private void setUserDetails() {
-        if (thisUser.getAvatar() != null) {
-            loadAndSetPicture(Uri.parse(thisUser.getAvatar()), profilePic);
-            loadAndSetPicture(Uri.parse(thisUser.getAvatar()), profilePicSmall);
+    private void setSelectedUserDetails() {
+        if (thisUser.getFollowing() != null) {
+            for (String following : thisUser.getFollowing()) {
+                if (following.equals(selectedUser.getId())) {
+                    buttonFollow.setVisibility(View.GONE);
+                    buttonUnfollow.setVisibility(View.VISIBLE);
+                } else {
+                    buttonFollow.setVisibility(View.VISIBLE);
+                    buttonUnfollow.setVisibility(View.GONE);
+                }
+            }
+        }
+        if (selectedUser.getAvatar() != null) {
+            loadAndSetPicture(Uri.parse(selectedUser.getAvatar()), profilePic);
+            loadAndSetPicture(Uri.parse(selectedUser.getAvatar()), profilePicSmall);
         } else {
             profilePic.setImageResource(R.drawable.ic_account_circle_white_140dp);
             profilePicSmall.setImageResource(R.drawable.ic_account_circle_white_140dp);
         }
-        textFullName.setText(thisUser.getName());
+        textFullName.setText(selectedUser.getName());
 
         try {
-            if (thisUser.getBio() != null) {
+            if (selectedUser.getBio() != null) {
                 textBio.setVisibility(View.VISIBLE);
-                textBio.setText(thisUser.getBio());
+                textBio.setText(selectedUser.getBio());
             } else
                 textBio.setVisibility(View.GONE);
 
-            if (thisUser.getSite() != null) {
+            if (selectedUser.getSite() != null) {
                 {
-                    String display = "";
                     buttonSiteLink.setVisibility(View.VISIBLE);
-
-                    display = thisUser.getSite();
-                    if (thisUser.getSite().length() >= 8) {
-                        if (thisUser.getSite().substring(0, 8).equals("https://"))
-                            display = thisUser.getSite().substring(8);
-                        else if (thisUser.getSite().substring(0, 7).equals("http://"))
-                            display = thisUser.getSite().substring(7);
+                    String display = selectedUser.getSite();
+                    if (selectedUser.getSite().length() >= 8) {
+                        if (selectedUser.getSite().substring(0, 8).equals("https://"))
+                            display = selectedUser.getSite().substring(8);
+                        else if (selectedUser.getSite().substring(0, 7).equals("http://"))
+                            display = selectedUser.getSite().substring(7);
                         else
-                            display = thisUser.getSite();
+                            display = selectedUser.getSite();
 
                     }
 
@@ -232,19 +352,23 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
             } else
                 buttonSiteLink.setVisibility(View.GONE);
 
-            if (thisUser.getFollowers() != null)
-                textFollowers.setText(Integer.toString(thisUser.getFollowers().size()));
+            if (selectedUser.getFollowers() != null)
+                textFollowers.setText(Integer.toString(selectedUser.getFollowers().size()));
 
-            textFollowing.setText(Integer.toString(thisUser.getFollowingCount()));
+            textFollowing.setText(Integer.toString(selectedUser.getFollowingCount()));
 
-            if (thisUser.getEvents() != null) {
-                textEventCount.setText(thisUser.getEvents().size() + " events");
+            if (selectedUser.getEvents() != null) {
+                textEventCount.setText(selectedUser.getEvents().size() + " events");
             }
 
             checkEvents();
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+    }
+
+    private void setUserDetails() {
 
     }
 
@@ -255,13 +379,13 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
 
                 int count = 0;
                 for (DataSnapshot eventDataSnapshot : dataSnapshot.getChildren()) {
-                    if (thisUser.getEvents() != null) {
-                        for (String postedEvent : thisUser.getEvents()) {
+                    if (selectedUser.getEvents() != null) {
+                        for (String postedEvent : selectedUser.getEvents()) {
                             if (eventDataSnapshot.getKey().equals(postedEvent)) {
                                 event = eventDataSnapshot.getValue(Event.class);
                                 event.setEventId(eventDataSnapshot.getKey());
-                                if (event.getAuthor().getId().equals(thisUser.getId())) {
-                                    event.setAuthor(thisUser);
+                                if (event.getAuthor().getId().equals(selectedUser.getId())) {
+                                    event.setAuthor(selectedUser);
                                     updateEvent(event.getEventId());
                                 }
 
@@ -270,8 +394,8 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
 
                         }
                     }
-                    if (thisUser.getPromotedEvents() != null) {
-                        for (String promotedEvent : thisUser.getPromotedEvents()) {
+                    if (selectedUser.getPromotedEvents() != null) {
+                        for (String promotedEvent : selectedUser.getPromotedEvents()) {
                             if (eventDataSnapshot.getKey().equals(promotedEvent)) {
                                 event = eventDataSnapshot.getValue(Event.class);
                                 event.setEventId(eventDataSnapshot.getKey());
@@ -289,8 +413,8 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
 
                     int count = 0;
                     for (DataSnapshot eventDataSnapshot : dataSnapshot.getChildren()) {
-                        if (thisUser.getEvents() != null) {
-                            for (String postedEvent : thisUser.getEvents()) {
+                        if (selectedUser.getEvents() != null) {
+                            for (String postedEvent : selectedUser.getEvents()) {
                                 if (eventDataSnapshot.getKey().equals(postedEvent)) {
                                     event = eventDataSnapshot.getValue(Event.class);
                                     event.setEventId(eventDataSnapshot.getKey());
@@ -333,7 +457,7 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
 
     private void updateEvent(String eventId) {
         Map<String, Object> user = new HashMap<>();
-        user.put("author", thisUser);
+        user.put("author", selectedUser);
         databaseReference.child("Event").child(eventId).updateChildren(user, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
@@ -341,9 +465,6 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
                     // TODO Add error code
                     showSnackBar("Something went wrong", Snackbar.LENGTH_LONG);
                 }
-//               else {
-//
-//               }
             }
         });
     }
@@ -366,6 +487,8 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
         textFollowers = findViewById(R.id.textViewFollwersCount);
         textFollowing = findViewById(R.id.textViewFollowingCount);
         buttonSiteLink = findViewById(R.id.buttonSiteLink);
+        buttonFollow = findViewById(R.id.buttonFollow);
+        buttonUnfollow = findViewById(R.id.butttonUnfollow);
         layoutError = findViewById(R.id.layoutError);
         buttonMore = findViewById(R.id.buttonMore);
         fabAdd = findViewById(R.id.fabAdd);
@@ -378,7 +501,7 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
         databaseReference = database.getReference();
 
         //set static resource
-        profilePicToolbar.setTitle(thisUser.getName());
+        profilePicToolbar.setTitle(selectedUser.getName());
     }
 
     public void addPost(@NotNull Event event) {

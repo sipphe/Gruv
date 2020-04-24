@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -23,7 +24,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.gruv.PostActivity;
+import com.gruv.ProfileActivity;
 import com.gruv.R;
+import com.gruv.UserActivity;
 import com.gruv.interfaces.ClickInterface;
 import com.gruv.models.Author;
 import com.gruv.models.Event;
@@ -126,6 +129,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
         CardView cardPost;
         ImageView likeButton;
         ImageView commentButton;
+        ConstraintLayout layoutUser;
         boolean liked = false;
 
         public ViewHolder(View itemView) {
@@ -149,6 +153,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
             cardPost = itemView.findViewById(R.id.card_view_post);
             likeButton = itemView.findViewById(R.id.imageLike);
             commentButton = itemView.findViewById(R.id.imageComment);
+            layoutUser = itemView.findViewById(R.id.layoutAuthor);
 
             cardPost.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -183,8 +188,24 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
                     intent.putExtra("CommentClicked", true);
                     context.startActivity(intent);
                 }
+
+
             });
 
+            layoutUser.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    position = getAdapterPosition();
+                    if (!eventList.get(position).getAuthor().getId().equals(thisUser.getId())) {
+                        Intent intent = new Intent(context, UserActivity.class);
+                        intent.putExtra("selectedUser", eventList.get(position).getAuthor());
+                        context.startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(context, ProfileActivity.class);
+                        context.startActivity(intent);
+                    }
+                }
+            });
         }
 
         public Like getUserLike(Event event) {
