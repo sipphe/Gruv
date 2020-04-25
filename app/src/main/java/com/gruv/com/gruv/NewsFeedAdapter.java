@@ -110,7 +110,10 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
             textLikeCount.setText(event.getLikes().size() + "");
 
         Glide.with(context).load(event.getImagePostUrl()).centerCrop().into(imagePost);
-        Glide.with(context).load(event.getAuthor().getAvatar()).centerCrop().into(imageProfilePic);
+        if (event.getAuthor().getAvatar() != null)
+            Glide.with(context).load(event.getAuthor().getAvatar()).centerCrop().into(imageProfilePic);
+        else
+            imageProfilePic.setImageResource(R.drawable.ic_account_circle_black_always);
 
     }
 

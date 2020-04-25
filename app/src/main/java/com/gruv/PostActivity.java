@@ -31,6 +31,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -91,12 +92,14 @@ public class PostActivity extends AppCompatActivity {
     private HashMap<String, Comment> comments;
     private LinearLayoutManager layoutManager;
     private Comment comment;
+    private String eventId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
         postEvent = (Event) getIntent().getSerializableExtra("Event");
+        eventId = postEvent.getEventID();
         if (comments != null)
             comments.clear();
         comments = postEvent.getComments();
@@ -120,7 +123,7 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void run() {
                 layoutProgress.setVisibility(View.VISIBLE);
-                getAuthorAndUpdateEvent();
+                getAuthorAndUpdateEvent(comments);
             }
         });
         thread.start();
@@ -227,7 +230,49 @@ public class PostActivity extends AppCompatActivity {
 
     }
 
+    private void getPost() {
+        databaseReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
+                    if (eventSnapshot.getKey().equals(eventId)) {
+                        postEvent = eventSnapshot.getValue(Event.class);
+                        setPost();
+                        setComments(postEvent);
+                    }
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
+                    if (eventSnapshot.getKey().equals(eventId)) {
+                        postEvent = eventSnapshot.getValue(Event.class);
+                        setPost();
+                        setComments(postEvent);
+                    }
+                }
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                showSnackBar(databaseError.getMessage(), Snackbar.LENGTH_LONG);
+            }
+        });
+    }
+
     private void initialiseAdapter() {
+        commentKeys.clear();
         for (Map.Entry<String, Comment> commentEntry : postEvent.getComments().entrySet()) {
             commentKeys.add(commentEntry.getKey());
         }
@@ -299,9 +344,12 @@ public class PostActivity extends AppCompatActivity {
         textVenue = findViewById(R.id.textVenue);
         likeCount = findViewById(R.id.textViewLikeCount);
         commentCount = findViewById(R.id.textviewCommentCount);
-
-        Glide.with(this).load(postEvent.getImagePostUrl()).into(postPic);
-        Glide.with(this).load(postEvent.getAuthor().getAvatar()).into(imageProfilePicture);
+        try {
+            Glide.with(this).load(postEvent.getImagePostUrl()).into(postPic);
+            Glide.with(this).load(postEvent.getAuthor().getAvatar()).into(imageProfilePicture);
+        } catch (Exception e) {
+            showSnackBar("Something went wrong", Snackbar.LENGTH_LONG);
+        }
 
         //postPic.setImageResource(postEvent.getImagePostId());
         //imageProfilePicture.setImageResource(postEvent.setCurrentUser().getProfilePictureId());
@@ -327,13 +375,14 @@ public class PostActivity extends AppCompatActivity {
 
     }
 
-    public void setComments() {
-        commentKeys.clear();
-        for (Map.Entry<String, Comment> commentEntry : postEvent.getComments().entrySet()) {
-            commentKeys.add(commentEntry.getKey());
-        }
-        if (adapter != null)
-            adapter.notifyDataSetChanged();
+    public void setComments(Event postEvent) {
+//        commentKeys.clear();
+//        this.postEvent = postEvent;
+//        for (Map.Entry<String, Comment> commentEntry : postEvent.getComments().entrySet()) {
+//            commentKeys.add(commentEntry.getKey());
+//        }
+
+        initialiseAdapter();
 
         setPost();
     }
@@ -353,17 +402,19 @@ public class PostActivity extends AppCompatActivity {
                 if (databaseError != null) {
                     showSnackBar(databaseError.getMessage(), Snackbar.LENGTH_LONG);
                 }
-                setComments();
+                setComments(postEvent);
+                setPost();
             }
         });
         postEvent.addComment(comment);
-        setComments();
-        if (postEvent.getComments() != null) {
-            if (postEvent.getComments().size() == 1)
-                commentCount.setText("1 COMMENT");
-            else
-                commentCount.setText(postEvent.getComments().size() + " COMMENTS");
-        }
+        setPost();
+        setComments(postEvent);
+//        if (postEvent.getComments() != null) {
+//            if (postEvent.getComments().size() == 1)
+//                commentCount.setText("1 COMMENT");
+//            else
+//                commentCount.setText(postEvent.getComments().size() + " COMMENTS");
+//        }
     }
 
     public int getStatusBarHeight() {
@@ -441,7 +492,7 @@ public class PostActivity extends AppCompatActivity {
         }
     }
 
-    private void getAuthorAndUpdateEvent() {
+    private void getAuthorAndUpdateEvent(HashMap<String, Comment> comments) {
         comment = new Comment();
         if (comments != null) {
             for (Map.Entry<String, Comment> commentEntry : comments.entrySet()) {
@@ -452,7 +503,7 @@ public class PostActivity extends AppCompatActivity {
                         author.setId(dataSnapshot.getKey());
                         comment = commentEntry.getValue();
                         comment.setCommentId(commentEntry.getKey());
-                        postEvent.addComment(commentEntry.getValue());
+                        postEvent.addComment(comment);
                         updateEvent(postEvent.getEventID(), author, comment);
                     }
 
@@ -475,7 +526,7 @@ public class PostActivity extends AppCompatActivity {
                 if (databaseError != null) {
                     showSnackBar("Something went wrong", Snackbar.LENGTH_LONG);
                 } else {
-                    setComments();
+                    getPost();
                 }
             }
         });

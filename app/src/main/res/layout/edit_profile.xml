@@ -25,7 +25,7 @@
                 android:layout_width="140dp"
                 android:layout_height="140dp"
                 android:layout_marginTop="@dimen/twenty"
-                android:src="@drawable/ic_account_circle_black_always"
+                android:src="@drawable/ic_account_circle_black_24dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

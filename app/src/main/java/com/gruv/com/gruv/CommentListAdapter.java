@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.text.HtmlCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -46,7 +47,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
 
 
         // Inflate the custom layout
-        View eventView = inflater.inflate(R.layout.comment, parent, false);
+        View eventView = inflater.inflate(R.layout.commentcontent, parent, false);
         CommentListAdapter.ViewHolder viewHolder = new CommentListAdapter.ViewHolder(eventView);
 
         return viewHolder;
@@ -54,14 +55,23 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Comment comment = event.getComments().get(commentKeys.get(position));
-        CircleImageView profilePic = holder.profilePic;
-        TextView textAuthor = holder.textAuthor;
-        TextView textComment = holder.textComment;
+        if (event.getComments() != null) {
+            Comment comment = event.getComments().get(commentKeys.get(position));
+            CircleImageView profilePic = holder.profilePic;
+//        TextView textAuthor = holder.textAuthor;
+            TextView textComment = holder.textComment;
 
-        Glide.with(context).load(comment.getAuthor().getAvatar()).into(profilePic);
-        textAuthor.setText(comment.getAuthor().getName());
-        textComment.setText(comment.getCommentText());
+
+            if (comment.getAuthor().getAvatar() != null) {
+                Glide.with(context).load(comment.getAuthor().getAvatar()).into(profilePic);
+            } else {
+                profilePic.setImageResource(R.drawable.ic_account_circle_black_24dp);
+            }
+
+
+//        textAuthor.setText(comment.getAuthor().getName());
+            textComment.setText(HtmlCompat.fromHtml("<b>" + comment.getAuthor().getName() + "</b>    " + comment.getCommentText(), HtmlCompat.FROM_HTML_MODE_LEGACY));
+        }
     }
 
     @Override
@@ -80,15 +90,15 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             profilePic = itemView.findViewById(R.id.imageProfilePic);
-            textAuthor = itemView.findViewById(R.id.textEventAuthor);
+//            textAuthor = itemView.findViewById(R.id.textEventAuthor);
             textComment = itemView.findViewById(R.id.textComment);
 
-            textAuthor.setOnClickListener(new View.OnClickListener() {
+            textComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!event.getAuthor().getId().equals(thisUser.getId())) {
+                    if (!event.getComments().get(commentKeys.get(getAdapterPosition())).getAuthor().getId().equals(thisUser.getId())) {
                         Intent intent = new Intent(context, UserActivity.class);
-                        intent.putExtra("selectedUser", event.getComments().get(getAdapterPosition()).getAuthor());
+                        intent.putExtra("selectedUser", event.getComments().get(commentKeys.get(getAdapterPosition())).getAuthor());
                         context.startActivity(intent);
                     } else {
                         Intent intent = new Intent(context, ProfileActivity.class);

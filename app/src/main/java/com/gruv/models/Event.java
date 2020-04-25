@@ -181,4 +181,8 @@ public class Event implements Serializable, Comparable<Event> {
     public int compareTo(Event o) {
         return datePosted.compareTo(o.datePosted);
     }
+
+    public void clearComments() {
+        comments.clear();
+    }
 }
