@@ -25,6 +25,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
@@ -93,6 +95,8 @@ public class PostActivity extends AppCompatActivity {
     private LinearLayoutManager layoutManager;
     private Comment comment;
     private String eventId;
+    private Like like;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,11 +109,11 @@ public class PostActivity extends AppCompatActivity {
         comments = postEvent.getComments();
         initialiseControls();
         setCurrentUser();
+        getAuthor();
         initialiseAdapter();
         setTransparentStatusBar();
         setTopPadding(getStatusBarHeight());
         setPost();
-
         textEventDescription.getLayoutParams().height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
 
         int height = textEventDescription.getLineCount();
@@ -173,13 +177,15 @@ public class PostActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (!liked) {
                     buttonLike.setImageDrawable(getDrawable(R.drawable.sunshine_clicked));
-                    addLike(postEvent.getAuthor());
+                    addLike();
                     liked = true;
                 } else {
+                    addLike();
                     buttonLike.setImageDrawable(getDrawable(R.drawable.sunshine));
                     removeLike(postEvent.getAuthor());
                     liked = false;
                 }
+                setPost();
             }
         });
 
@@ -230,6 +236,23 @@ public class PostActivity extends AppCompatActivity {
 
     }
 
+    public void getAuthor() {
+        databaseReference.child("author").child(thisUser.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    thisUser = dataSnapshot.getValue(Author.class);
+                    thisUser.setId(dataSnapshot.getKey());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     private void getPost() {
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
@@ -237,6 +260,7 @@ public class PostActivity extends AppCompatActivity {
                 for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
                     if (eventSnapshot.getKey().equals(eventId)) {
                         postEvent = eventSnapshot.getValue(Event.class);
+                        postEvent.setEventID(eventSnapshot.getKey());
                         setPost();
                         setComments(postEvent);
                     }
@@ -248,6 +272,7 @@ public class PostActivity extends AppCompatActivity {
                 for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
                     if (eventSnapshot.getKey().equals(eventId)) {
                         postEvent = eventSnapshot.getValue(Event.class);
+                        postEvent.setEventID(eventSnapshot.getKey());
                         setPost();
                         setComments(postEvent);
                     }
@@ -372,7 +397,7 @@ public class PostActivity extends AppCompatActivity {
             else
                 commentCount.setText(postEvent.getComments().size() + " COMMENTS");
         }
-
+        setLiked(postEvent, thisUser);
     }
 
     public void setComments(Event postEvent) {
@@ -389,14 +414,14 @@ public class PostActivity extends AppCompatActivity {
 
     public void addComment(String commentText) {
         Comment comment = new Comment();
-        Map<String, Object> likeToAdd = new HashMap<>();
-        comment.setCommentId(databaseReference.child("Event").child(postEvent.getEventID()).child("comments").push().getKey());
+        Map<String, Object> commentToAdd = new HashMap<>();
+        comment.setCommentId(databaseReference.child("Event").child(eventId).child("comments").push().getKey());
         comment.setCommentText(commentText);
         comment.setAuthor(thisUser);
         postEvent.addComment(comment);
-        comments.put(comment.getCommentId(), comment);
+        commentToAdd.put(comment.getCommentId(), comment);
 
-        databaseReference.child("Event").child(postEvent.getEventID()).child("likes").updateChildren(likeToAdd, new DatabaseReference.CompletionListener() {
+        databaseReference.child("Event").child(eventId).child("comments").updateChildren(commentToAdd, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                 if (databaseError != null) {
@@ -466,13 +491,109 @@ public class PostActivity extends AppCompatActivity {
         appBarLayout.setPadding(0, topPadding, 0, 0);
     }
 
-    public void addLike(Author author) {
-        thisLike = new Like(postEvent.getEventID(), author);
-        postEvent.addLike(thisLike);
-        if (postEvent.getLikes().size() == 1)
+    public void addLike() {
+        like = new Like();
+        if (!liked) {
+            like.setEventId(eventId);
+            liked = true;
+            addLikeToDB(like, postEvent);
+
+        } else {
+            liked = false;
+            postEvent.removeLike(getUserLike(postEvent));
+            removeLikeFromDB(getUserLike(postEvent), postEvent);
+        }
+    }
+
+    public Like getUserLike(Event event) {
+        int size = 0;
+        boolean liked = false;
+        Like thislike = null;
+        if (event.getLikes() != null)
+            size = event.getLikes().size();
+
+        if (size != 0) {
+            for (Map.Entry<String, Like> like : event.getLikes().entrySet()) {
+                if (like.getValue().getAuthor().getId().equals(thisUser.getId()))
+                    thislike = like.getValue();
+            }
+        }
+//            for (int i = 0; i < size; i++) {
+//                if (event.getLikes().get(i).getAuthor() == thisUser)
+//                    like = event.getLikes().get(i);
+//            }
+        return thislike;
+    }
+
+    public void addLikeToDB(Like like, Event event) {
+        database = FirebaseDatabase.getInstance();
+        databaseReference = database.getReference();
+        Map<String, Object> likeToAdd = new HashMap<>();
+        like.setLikeId(databaseReference.child("Event").child(event.getEventID()).child("likes").push().getKey());
+        like.setAuthor(thisUser);
+        event.addLike(like);
+        likeToAdd.put(like.getLikeId(), like);
+
+        databaseReference.child("Event").child(event.getEventID()).child("likes").updateChildren(likeToAdd, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    showSnackBar(databaseError.getMessage(), Snackbar.LENGTH_LONG);
+                }
+            }
+        });
+
+    }
+
+    public void removeLikeFromDB(Like like, Event event) {
+        database = FirebaseDatabase.getInstance();
+        databaseReference = database.getReference();
+
+        databaseReference.child("Event").child(event.getEventID()).child("likes").child(like.getLikeId()).setValue(null)
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        showSnackBar(e.getMessage(), Snackbar.LENGTH_LONG);
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                setLiked(postEvent, thisUser);
+            }
+        });
+
+    }
+
+    public void setLiked(Event event, Author thisUser) {
+        int size = 0;
+        liked = false;
+        if (event.getLikes() != null)
+            size = event.getLikes().size();
+
+        if (size != 0) {
+            for (Map.Entry<String, Like> like : event.getLikes().entrySet()) {
+                if (like.getValue().getAuthor().getId().equals(thisUser.getId()))
+                    liked = true;
+            }
+        }
+
+//            for (int i = 0; i < size; i++) {
+//                if (event.getLikes().get(i).getAuthor() == thisUser)
+//                    liked = true;
+//            }
+
+        if (liked) {
+            buttonLike.setImageResource(R.drawable.sunshine_clicked);
+        } else {
+            buttonLike.setImageResource(R.drawable.sunshine);
+        }
+
+        if (event.getLikes() == null || event.getLikes().isEmpty())
+            likeCount.setText("0");
+        else if (event.getLikes().size() == 1)
             likeCount.setText("1 LIKE");
         else
-            likeCount.setText(postEvent.getLikes().size() + " LIKES");
+            likeCount.setText(event.getLikes().size() + " LIKES");
     }
 
     public void removeLike(Author author) {

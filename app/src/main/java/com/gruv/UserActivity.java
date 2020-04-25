@@ -201,9 +201,12 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
         List<String> following;
         if (thisUser.getFollowing() != null) {
             following = thisUser.getFollowing();
-            following.add(selectedUser.getId());
-            thisUser.setFollowing(following);
+
+        } else {
+            following = new ArrayList<>();
         }
+        following.add(selectedUser.getId());
+        thisUser.setFollowing(following);
         Map<String, Object> user = new HashMap<>();
         user.put(thisUser.getId(), thisUser);
         databaseReference.child("author").updateChildren(user, new DatabaseReference.CompletionListener() {
@@ -218,12 +221,15 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
                 setSelectedUserDetails();
             }
         });
-
+        List<String> followers;
         if (selectedUser.getFollowers() != null) {
-            List<String> followers = selectedUser.getFollowers();
-            followers.add(thisUser.getId());
-            selectedUser.setFollowers(followers);
+            followers = selectedUser.getFollowers();
+        } else {
+            followers = new ArrayList<>();
         }
+
+        followers.add(thisUser.getId());
+        selectedUser.setFollowers(followers);
         user = new HashMap<>();
         user.put(selectedUser.getId(), selectedUser);
         databaseReference.child("author").updateChildren(user, new DatabaseReference.CompletionListener() {

@@ -80,8 +80,7 @@ public class Event implements Serializable, Comparable<Event> {
     public void convertDate(String eventDateString) {
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 
-        LocalDateTime eventDateFormatted = LocalDateTime.parse(eventDateString, formatter);
-        this.eventDate = eventDateFormatted;
+        this.eventDate = LocalDateTime.parse(eventDateString, formatter);
     }
 
     public Venue getVenue() {
