@@ -362,7 +362,7 @@
                         android:layout_height="90dp"
                         android:layout_marginTop="@dimen/forty"
                         android:paddingBottom="@dimen/twenty"
-                        android:src="@drawable/ic_mode_edit_black_24dp"
+                        android:src="@drawable/empty_feed_color_48dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -374,7 +374,7 @@
                         android:layout_marginEnd="@dimen/thirty_two"
                         android:padding="@dimen/twelve"
                         android:paddingBottom="@dimen/fifty_six"
-                        android:text="You haven't posted any events yet. Tap on '+' to add one"
+                        android:text="@string/error_404_user"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/imageView" />

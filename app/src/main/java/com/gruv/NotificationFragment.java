@@ -13,7 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
-import com.gruv.com.gruv.MyListAdapter;
+import com.gruv.adapters.MyListAdapter;
 
 
 /**

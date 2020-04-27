@@ -14,15 +14,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <ImageView
+            android:id="@+id/imageVerified"
+            android:layout_width="@dimen/twelve"
+            android:layout_height="@dimen/twelve"
+            android:layout_marginStart="@dimen/four"
+            android:src="@drawable/verified_48dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imageProfilePic"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/textEventAuthor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/thirty_two"
             android:text="Author"
+            android:layout_marginStart="@dimen/four"
             android:textSize="@dimen/text_size"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imageVerified"
             app:layout_constraintTop_toTopOf="parent" />
 
         <de.hdodenhof.circleimageview.CircleImageView

@@ -40,8 +40,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.gruv.com.gruv.PostedEventsAdapter;
-import com.gruv.com.gruv.PromotedEventsAdapter;
+import com.gruv.adapters.PostedEventsAdapter;
+import com.gruv.adapters.PromotedEventsAdapter;
 import com.gruv.interfaces.ClickInterface;
 import com.gruv.interfaces.SecondClickInterface;
 import com.gruv.models.Author;
@@ -50,6 +50,7 @@ import com.gruv.models.Event;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -392,6 +393,7 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
         imageVerified = findViewById(R.id.imageVerified);
 
 
+
         recyclerPostedEvents = findViewById(R.id.recyclerPostedEvents);
         recyclerPromotedEvents = findViewById(R.id.recyclerPromotedEvents);
 
@@ -403,8 +405,10 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
     }
 
     public void addPost(@NotNull Event event) {
-        if (event.getAuthor() != null)
+        if (event.getAuthor() != null) {
             postedEvents.add(event);
+            Collections.sort(postedEvents, Collections.reverseOrder());
+        }
         if (postedEventsAdapter != null) {
             postedEventsAdapter.notifyDataSetChanged();
         }
@@ -412,8 +416,9 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
 
     public void addPost(@NotNull Event event, int index) {
         if (event.getAuthor() != null) {
-            if (postedEvents.isEmpty())
+            if (postedEvents.isEmpty()) {
                 postedEvents.add(event);
+            }
             else {
 //                if (event.getEventId() != postedEvents.get(postedEvents.size() - 1).getEventId())
                 int count = 0;
@@ -427,6 +432,7 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
             }
         }
         if (postedEventsAdapter != null) {
+            Collections.sort(postedEvents, Collections.reverseOrder());
             postedEventsAdapter.notifyDataSetChanged();
         }
 //        if (event.getAuthor() != null)
@@ -439,6 +445,7 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
     public void addPromotedPost(@NotNull Event event) {
         if (event.getAuthor() != null)
             promotedEvents.add(event);
+        Collections.sort(promotedEvents, Collections.reverseOrder());
         if (promotedEventsAdapter != null) {
             promotedEventsAdapter.notifyDataSetChanged();
         }
@@ -458,6 +465,7 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
                     }
                     count++;
                 }
+                Collections.sort(promotedEvents, Collections.reverseOrder());
             }
         }
         if (promotedEventsAdapter != null) {

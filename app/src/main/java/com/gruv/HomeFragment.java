@@ -31,7 +31,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.gruv.com.gruv.NewsFeedAdapter;
+import com.gruv.adapters.NewsFeedAdapter;
 import com.gruv.interfaces.ClickInterface;
 import com.gruv.models.Author;
 import com.gruv.models.Event;
@@ -84,9 +84,7 @@ public class HomeFragment extends Fragment implements ClickInterface {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         this.view = view;
         this.savedInstance = savedInstanceState;
-
         eventList = new ArrayList<>();
-
         initialiseControls();
         setCurrentUser();
         initialiseAdapter();
@@ -124,7 +122,6 @@ public class HomeFragment extends Fragment implements ClickInterface {
                 if (dataSnapshot.exists()) {
                     thisUser = dataSnapshot.getValue(Author.class);
                     thisUser.setId(dataSnapshot.getKey());
-                    assert thisUser.getFollowing() != null;
                     if (thisUser.getFollowing() != null) {
 //                        if (thisUser.getFollowing().size() != 1) {
                         getFollowingsEventIds();
@@ -257,7 +254,7 @@ public class HomeFragment extends Fragment implements ClickInterface {
             if (eventList.isEmpty())
                 eventList.add(event);
             else {
-                if (event.getEventID() != eventList.get(eventList.size() - 1).getEventID())
+                if (eventList.stream().noneMatch(o -> o.getEventID().equals(event.getEventID())))
                     eventList.add(event);
             }
 
@@ -265,7 +262,9 @@ public class HomeFragment extends Fragment implements ClickInterface {
         }
         if (adapter != null) {
             adapter.notifyDataSetChanged();
+
         }
+
     }
 
     public void addPost(@NotNull Event event, int index) {
@@ -273,7 +272,6 @@ public class HomeFragment extends Fragment implements ClickInterface {
             if (eventList.isEmpty())
                 eventList.add(event);
             else {
-//                if (event.getEventId() != postedEvents.get(postedEvents.size() - 1).getEventId())
                 int count = 0;
                 for (Event listValue : eventList) {
                     if (listValue.getEventID().equals(Integer.toString(index))) {
@@ -284,14 +282,6 @@ public class HomeFragment extends Fragment implements ClickInterface {
                 }
             }
         }
-//        if (event.getAuthor() != null) {
-//            if (eventList.isEmpty())
-//                eventList.add(event);
-//            else {
-//                if (event.getEventId() != eventList.get(eventList.size() - 1).getEventId())
-//                    eventList.set(index, event);
-//            }
-//        }
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }

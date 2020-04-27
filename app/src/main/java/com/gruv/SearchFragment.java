@@ -45,7 +45,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.gruv.com.gruv.SearchListAdapter;
+import com.gruv.adapters.SearchListAdapter;
 import com.gruv.models.Author;
 import com.gruv.models.Event;
 import com.gruv.models.Venue;
@@ -169,6 +169,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
 
     private void search(String text) {
         events.clear();
+        map.clear();
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {

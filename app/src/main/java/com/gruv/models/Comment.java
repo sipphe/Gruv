@@ -2,9 +2,10 @@ package com.gruv.models;
 
 import java.io.Serializable;
 
-public class Comment implements Serializable {
+public class Comment implements Serializable, Comparable<Comment> {
     private String commentId, eventId, commentText;
     private Author author;
+    private String postedDate;
 
     public Comment() {
 
@@ -51,5 +52,18 @@ public class Comment implements Serializable {
     @Override
     public String toString() {
         return author.getName() + ": " + commentText;
+    }
+
+    public String getPostedDate() {
+        return postedDate;
+    }
+
+    public void setPostedDate(String postedDate) {
+        this.postedDate = postedDate;
+    }
+
+    @Override
+    public int compareTo(Comment o) {
+        return postedDate.compareTo(o.postedDate);
     }
 }

@@ -22,7 +22,9 @@
             android:layout_width="@dimen/forty"
             android:layout_height="@dimen/forty"
             android:paddingStart="@dimen/twenty"
+            android:contentDescription="@string/back"
             android:paddingTop="@dimen/four"
+            android:paddingEnd="@dimen/zero"
             app:icon="@drawable/ic_arrow_back_white_24dp"
             app:iconGravity="textStart"
             app:iconTint="@color/white"
@@ -79,6 +81,7 @@
             android:scaleType="fitCenter"
             android:src="@drawable/ic_more_vert_white_24dp"
             app:iconTint="@color/white"
+            android:contentDescription="@string/more"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -114,6 +117,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
+                    android:contentDescription="@string/profile_picture"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.button.MaterialButton
@@ -124,7 +128,7 @@
                     android:layout_marginEnd="@dimen/twenty"
                     android:layout_marginBottom="@dimen/twenty"
                     android:elevation="@dimen/eight"
-                    android:text="Edit Profile"
+                    android:text="@string/edit_profile"
                     android:textColor="@color/colorAccent"
                     app:layout_constraintBottom_toTopOf="@+id/layoutUserName"
                     app:layout_constraintEnd_toEndOf="parent" />
@@ -160,7 +164,7 @@
                             android:marqueeRepeatLimit="1"
                             android:scrollHorizontally="true"
                             android:singleLine="true"
-                            android:text="User Name"
+                            android:text=""
                             android:textColor="@color/white"
                             android:textSize="20sp"
                             app:layout_constraintStart_toStartOf="parent"
@@ -176,6 +180,7 @@
                             android:visibility="gone"
                             app:layout_constraintBottom_toBottomOf="@+id/textName"
                             app:layout_constraintStart_toEndOf="@+id/textName"
+                            android:contentDescription="@string/verified"
                             app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -185,7 +190,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/thirty_two"
                             android:layout_marginBottom="@dimen/sixteen"
-                            android:text="0 events"
+                            android:text=""
                             android:textColor="@color/colorPrimaryLight"
                             android:textSize="@dimen/text_size"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -206,9 +211,9 @@
                             android:id="@+id/textViewFollwersCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0"
+                            android:text="@string/zero"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/twenty_eight"
+                            android:textSize="28sp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -218,9 +223,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="@dimen/zero"
-                            android:text="Followers"
+                            android:text="@string/followers"
                             android:textColor="@color/white"
-                            android:textSize="15dp"
+                            android:textSize="15sp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/textViewFollwersCount" />
@@ -240,9 +245,9 @@
                             android:id="@+id/textViewFollowingCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0"
+                            android:text="@string/zero"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/twenty_eight"
+                            android:textSize="28sp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -252,9 +257,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="@dimen/zero"
-                            android:text="Following"
+                            android:text="@string/following"
                             android:textColor="@color/white"
-                            android:textSize="15dp"
+                            android:textSize="15sp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/textViewFollowingCount" />
@@ -291,7 +296,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/sixteen"
-                        android:text="Bio"
+                        android:text="@string/bio"
                         android:textColor="@color/blackDN"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -302,7 +307,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/eight"
-                        android:text="site"
+                        android:text="@string/site"
                         android:textAllCaps="false"
                         android:textColor="@color/blackDN"
                         app:icon="@drawable/ic_site_black_24dp"
@@ -320,7 +325,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/twenty"
                     android:padding="@dimen/twelve"
-                    android:text="All Events"
+                    android:text="@string/all_events"
                     android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/layoutBio" />
@@ -350,6 +355,7 @@
                         android:src="@drawable/ic_mode_edit_black_24dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
+                        android:contentDescription="@string/error"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
@@ -359,7 +365,7 @@
                         android:layout_marginEnd="@dimen/thirty_two"
                         android:padding="@dimen/twelve"
                         android:paddingBottom="@dimen/fifty_six"
-                        android:text="You haven't posted any events yet. Tap on '+' to add one"
+                        android:text="@string/error_404_profile"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/imageView" />

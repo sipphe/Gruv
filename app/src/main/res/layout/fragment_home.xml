@@ -25,7 +25,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginStart="0dp"
             android:layout_marginEnd="0dp"
-            android:contentDescription="@android:string/VideoView_error_text_unknown"
+            android:contentDescription="@string/error_404"
             android:foregroundGravity="center_vertical|center"
             android:gravity="center"
             android:padding="20dp"

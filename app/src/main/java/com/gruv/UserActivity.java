@@ -43,8 +43,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.gruv.com.gruv.PostedEventsAdapter;
-import com.gruv.com.gruv.PromotedEventsAdapter;
+import com.gruv.adapters.PostedEventsAdapter;
+import com.gruv.adapters.PromotedEventsAdapter;
 import com.gruv.interfaces.ClickInterface;
 import com.gruv.interfaces.SecondClickInterface;
 import com.gruv.models.Author;
@@ -556,7 +556,7 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
     public void addPost(@NotNull Event event) {
         if (event.getAuthor() != null) {
             postedEvents.add(event);
-            Collections.sort(postedEvents);
+            Collections.sort(postedEvents, Collections.reverseOrder());
         }
         if (postedEventsAdapter != null) {
             postedEventsAdapter.notifyDataSetChanged();
@@ -565,8 +565,9 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
 
     public void addPost(@NotNull Event event, int index) {
         if (event.getAuthor() != null) {
-            if (postedEvents.isEmpty())
+            if (postedEvents.isEmpty()) {
                 postedEvents.add(event);
+            }
             else {
 //                if (event.getEventId() != postedEvents.get(postedEvents.size() - 1).getEventId())
                 int count = 0;
@@ -577,10 +578,10 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
                     }
                     count++;
                 }
-                Collections.sort(postedEvents);
             }
         }
         if (postedEventsAdapter != null) {
+            Collections.sort(postedEvents, Collections.reverseOrder());
             postedEventsAdapter.notifyDataSetChanged();
         }
 //        if (event.getAuthor() != null)
@@ -591,10 +592,9 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
     }
 
     public void addPromotedPost(@NotNull Event event) {
-        if (event.getAuthor() != null) {
+        if (event.getAuthor() != null)
             promotedEvents.add(event);
-            Collections.sort(promotedEvents);
-        }
+        Collections.sort(promotedEvents, Collections.reverseOrder());
         if (promotedEventsAdapter != null) {
             promotedEventsAdapter.notifyDataSetChanged();
         }
@@ -614,6 +614,7 @@ public class UserActivity extends AppCompatActivity implements ClickInterface, S
                     }
                     count++;
                 }
+                Collections.sort(promotedEvents, Collections.reverseOrder());
             }
         }
         if (promotedEventsAdapter != null) {

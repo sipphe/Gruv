@@ -104,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
                     active = fragMessages;
                     toolbar = findViewById(R.id.main_app_toolbar);
                     setSupportActionBar(toolbar);
+                    searchBarToggle(false);
                     getSupportActionBar().show();
                     return true;
             }

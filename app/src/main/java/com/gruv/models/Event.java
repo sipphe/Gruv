@@ -10,6 +10,7 @@ import java.util.List;
 
 public class Event implements Serializable, Comparable<Event> {
 
+    public LocalDateTime eventEndDate;
     private String eventID, eventName, eventDescription;
     private Author author;
     private LocalDateTime eventDate;
@@ -17,7 +18,7 @@ public class Event implements Serializable, Comparable<Event> {
     private HashMap<String, Comment> comments;
     private HashMap<String, Like> likes;
     private Integer imagePostId;
-    private String eventDateString;
+    private String eventDateString, eventEndDateString;
     private String imagePostUrl;
     private String datePosted;
 
@@ -77,12 +78,25 @@ public class Event implements Serializable, Comparable<Event> {
         this.eventDate = eventDate;
     }
 
-    public void convertDate(String eventDateString) {
+    public void convertStartDate(String eventDateString) {
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 
         this.eventDate = LocalDateTime.parse(eventDateString, formatter);
     }
 
+    public LocalDateTime getEventEndDate() {
+        return eventEndDate;
+    }
+
+    public void setEventEndDate(LocalDateTime eventEndDate) {
+        this.eventEndDate = eventEndDate;
+    }
+
+    public void convertEndDate(String eventDateString) {
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+
+        this.eventEndDate = LocalDateTime.parse(eventDateString, formatter);
+    }
     public Venue getVenue() {
         return venue;
     }
@@ -149,8 +163,17 @@ public class Event implements Serializable, Comparable<Event> {
     }
 
     public void setEventDateString(String eventDateString) {
-        convertDate(eventDateString);
+        convertStartDate(eventDateString);
         this.eventDateString = eventDateString;
+    }
+
+    public String getEventEndDateString() {
+        return eventEndDateString;
+    }
+
+    public void setEventEndDateString(String eventEndDateString) {
+        convertEndDate(eventEndDateString);
+        this.eventEndDateString = eventEndDateString;
     }
 
     public String getImagePostUrl() {

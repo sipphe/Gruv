@@ -70,4 +70,18 @@
     <string name="help">Help</string>
     <string name="share">Share</string>
     <string name="post_notifications">Turn on post notificatiions</string>
+    <string name="back">Back</string>
+    <string name="more">More</string>
+    <string name="profile_picture">Profile Picture</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="verified">Verified</string>
+    <string name="zero">0</string>
+    <string name="followers">Followers</string>
+    <string name="following">Following</string>
+    <string name="bio">Bio</string>
+    <string name="site">site</string>
+    <string name="all_events">All Events</string>
+    <string name="error">Error</string>
+    <string name="error_404_profile">You haven\'t posted any events yet. Tap on \'+\' to add one</string>
+    <string name="error_404_user">There aren\'t any events here</string>
 </resources>

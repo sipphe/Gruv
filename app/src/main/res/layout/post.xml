@@ -42,6 +42,38 @@
                 app:layout_constraintVertical_bias="0.0"
                 tools:layout_editor_absoluteX="0dp">
 
+                <LinearLayout
+                    android:id="@+id/chipEventPassed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/eight"
+                    android:background="@drawable/event_passed_border"
+                    android:padding="@dimen/four"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/four"
+                        android:layout_marginEnd="@dimen/four"
+                        android:text="event has passed"
+                        android:textColor="@color/red"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textDatePosted"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/eight"
+                    android:text="5d"
+                    android:textColor="@color/light_grey"
+                    android:textSize="@dimen/text_size"
+                    app:layout_constraintStart_toEndOf="@+id/chipEventPassed"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <ImageView
                     android:id="@+id/imageLike"
                     android:layout_width="34dp"
@@ -69,9 +101,7 @@
                     android:layout_height="wrap_content"
                     android:text="1"
                     android:textColor="@color/white"
-                    app:layout_constraintEnd_toStartOf="@+id/counterComments"
-                    app:layout_constraintHorizontal_bias="0.908"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/imageLike"
                     app:layout_constraintTop_toBottomOf="@+id/imageLike" />
 
                 <TextView
@@ -80,9 +110,7 @@
                     android:layout_height="wrap_content"
                     android:text="1"
                     android:textColor="@color/white"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.952"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/imageComment"
                     app:layout_constraintTop_toBottomOf="@+id/imageLike" />
 
                 <TextView
@@ -185,15 +213,28 @@
                     app:layout_constraintStart_toEndOf="@+id/textEventDescription">
 
                     <TextView
+                        android:id="@+id/textViewYear"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/zero"
+                        android:text="2010"
+                        android:textColor="@color/white"
+                        android:textSize="15dp"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
                         android:id="@+id/textViewDay"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1"
                         android:textColor="@color/white"
                         android:textSize="30dp"
-                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textViewYear" />
 
                     <TextView
                         android:id="@+id/textViewMonth"

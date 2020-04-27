@@ -1,6 +1,8 @@
 package com.gruv;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -8,6 +10,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,6 +31,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -39,13 +43,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.gruv.com.gruv.CommentListAdapter;
+import com.gruv.adapters.CommentListAdapter;
 import com.gruv.models.Author;
 import com.gruv.models.Comment;
 import com.gruv.models.Event;
 import com.gruv.models.Like;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +64,7 @@ public class PostActivity extends AppCompatActivity {
     private ConstraintLayout appBarLayout;
     private ConstraintLayout layoutDesc;
     private ConstraintLayout layoutLikeComment;
-    private ConstraintLayout layoutAddComment;
+    List<Comment> commentKeys = new ArrayList<>();
     private LinearLayout layoutProgress;
     private Toolbar toolbar;
     private Event postEvent;
@@ -79,7 +86,7 @@ public class PostActivity extends AppCompatActivity {
     private TextView likeCount, commentCount;
     private TextInputLayout textLayoutAddComment;
     private TextInputEditText editTextAddComment;
-    List<String> commentKeys = new ArrayList<>();
+    private ConstraintLayout layoutAddComment, layoutVenue;
     private ScrollView scrollView;
     private NestedScrollView scrollViewComments;
     private Boolean liked = false;
@@ -96,6 +103,12 @@ public class PostActivity extends AppCompatActivity {
     private Comment comment;
     private String eventId;
     private Like like;
+    private ImageView imageVerified;
+    private LinearLayout chipPassed;
+    private TextView textDatePosted;
+    private TextView textEventEndDate;
+    private TextView textDatePostedText;
+    private TextView textEventEndDateText;
 
 
     @Override
@@ -234,6 +247,21 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
+        layoutVenue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new MaterialAlertDialogBuilder(PostActivity.this)
+                        .setTitle("Open maps?")
+                        .setPositiveButton("Open", ((dialog, which) -> {
+                            String uri = "http://maps.google.com/maps?q=loc:" + postEvent.getVenue().getLatitude() + "," + postEvent.getVenue().getLongitude();
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                            PostActivity.this.startActivity(intent);
+                        }))
+                        .setNegativeButton("Cancel", (dialog, which) -> {
+                        })
+                        .show();
+            }
+        });
     }
 
     public void getAuthor() {
@@ -297,10 +325,21 @@ public class PostActivity extends AppCompatActivity {
     }
 
     private void initialiseAdapter() {
+        Comment comment = new Comment();
         commentKeys.clear();
-        for (Map.Entry<String, Comment> commentEntry : postEvent.getComments().entrySet()) {
-            commentKeys.add(commentEntry.getKey());
+        if (postEvent.getComments() == null) {
+            HashMap<String, Comment> comments = new HashMap<>();
+            postEvent.setComments(comments);
+            layoutProgress.setVisibility(View.GONE);
         }
+        for (Map.Entry<String, Comment> commentEntry : postEvent.getComments().entrySet()) {
+            comment = new Comment();
+            comment.setCommentId(commentEntry.getKey());
+            comment.setPostedDate(commentEntry.getValue().getPostedDate());
+            commentKeys.add(comment);
+
+        }
+        Collections.sort(commentKeys, Collections.reverseOrder());
         adapter = new CommentListAdapter(this, postEvent, commentKeys, thisUser);
         recyclerComments.setAdapter(adapter);
         layoutManager = new LinearLayoutManager(this);
@@ -313,6 +352,8 @@ public class PostActivity extends AppCompatActivity {
         layoutAddComment.setVisibility(View.VISIBLE);
         scrollView.fullScroll(View.FOCUS_DOWN);
         editTextAddComment.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
     }
 
     private void setCurrentUser() {
@@ -336,12 +377,19 @@ public class PostActivity extends AppCompatActivity {
         layoutAuthor = findViewById(R.id.layoutAuthor);
         layoutLikeComment = findViewById(R.id.layoutLikeComment);
         layoutAddComment = findViewById(R.id.layoutAddComment);
+        layoutVenue = findViewById(R.id.layoutVenue);
         buttonAddComment = findViewById(R.id.buttonComment);
         buttonCloseComment = findViewById(R.id.buttonCloseComment);
         buttonLike = findViewById(R.id.buttonLike);
         textLayoutAddComment = findViewById(R.id.textInputLayout);
         editTextAddComment = findViewById(R.id.editTextComment);
         buttonSend = findViewById(R.id.buttonSend);
+        imageVerified = findViewById(R.id.imageVerified);
+        chipPassed = findViewById(R.id.chipEventPassed);
+        textDatePosted = findViewById(R.id.textDatePosted);
+        textEventEndDate = findViewById(R.id.textEventEndDate);
+        textDatePostedText = findViewById(R.id.textDatePostedText);
+        textEventEndDateText = findViewById(R.id.textEventEndDateText);
 
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference();
@@ -369,6 +417,7 @@ public class PostActivity extends AppCompatActivity {
         textVenue = findViewById(R.id.textVenue);
         likeCount = findViewById(R.id.textViewLikeCount);
         commentCount = findViewById(R.id.textviewCommentCount);
+
         try {
             Glide.with(this).load(postEvent.getImagePostUrl()).into(postPic);
             Glide.with(this).load(postEvent.getAuthor().getAvatar()).into(imageProfilePicture);
@@ -385,6 +434,17 @@ public class PostActivity extends AppCompatActivity {
         textMonth.setText(postEvent.getEventDate().getMonth().toString().substring(0, 3).toUpperCase());
         textEventDescription.setText(postEvent.getEventDescription());
         textVenue.setText(postEvent.getVenue().getVenueName());
+        if (postEvent.getEventEndDate() != null) {
+            if (postEvent.getEventEndDate().isBefore(LocalDateTime.now()))
+                chipPassed.setVisibility(View.VISIBLE);
+            else
+                chipPassed.setVisibility(View.GONE);
+        } else {
+            if (postEvent.getEventDate().isBefore(LocalDateTime.now()))
+                chipPassed.setVisibility(View.VISIBLE);
+            else
+                chipPassed.setVisibility(View.GONE);
+        }
         if (postEvent.getLikes() != null) {
             if (postEvent.getLikes().size() == 1)
                 likeCount.setText("1 LIKE");
@@ -398,6 +458,36 @@ public class PostActivity extends AppCompatActivity {
                 commentCount.setText(postEvent.getComments().size() + " COMMENTS");
         }
         setLiked(postEvent, thisUser);
+
+        if (postEvent.getDatePosted() != null) {
+            textDatePosted.setVisibility(View.VISIBLE);
+            textDatePostedText.setVisibility(View.VISIBLE);
+            textDatePosted.setText(dateString(LocalDateTime.parse(postEvent.getDatePosted(), DateTimeFormatter.ISO_DATE_TIME)));
+        } else {
+            textDatePosted.setVisibility(View.GONE);
+            textDatePostedText.setVisibility(View.GONE);
+        }
+
+        if (postEvent.getEventEndDate() != null) {
+            textEventEndDate.setVisibility(View.VISIBLE);
+            textEventEndDateText.setVisibility(View.VISIBLE);
+            textEventEndDate.setText(dateString(LocalDateTime.parse(postEvent.getEventEndDateString(), DateTimeFormatter.ISO_DATE_TIME)));
+        } else {
+            textEventEndDate.setVisibility(View.GONE);
+            textEventEndDateText.setVisibility(View.GONE);
+        }
+    }
+
+    private String dateString(LocalDateTime startDate) {
+        String dateString = "";
+        String minutes = "";
+        if (startDate.getMinute() < 10) {
+            minutes = "0" + startDate.getMinute();
+        } else {
+            minutes = startDate.getMinute() + "";
+        }
+        dateString = startDate.getDayOfMonth() + " " + startDate.getMonth().toString().substring(0, 3) + " " + startDate.getYear() + "   " + startDate.getHour() + ":" + minutes;
+        return dateString;
     }
 
     public void setComments(Event postEvent) {
@@ -418,6 +508,7 @@ public class PostActivity extends AppCompatActivity {
         comment.setCommentId(databaseReference.child("Event").child(eventId).child("comments").push().getKey());
         comment.setCommentText(commentText);
         comment.setAuthor(thisUser);
+        comment.setPostedDate(LocalDateTime.now().toString());
         postEvent.addComment(comment);
         commentToAdd.put(comment.getCommentId(), comment);
 
@@ -634,7 +725,8 @@ public class PostActivity extends AppCompatActivity {
                 });
 
             }
-        }
+        } else
+            layoutProgress.setVisibility(View.GONE);
     }
 
     private void updateEvent(String eventId, Author author, Comment comment) {

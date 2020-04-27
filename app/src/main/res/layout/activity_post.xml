@@ -78,6 +78,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+                <LinearLayout
+                    android:id="@+id/chipEventPassed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/thirty_two"
+                    android:layout_marginBottom="@dimen/twelve"
+                    android:background="@drawable/event_passed_border"
+                    android:elevation="@dimen/twelve"
+                    android:padding="@dimen/four"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageViewPostPicture"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/four"
+                        android:layout_marginEnd="@dimen/four"
+                        android:text="event has passed"
+                        android:textColor="@color/red" />
+                </LinearLayout>
+
                 <ImageView
                     android:id="@+id/imageViewPostPicture"
                     android:layout_width="match_parent"
@@ -130,6 +152,17 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
+                        <ImageView
+                            android:id="@+id/imageVerified"
+                            android:layout_width="@dimen/twenty"
+                            android:layout_height="@dimen/twenty"
+                            android:layout_marginStart="@dimen/four"
+                            android:src="@drawable/verified_48dp"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toBottomOf="@+id/textEventAuthor"
+                            app:layout_constraintStart_toEndOf="@+id/textEventAuthor"
+                            app:layout_constraintTop_toTopOf="parent" />
+
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/imageProfilePic"
                             android:layout_width="20dp"
@@ -180,7 +213,10 @@
                     android:id="@+id/layoutDescription"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:padding="@dimen/twenty"
+                    android:paddingStart="@dimen/twenty"
+                    android:paddingTop="@dimen/twenty"
+                    android:paddingEnd="@dimen/twenty"
+                    android:paddingBottom="@dimen/zero"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/layoutEventSummary">
@@ -189,6 +225,7 @@
                         android:id="@+id/textEventDescription"
                         android:layout_width="@dimen/text_desc_width"
                         android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/twelve"
                         android:text="Event Description"
                         android:textSize="@dimen/sixteen"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -213,10 +250,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/twenty"
                         android:layout_marginBottom="@dimen/twelve"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintBottom_toTopOf="@id/textDatePostedText"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.958">
+                        app:layout_constraintTop_toTopOf="parent">
 
                         <ImageView
                             android:id="@+id/imagePin"
@@ -246,10 +282,54 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/twenty"
+                        android:layout_marginBottom="@dimen/twelve"
                         android:text="Read More"
                         android:textColor="@color/blackDN"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintBottom_toTopOf="@+id/textEventEndDateText"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                    <TextView
+                        android:id="@+id/textDatePostedText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/twenty"
+                        android:text="Posted on"
+                        android:textSize="@dimen/text_size"
+                        app:layout_constraintBottom_toTopOf="@id/textDatePosted"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <TextView
+                        android:id="@+id/textDatePosted"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/twenty"
+                        android:text="13/5/2010"
+                        android:textSize="@dimen/text_size"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        tools:layout_editor_absoluteY="34dp" />
+
+                    <TextView
+                        android:id="@+id/textEventEndDateText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/twenty"
+                        android:gravity="end"
+                        android:text="Ends at"
+                        android:textSize="@dimen/text_size"
+                        app:layout_constraintBottom_toTopOf="@id/textEventEndDate"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                    <TextView
+                        android:id="@+id/textEventEndDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/twenty"
+                        android:gravity="end"
+                        android:text="13/5/2010"
+                        android:textSize="@dimen/text_size"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -265,8 +345,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/fifty_six"
                         android:layout_marginStart="@dimen/twenty"
-                        android:text="0 LIKES"
                         android:gravity="center"
+                        android:text="0 LIKES"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -276,8 +356,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/fifty_six"
                         android:layout_marginStart="@dimen/twenty"
-                        android:text="0 COMMENTS"
                         android:gravity="center"
+                        android:text="0 COMMENTS"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/textViewLikeCount"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -347,7 +427,6 @@
                         app:layout_constraintEnd_toStartOf="@+id/buttonCloseComment"
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
                 <LinearLayout
                     android:id="@+id/layoutSeperator"
                     android:layout_width="match_parent"
@@ -356,9 +435,9 @@
                     android:layout_marginEnd="@dimen/eight"
                     android:background="@color/grey"
                     android:orientation="horizontal"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/layoutAddComment" />
-
+                    app:layout_constraintStart_toStartOf="parent
+"
+                    app:layout_constraintTop_toBottomOf="@+id/layoutAddComment" />
                 <androidx.core.widget.NestedScrollView
                     android:id="@+id/scrollViewComments"
                     android:layout_width="match_parent"
@@ -402,6 +481,8 @@
                                 android:layout_gravity="center_horizontal"
                                 android:layout_marginTop="6dp" />
                         </LinearLayout>
+
+
                     </LinearLayout>
                 </androidx.core.widget.NestedScrollView>
 
