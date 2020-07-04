@@ -14,6 +14,7 @@ public class Event implements Serializable, Comparable<Event> {
     private String eventID, eventName, eventDescription;
     private Author author;
     private LocalDateTime eventDate;
+    private String ticketLink;
     private Venue venue;
     private HashMap<String, Comment> comments;
     private HashMap<String, Like> likes;
@@ -76,6 +77,8 @@ public class Event implements Serializable, Comparable<Event> {
 
     public void setEventDate(LocalDateTime eventDate) {
         this.eventDate = eventDate;
+        if (eventDate != null)
+            eventDateString = eventDate.format(DateTimeFormatter.ISO_DATE_TIME);
     }
 
     public void convertStartDate(String eventDateString) {
@@ -90,13 +93,16 @@ public class Event implements Serializable, Comparable<Event> {
 
     public void setEventEndDate(LocalDateTime eventEndDate) {
         this.eventEndDate = eventEndDate;
+        if (eventEndDate != null)
+            eventEndDateString = eventEndDate.format(DateTimeFormatter.ISO_DATE_TIME);
     }
 
     public void convertEndDate(String eventDateString) {
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-
-        this.eventEndDate = LocalDateTime.parse(eventDateString, formatter);
+        if (eventDateString != null)
+            this.eventEndDate = LocalDateTime.parse(eventDateString, formatter);
     }
+
     public Venue getVenue() {
         return venue;
     }
@@ -147,7 +153,7 @@ public class Event implements Serializable, Comparable<Event> {
 
     public void removeLike(Like like) {
         if (this.likes != null)
-            this.likes.remove(like);
+            this.likes.remove(like.getLikeId());
     }
 
     public Integer getImagePostId() {
@@ -190,6 +196,14 @@ public class Event implements Serializable, Comparable<Event> {
 
     public void setImagePostUrl(String imagePostUrl) {
         this.imagePostUrl = imagePostUrl;
+    }
+
+    public String getTicketLink() {
+        return ticketLink;
+    }
+
+    public void setTicketLink(String ticketLink) {
+        this.ticketLink = ticketLink;
     }
 
     @Override

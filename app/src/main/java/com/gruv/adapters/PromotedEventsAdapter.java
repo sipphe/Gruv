@@ -15,6 +15,7 @@ import com.gruv.interfaces.ClickInterface;
 import com.gruv.models.Event;
 
 import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -22,12 +23,14 @@ public class PromotedEventsAdapter extends RecyclerView.Adapter<PromotedEventsAd
 
 
     private final ClickInterface listener;
-    private List<Event> eventList;
+    private Map<String, Event> eventList;
+    private List<Event> eventKeys;
     private Context context;
 
-    public PromotedEventsAdapter(Context context, List<Event> eventList, ClickInterface listener) {
+    public PromotedEventsAdapter(Context context, List<Event> eventKeys, Map<String, Event> eventList, ClickInterface listener) {
         this.context = context;
         this.eventList = eventList;
+        this.eventKeys = eventKeys;
         this.listener = listener;
     }
 
@@ -48,7 +51,7 @@ public class PromotedEventsAdapter extends RecyclerView.Adapter<PromotedEventsAd
     @Override
     public void onBindViewHolder(PromotedEventsAdapter.ViewHolder viewHolder, int position) {
         // Get the data model based on position
-        Event event = eventList.get(position);
+        Event event = eventList.get(eventKeys.get(position).getEventID());
         CircleImageView imagePost = viewHolder.imagePost;
         TextView textTitle = viewHolder.textTitle;
 

@@ -21,6 +21,9 @@ import com.gruv.models.Author;
 import com.gruv.models.Comment;
 import com.gruv.models.Event;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -61,6 +64,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
             CircleImageView profilePic = holder.profilePic;
             TextView textComment = holder.textComment;
             ImageView imageVerified = holder.imageVerified;
+            TextView textDatePosted = holder.textDatePosted;
 
             if (comment.getAuthor().isVerified()) {
                 imageVerified.setVisibility(View.VISIBLE);
@@ -73,10 +77,54 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
                 profilePic.setImageResource(R.drawable.ic_account_circle_black_24dp);
             }
 
+            textDatePosted.setText(getCounterFromDate(LocalDateTime.parse(comment.getPostedDate(), DateTimeFormatter.ISO_DATE_TIME)));
+
 
 //        textAuthor.setText(comment.getAuthor().getName());
             textComment.setText(HtmlCompat.fromHtml("<b>" + comment.getAuthor().getName() + "</b>    " + comment.getCommentText(), HtmlCompat.FROM_HTML_MODE_LEGACY));
         }
+    }
+
+    private String getCounterFromDate(LocalDateTime startDate) {
+        LocalDateTime dateNow = LocalDateTime.now();
+        String counter = "";
+
+        Duration duration = Duration.between(startDate, dateNow);
+        long allDays = duration.toDays();
+        int year = (int) (allDays / 365);
+        long yearDays = duration.toDays() - (year * 365);
+        int months = (int) (yearDays / 30.4167);
+        int monthDays = (int) (yearDays - (months * 30.4167));
+        long allHours = duration.toHours();
+        int hours = (int) (allHours - (allDays * 24));
+        long allMinutes = duration.toMinutes();
+        int minutes = (int) (allMinutes - (allHours * 60));
+        int seconds = (int) (duration.getSeconds() - (allMinutes * 60));
+
+        if (year == 0) {
+            if (months == 0) {
+                if (monthDays == 0) {
+                    if (hours == 0) {
+                        if (minutes == 0) {
+                            counter = seconds + "s";
+                        } else {
+                            counter = minutes + "m";
+                        }
+                    } else {
+                        counter = hours + "h";
+                    }
+                } else {
+                    counter = monthDays + "d";
+                }
+            } else {
+                counter = monthDays + "d";
+            }
+        } else {
+            counter = monthDays + "d";
+        }
+
+        return counter;
+//        LocalDateTime durationDateTime = LocalDateTime.of(year, months, monthDays, hours, minutes, seconds);
     }
 
     @Override
@@ -88,6 +136,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        TextView textDatePosted;
         CircleImageView profilePic;
         TextView textComment;
         ImageView imageVerified;
@@ -98,6 +147,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
 //            textAuthor = itemView.findViewById(R.id.textEventAuthor);
             textComment = itemView.findViewById(R.id.textComment);
             imageVerified = itemView.findViewById(R.id.imageVerified);
+            textDatePosted = itemView.findViewById(R.id.textDatePosted);
             textComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -46,11 +46,10 @@
                     android:id="@+id/chipEventPassed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/eight"
                     android:background="@drawable/event_passed_border"
                     android:padding="@dimen/four"
                     android:visibility="gone"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/chipEventOccurring"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
@@ -63,6 +62,26 @@
                         android:textSize="12sp" />
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/chipEventOccurring"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/eight"
+                    android:background="@drawable/event_occuring_border"
+                    android:padding="@dimen/four"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/four"
+                        android:layout_marginEnd="@dimen/four"
+                        android:text="event is occurring"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="12sp" />
+                </LinearLayout>
                 <TextView
                     android:id="@+id/textDatePosted"
                     android:layout_width="wrap_content"

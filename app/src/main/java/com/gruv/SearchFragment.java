@@ -169,7 +169,8 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback, Goog
 
     private void search(String text) {
         events.clear();
-        map.clear();
+        if (map != null)
+            map.clear();
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {

@@ -17,18 +17,19 @@
 
 
         <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout2"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:elevation="5dp"
             android:background="@color/colorPrimary"
+            android:elevation="@dimen/twenty"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/main_app_toolbar"
+                style="@style/ToolbarTheme"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                style="@style/RobotoTextViewStyle"
                 android:navigationIcon="@drawable/ic_menu_white_24dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -62,12 +63,13 @@
                         android:id="@+id/textTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/fifty_two"
+                        android:layout_marginStart="@dimen/sixty_four"
                         android:layout_marginEnd="@dimen/fifty_two"
                         android:text="@string/app_name"
                         android:textColor="@color/white"
                         android:textSize="20sp"
                         android:textStyle="bold"
+                        android:fontFamily="@font/roboto_thin"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/buttonMore"
                         app:layout_constraintStart_toEndOf="@+id/buttonDrawerIcon"
@@ -88,12 +90,56 @@
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutPosting"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/whiteElevation"
+            android:elevation="@dimen/twelve"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/appBarLayout2">
+
+            <ImageView
+                android:id="@+id/imagePost"
+                android:layout_width="@dimen/thirty_two"
+                android:layout_height="@dimen/thirty_two"
+                android:layout_marginStart="@dimen/twenty"
+                android:scaleType="centerCrop"
+                android:src="@drawable/party_3"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textPostingEventName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/seventy_two"
+                android:layout_marginEnd="@dimen/forty"
+                android:text="Posting Event 1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imagePost"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/imageDone"
+                android:layout_width="@dimen/twenty_four"
+                android:layout_height="@dimen/twenty_four"
+                android:layout_marginEnd="@dimen/sixteen"
+                android:src="@drawable/ic_check_black_24dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <include
             layout="@layout/content_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintBottom_toTopOf="@+id/nav_view"
-            app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
+            tools:layout_editor_absoluteX="-91dp" />
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/floatingActionButton"
@@ -116,6 +162,18 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:elevation="12dp"
             app:menu="@menu/bottom_nav_menu" />
+
+        <ProgressBar
+            android:id="@+id/progressPosting"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="@dimen/zero"
+            android:indeterminate="true"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/layoutPosting"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layoutPosting" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

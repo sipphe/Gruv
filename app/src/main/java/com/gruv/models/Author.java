@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.stfalcon.chatkit.commons.models.IUser;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Author implements IUser, Serializable {
@@ -134,5 +135,13 @@ public class Author implements IUser, Serializable {
             return following.size() - 1;
         else
             return 0;
+    }
+
+    public void addEvent(String eventId) {
+        if (this.events == null)
+            this.events = new ArrayList<>();
+
+
+        this.events.add(eventId);
     }
 }

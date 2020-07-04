@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -40,7 +42,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -51,7 +56,7 @@ public class HomeFragment extends Fragment implements ClickInterface {
     private FirebaseUser currentUser;
     public NewsFeedAdapter adapter;
     ConstraintLayout layoutAuthor;
-    ExtendedFloatingActionButton fab;
+    private ExtendedFloatingActionButton fab;
     private ClickInterface clickInterface;
     private RecyclerView feed;
     private LinearLayout layoutProgress;
@@ -62,12 +67,14 @@ public class HomeFragment extends Fragment implements ClickInterface {
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private RelativeLayout parentLayout, layoutError;
-    private List<Event> eventList;
+    private HashMap<String, Event> eventList;
     private Author thisUser;
-    View view;
+    private View view;
     private boolean viewCreated = false;
-    Bundle savedInstance;
+    private Bundle savedInstance;
     private List<String> followingEventIds;
+    private FloatingActionButton fabAdd;
+    private List<Event> eventKeys = new ArrayList<>();
 
     public HomeFragment() {
         // Required empty public constructor
@@ -84,7 +91,7 @@ public class HomeFragment extends Fragment implements ClickInterface {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         this.view = view;
         this.savedInstance = savedInstanceState;
-        eventList = new ArrayList<>();
+        eventList = new HashMap<>();
         initialiseControls();
         setCurrentUser();
         initialiseAdapter();
@@ -106,12 +113,16 @@ public class HomeFragment extends Fragment implements ClickInterface {
         if (thisUser != null)
             getAuthor();
 
-
+        fabAdd.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), AddEventActivity.class);
+            startActivity(intent);
+        });
         //viewCreated = true;
     }
 
     private void getAuthor() {
         eventList.clear();
+        eventKeys.clear();
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
@@ -150,8 +161,10 @@ public class HomeFragment extends Fragment implements ClickInterface {
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                         if (dataSnapshot.getKey().equals(eventId)) {
                             event = dataSnapshot.getValue(Event.class);
-                            event.setEventID(dataSnapshot.getKey());
-                            addPost(event);
+                            if (event != null) {
+                                event.setEventID(dataSnapshot.getKey());
+                                addPost(event);
+                            }
                         }
                         checkEvents();
                         hideProgress();
@@ -162,8 +175,10 @@ public class HomeFragment extends Fragment implements ClickInterface {
                     public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                         if (dataSnapshot.getKey().equals(eventId)) {
                             event = dataSnapshot.getValue(Event.class);
-                            event.setEventID(dataSnapshot.getKey());
-                            addPost(event, Integer.parseInt(eventId));
+                            if (event != null) {
+                                event.setEventID(dataSnapshot.getKey());
+                                addPost(event);
+                            }
                         }
                         checkEvents();
                         hideProgress();
@@ -173,8 +188,10 @@ public class HomeFragment extends Fragment implements ClickInterface {
                     public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.getKey().equals(eventId)) {
                             event = dataSnapshot.getValue(Event.class);
-                            event.setEventID(dataSnapshot.getKey());
-                            addPost(event, Integer.parseInt(eventId));
+                            if (event != null) {
+                                event.setEventID(dataSnapshot.getKey());
+                                addPost(event);
+                            }
                         }
                         checkEvents();
                         hideProgress();
@@ -184,8 +201,10 @@ public class HomeFragment extends Fragment implements ClickInterface {
                     public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                         if (dataSnapshot.getKey().equals(eventId)) {
                             event = dataSnapshot.getValue(Event.class);
-                            event.setEventID(dataSnapshot.getKey());
-                            addPost(event, Integer.parseInt(eventId));
+                            if (event != null) {
+                                event.setEventID(dataSnapshot.getKey());
+                                addPost(event);
+                            }
                         }
                         checkEvents();
                         hideProgress();
@@ -198,6 +217,13 @@ public class HomeFragment extends Fragment implements ClickInterface {
                     }
                 });
             }
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    feed.smoothScrollToPosition(adapter.getItemCount());
+                }
+            }, 1000);
         } else {
             checkEvents();
         }
@@ -236,7 +262,7 @@ public class HomeFragment extends Fragment implements ClickInterface {
 
     private void initialiseAdapter() {
         eventList.clear();
-        adapter = new NewsFeedAdapter(getActivity(), getActivity(), eventList, clickInterface, thisUser);
+        adapter = new NewsFeedAdapter(getActivity(), getActivity(), eventKeys, eventList, clickInterface, thisUser);
         feed.setAdapter(adapter);
         layoutManager = new LinearLayoutManager(getActivity());
         feed.setLayoutManager(layoutManager);
@@ -245,47 +271,58 @@ public class HomeFragment extends Fragment implements ClickInterface {
     public void recyclerViewOnClick(int position) {
         fab.setVisibility(View.GONE);
         Intent intent = new Intent(getActivity(), PostActivity.class);
-        intent.putExtra("Event", eventList.get(position));
+        intent.putExtra("Event", eventList.get(eventKeys.get(position).getEventID()));
         startActivity(intent);
     }
 
     public void addPost(@NotNull Event event) {
+        Map<String, Event> it = eventList;
         if (event.getAuthor() != null) {
-            if (eventList.isEmpty())
-                eventList.add(event);
-            else {
-                if (eventList.stream().noneMatch(o -> o.getEventID().equals(event.getEventID())))
-                    eventList.add(event);
-            }
-
-            Collections.sort(eventList);
-        }
-        if (adapter != null) {
-            adapter.notifyDataSetChanged();
-
-        }
-
-    }
-
-    public void addPost(@NotNull Event event, int index) {
-        if (event.getAuthor() != null) {
-            if (eventList.isEmpty())
-                eventList.add(event);
-            else {
-                int count = 0;
-                for (Event listValue : eventList) {
-                    if (listValue.getEventID().equals(Integer.toString(index))) {
-                        eventList.set(count, event);
-                        break;
+            if (eventList.isEmpty()) {
+                eventList.put(event.getEventID(), event);
+                eventKeys.add(event);
+            } else {
+                try {
+                    for (Map.Entry<String, Event> eventEntry : it.entrySet()) {
+                        eventList.put(event.getEventID(), event);
+                        if (!eventKeys.stream().anyMatch(o -> o.getEventID().equals(event.getEventID()))) {
+                            eventKeys.add(event);
+                        }
                     }
-                    count++;
+                } catch (ConcurrentModificationException e) {
+                    e.printStackTrace();
                 }
             }
-        }
-        if (adapter != null) {
-            adapter.notifyDataSetChanged();
+
+            Collections.sort(eventKeys);
+
+            if (adapter != null) {
+                adapter.notifyDataSetChanged();
+            }
+
         }
     }
+
+//    public void addPost(@NotNull Event event, int index) {
+//        if (event.getAuthor() != null) {
+//            if (eventList.isEmpty())
+//                eventList.add(event);
+//            else {
+//                int count = 0;
+//                for (Event listValue : eventList) {
+//                    if (listValue.getEventID().equals(Integer.toString(index))) {
+//                        eventList.set(count, event);
+//                        break;
+//                    }
+//                    count++;
+//                }
+//            }
+//            Collections.sort(eventList);
+//        }
+//        if (adapter != null) {
+//            adapter.notifyDataSetChanged();
+//        }
+//    }
 
     public void addPostToFeed(View v) {
         // save index and top position
@@ -319,13 +356,14 @@ public class HomeFragment extends Fragment implements ClickInterface {
         fab = getActivity().findViewById(R.id.floatingActionButton);
         feed = getActivity().findViewById(R.id.listNewsFeed);
         layoutError = getActivity().findViewById(R.id.layoutError);
+        fabAdd = getActivity().findViewById(R.id.fabAdd);
     }
 
     public void startPostActivity(int position) {
 
-        Intent post = new Intent(getActivity(), PostActivity.class);
-        post.putExtra("Event", eventList.get(position));
-        startActivity(post);
+//        Intent post = new Intent(getActivity(), PostActivity.class);
+//        post.putExtra("Event", eventList.get(eventKeys.get(position).getEventID()));
+//        startActivity(post);
     }
 
     public void scrollToTop() {

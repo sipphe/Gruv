@@ -79,36 +79,88 @@
                 android:layout_height="match_parent">
 
                 <LinearLayout
+                    android:id="@+id/chipEventOccurring"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/thirty_two"
+                    android:layout_marginBottom="@dimen/twelve"
+                    android:elevation="@dimen/twelve"
+                    android:padding="@dimen/four"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageViewPostPicture"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <com.google.android.material.chip.Chip
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:elevation="@dimen/four"
+                        android:enabled="false"
+                        android:text="event is occurring"
+                        android:textColor="@color/colorAccent"
+                        app:chipStrokeColor="@color/colorAccent"
+                        app:chipStrokeWidth="1dp"
+                        app:chipSurfaceColor="@color/transparent" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/chipEventPassed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/thirty_two"
                     android:layout_marginBottom="@dimen/twelve"
-                    android:background="@drawable/event_passed_border"
                     android:elevation="@dimen/twelve"
                     android:padding="@dimen/four"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@+id/imageViewPostPicture"
                     app:layout_constraintStart_toStartOf="parent">
 
-                    <TextView
+                    <com.google.android.material.chip.Chip
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/four"
-                        android:layout_marginEnd="@dimen/four"
+                        android:elevation="@dimen/four"
+                        android:enabled="false"
                         android:text="event has passed"
-                        android:textColor="@color/red" />
+                        android:textColor="@color/red"
+                        app:chipStrokeColor="@color/red"
+                        app:chipStrokeWidth="1dp"
+                        app:chipSurfaceColor="@color/transparent" />
                 </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonTicketLink"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/thirty_two"
+                    android:layout_marginBottom="@dimen/twelve"
+                    android:elevation="@dimen/twelve"
+                    android:text="Get Tickets"
+                    android:textColor="@color/colorAccent"
+                    app:icon="@drawable/baseline_confirmation_number_white_48dp"
+                    app:iconSize="@dimen/twenty"
+                    app:iconTint="@color/colorAccent"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageViewPostPicture"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
                 <ImageView
                     android:id="@+id/imageViewPostPicture"
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
-                    android:elevation="@dimen/eight"
+                    android:elevation="@dimen/zero"
                     android:scaleType="centerCrop"
                     android:src="@drawable/party_4"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:background="@drawable/gradient_shape"
+                    android:elevation="@dimen/eight"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -427,6 +479,7 @@
                         app:layout_constraintEnd_toStartOf="@+id/buttonCloseComment"
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
                 <LinearLayout
                     android:id="@+id/layoutSeperator"
                     android:layout_width="match_parent"
@@ -438,6 +491,7 @@
                     app:layout_constraintStart_toStartOf="parent
 "
                     app:layout_constraintTop_toBottomOf="@+id/layoutAddComment" />
+
                 <androidx.core.widget.NestedScrollView
                     android:id="@+id/scrollViewComments"
                     android:layout_width="match_parent"

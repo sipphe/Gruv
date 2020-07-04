@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class Venue implements Serializable {
     private String venueName;
+    private String address;
     private double latitude;
     private double longitude;
 
@@ -21,12 +22,32 @@ public class Venue implements Serializable {
         this.longitude = longitude;
     }
 
+    public Venue(String venueName, String address) {
+        this.venueName = venueName;
+        this.address = address;
+    }
+
+    public Venue(String venueName, String address, double latitude, double longitude) {
+        this.venueName = venueName;
+        this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
     public String getVenueName() {
         return venueName;
     }
 
     public void setVenueName(String venueName) {
         this.venueName = venueName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public double getLatitude() {
@@ -42,6 +63,11 @@ public class Venue implements Serializable {
     }
 
     public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public void setLatLong(double latitude, double longitude) {
+        this.latitude = latitude;
         this.longitude = longitude;
     }
 }

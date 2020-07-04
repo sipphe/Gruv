@@ -47,18 +47,20 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
 
     private final ClickInterface listener;
     private final Activity activity;
-    private List<Event> eventList;
+    List<Event> eventKeys;
+    private Map<String, Event> eventList;
     private Author thisUser;
     private Like like;
     private Context context;
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
 
-    public NewsFeedAdapter(@NonNull Context context, Activity activity, List<Event> eventList, ClickInterface listener, Author thisUser) {
+    public NewsFeedAdapter(@NonNull Context context, Activity activity, List<Event> eventKeys, Map<String, Event> eventList, ClickInterface listener, Author thisUser) {
         this.context = context;
         this.activity = activity;
         this.thisUser = thisUser;
         this.eventList = eventList;
+        this.eventKeys = eventKeys;
         this.listener = listener;
 
     }
@@ -79,7 +81,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(NewsFeedAdapter.ViewHolder viewHolder, int position) {
-        Event event = eventList.get(position);
+        Event event = eventList.get(eventKeys.get(position).getEventID());
         TextView titleText = viewHolder.titleText;
         TextView textAuthor = viewHolder.textAuthor;
         TextView textDescription = viewHolder.textDescription;
@@ -94,19 +96,29 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
         ImageView imageVerified = viewHolder.imageVerified;
         LinearLayout chipPassed = viewHolder.chipPassed;
         TextView textDatePosted = viewHolder.textDatePosted;
+        LinearLayout chipOccurring = viewHolder.chipOccurring;
 
         textDatePosted.setText(getCounterFromDate(LocalDateTime.parse(event.getDatePosted(), DateTimeFormatter.ISO_DATE_TIME)));
 
         if (event.getEventEndDate() != null) {
-            if (event.getEventEndDate().isBefore(LocalDateTime.now()))
+            if (event.getEventEndDate().isBefore(LocalDateTime.now())) {
                 chipPassed.setVisibility(View.VISIBLE);
-            else
+                chipOccurring.setVisibility(View.GONE);
+            } else if (event.getEventDate().isBefore(LocalDateTime.now()) && event.getEventEndDate().isAfter(LocalDateTime.now())) {
                 chipPassed.setVisibility(View.GONE);
+                chipOccurring.setVisibility(View.VISIBLE);
+            } else {
+                chipPassed.setVisibility(View.GONE);
+                chipOccurring.setVisibility(View.GONE);
+            }
         } else {
-            if (event.getEventDate().isBefore(LocalDateTime.now()))
+            if (event.getEventDate().isBefore(LocalDateTime.now())) {
+                chipOccurring.setVisibility(View.GONE);
                 chipPassed.setVisibility(View.VISIBLE);
-            else
+            } else {
                 chipPassed.setVisibility(View.GONE);
+                chipOccurring.setVisibility(View.GONE);
+            }
         }
         viewHolder.setLiked(event, thisUser, position);
         titleText.setText(event.getEventName());
@@ -190,6 +202,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder {
         public int position;
         public CircleImageView imageProfilePic;
+        public LinearLayout chipOccurring;
         TextView textYear;
         ImageView imageVerified;
         TextView titleText;
@@ -234,29 +247,34 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
             imageVerified = itemView.findViewById(R.id.imageVerified);
             chipPassed = itemView.findViewById(R.id.chipEventPassed);
             textDatePosted = itemView.findViewById(R.id.textDatePosted);
+            chipOccurring = itemView.findViewById(R.id.chipEventOccurring);
 
             cardPost.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.recyclerViewOnClick(getAdapterPosition());
+//                    listener.recyclerViewOnClick(getAdapterPosition());
+                    Intent post = new Intent(context, PostActivity.class);
+                    position = getAdapterPosition();
+                    post.putExtra("Event", eventList.get(eventKeys.get(position).getEventID()));
+                    context.startActivity(post);
                 }
             });
             likeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     position = getAdapterPosition();
-                    setLiked(eventList.get(position), thisUser, position);
+                    setLiked(eventList.get(eventKeys.get(position).getEventID()), thisUser, position);
                     if (!liked) {
-                        like.setEventId(eventList.get(position).getEventID());
+                        like.setEventId(eventList.get(eventKeys.get(position).getEventID()).getEventID());
                         liked = true;
-                        addLikeToDB(like, eventList.get(position));
-
+                        addLikeToDB(like, eventList.get(eventKeys.get(position).getEventID()));
                     } else {
                         liked = false;
-                        eventList.get(position).removeLike(getUserLike(eventList.get(position)));
-                        removeLikeFromDB(getUserLike(eventList.get(position)), eventList.get(position));
+                        Like removeLike = getUserLike(eventList.get(eventKeys.get(position).getEventID()));
+                        eventList.get(eventKeys.get(position).getEventID()).removeLike(removeLike);
+                        removeLikeFromDB(removeLike, eventList.get(eventKeys.get(position).getEventID()));
                     }
-                    setLiked(eventList.get(position), thisUser, position);
+                    setLiked(eventList.get(eventKeys.get(position).getEventID()), thisUser, position);
                 }
             });
             commentButton.setOnClickListener(new View.OnClickListener() {
@@ -264,7 +282,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
                 public void onClick(View v) {
                     position = getAdapterPosition();
                     Intent intent = new Intent(context, PostActivity.class);
-                    intent.putExtra("Event", eventList.get(position));
+                    intent.putExtra("Event", eventList.get(eventKeys.get(position).getEventID()));
                     intent.putExtra("CommentClicked", true);
                     context.startActivity(intent);
                 }
@@ -276,9 +294,9 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
                 @Override
                 public void onClick(View v) {
                     position = getAdapterPosition();
-                    if (!eventList.get(position).getAuthor().getId().equals(thisUser.getId())) {
+                    if (!eventList.get(eventKeys.get(position).getEventID()).getAuthor().getId().equals(thisUser.getId())) {
                         Intent intent = new Intent(context, UserActivity.class);
-                        intent.putExtra("selectedUser", eventList.get(position).getAuthor());
+                        intent.putExtra("selectedUser", eventList.get(eventKeys.get(position).getEventID()).getAuthor());
                         context.startActivity(intent);
                     } else {
                         Intent intent = new Intent(context, ProfileActivity.class);
@@ -370,7 +388,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
                     }).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    setLiked(eventList.get(position), thisUser, position);
+                    setLiked(eventList.get(eventKeys.get(position).getEventID()), thisUser, position);
                 }
             });
 

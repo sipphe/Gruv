@@ -51,6 +51,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,7 +68,8 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
     private TextView textFullName, textEventCount, textFollowers, textFollowing, textBio;
     private Author thisUser;
     private RecyclerView recyclerPostedEvents, recyclerPromotedEvents;
-    private List<Event> postedEvents = new ArrayList<>(), promotedEvents = new ArrayList<>();
+    private Map<String, Event> postedEvents = new HashMap<>();
+    private Map<String, Event> promotedEvents = new HashMap<>();
     private ConstraintLayout appBarLayout;
     private EditProfileBottomSheet bottomSheet;
     private ClickInterface postedEventsListener;
@@ -83,6 +85,8 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
     private ImageButton buttonMore;
     private FloatingActionButton fabAdd;
     private ImageView imageVerified;
+    private List<Event> postedEventKeys = new ArrayList<>();
+    private List<Event> promotedEventKeys = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,13 +117,13 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
         setUserDetails();
 
 
-        promotedEventsAdapter = new PromotedEventsAdapter(this, promotedEvents, postedEventsListener);
+        promotedEventsAdapter = new PromotedEventsAdapter(this, promotedEventKeys, promotedEvents, postedEventsListener);
         recyclerPostedEvents.setAdapter(promotedEventsAdapter);
         recyclerPostedEvents.setLayoutManager(new
 
                 LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-        postedEventsAdapter = new PostedEventsAdapter(this, this, thisUser, postedEvents, promotedEventsListener);
+        postedEventsAdapter = new PostedEventsAdapter(this, this, postedEventKeys, thisUser, postedEvents, promotedEventsListener);
         recyclerPromotedEvents.setAdapter(postedEventsAdapter);
         recyclerPromotedEvents.setLayoutManager(new LinearLayoutManager(this));
 
@@ -314,7 +318,7 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
                                 if (eventDataSnapshot.getKey().equals(postedEvent)) {
                                     event = eventDataSnapshot.getValue(Event.class);
                                     event.setEventID(eventDataSnapshot.getKey());
-                                    addPost(event, Integer.parseInt(event.getEventID()));
+                                    addPost(event);
                                 }
 
                             }
@@ -324,7 +328,7 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
                                 if (eventDataSnapshot.getKey().equals(promotedEvent)) {
                                     event = eventDataSnapshot.getValue(Event.class);
                                     event.setEventID(eventDataSnapshot.getKey());
-                                    addPromotedPost(event, Integer.parseInt(event.getEventID()));
+                                    addPromotedPost(event);
                                 }
                             }
                             count++;
@@ -393,7 +397,6 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
         imageVerified = findViewById(R.id.imageVerified);
 
 
-
         recyclerPostedEvents = findViewById(R.id.recyclerPostedEvents);
         recyclerPromotedEvents = findViewById(R.id.recyclerPromotedEvents);
 
@@ -406,77 +409,43 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
 
     public void addPost(@NotNull Event event) {
         if (event.getAuthor() != null) {
-            postedEvents.add(event);
-            Collections.sort(postedEvents, Collections.reverseOrder());
-        }
-        if (postedEventsAdapter != null) {
-            postedEventsAdapter.notifyDataSetChanged();
-        }
-    }
-
-    public void addPost(@NotNull Event event, int index) {
-        if (event.getAuthor() != null) {
             if (postedEvents.isEmpty()) {
-                postedEvents.add(event);
-            }
-            else {
-//                if (event.getEventId() != postedEvents.get(postedEvents.size() - 1).getEventId())
-                int count = 0;
-                for (Event listValue : postedEvents) {
-                    if (listValue.getEventID().equals(Integer.toString(index))) {
-                        postedEvents.set(count, event);
-                        break;
-                    }
-                    count++;
+                postedEvents.put(event.getEventID(), event);
+                postedEventKeys.add(event);
+            } else {
+                try {
+                    postedEvents.put(event.getEventID(), event);
+                    postedEventKeys.add(event);
+                } catch (ConcurrentModificationException e) {
+                    e.printStackTrace();
                 }
             }
         }
+//            if (event.getAuthor() != null) {
+//                postedEvents.add(event);
+        Collections.sort(postedEventKeys, Collections.reverseOrder());
+//            }
         if (postedEventsAdapter != null) {
-            Collections.sort(postedEvents, Collections.reverseOrder());
             postedEventsAdapter.notifyDataSetChanged();
         }
-//        if (event.getAuthor() != null)
-//            postedEvents.set(index, event);
-//        if (postedEventsAdapter != null) {
-//            postedEventsAdapter.notifyDataSetChanged();
-//        }
+
     }
+
 
     public void addPromotedPost(@NotNull Event event) {
-        if (event.getAuthor() != null)
-            promotedEvents.add(event);
-        Collections.sort(promotedEvents, Collections.reverseOrder());
-        if (promotedEventsAdapter != null) {
-            promotedEventsAdapter.notifyDataSetChanged();
-        }
-    }
-
-    public void addPromotedPost(@NotNull Event event, int index) {
         if (event.getAuthor() != null) {
-            if (promotedEvents.isEmpty())
-                promotedEvents.add(event);
-            else {
-//                if (event.getEventId() != postedEvents.get(postedEvents.size() - 1).getEventId())
-                int count = 0;
-                for (Event listValue : promotedEvents) {
-                    if (listValue.getEventID().equals(index)) {
-                        promotedEvents.set(count, event);
-                        break;
-                    }
-                    count++;
-                }
-                Collections.sort(promotedEvents, Collections.reverseOrder());
+            if (promotedEvents.isEmpty()) {
+                promotedEvents.put(event.getEventID(), event);
+                promotedEventKeys.add(event);
             }
         }
+
         if (promotedEventsAdapter != null) {
             promotedEventsAdapter.notifyDataSetChanged();
         }
-//        if (event.getAuthor() != null)
-//            promotedEvents.set(index, event);
-//        if (promotedEventsAdapter != null) {
-//            promotedEventsAdapter.notifyDataSetChanged();
-//        }
+
     }
+
 
     public void checkEvents() {
         if (thisUser.getEvents() == null || thisUser.getEvents().isEmpty()) {
@@ -524,13 +493,13 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
 
     public void recyclerViewOnClick(int position) {
         Intent intent = new Intent(this, PostActivity.class);
-        intent.putExtra("Event", promotedEvents.get(position));
+        intent.putExtra("Event", promotedEvents.get(promotedEventKeys.get(position).getEventID()));
         startActivity(intent);
     }
 
     public void recyclerViewPostOnClick(int position) {
         Intent intent = new Intent(this, PostActivity.class);
-        intent.putExtra("Event", postedEvents.get(position));
+        intent.putExtra("Event", postedEvents.get(postedEventKeys.get(position).getEventID()));
         startActivity(intent);
     }
 
@@ -572,8 +541,9 @@ public class ProfileActivity extends AppCompatActivity implements ClickInterface
     public void onBottomSheetDismiss() {
         this.thisUser = bottomSheet.thisUser;
         setUserDetails();
-        for (Event postedEvent : postedEvents) {
-            updateEvent(postedEvent.getEventID());
+        for (Map.Entry<String, Event> eventEntry : postedEvents.entrySet()) {
+//                if (eventList.stream().noneMatch(o -> o.getEventID().equals(event.getEventID())))
+            updateEvent(eventEntry.getValue().getEventID());
         }
     }
 

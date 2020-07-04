@@ -2,14 +2,17 @@ package com.gruv;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,6 +20,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -30,11 +34,13 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.gruv.models.Author;
+import com.gruv.models.Event;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
     FragmentManager fragManager = getSupportFragmentManager();
+    private ProgressBar progressPosting;
     Toolbar toolbar;
     NavigationView drawer;
     DrawerLayout drawerLayout;
@@ -120,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
         authenticateObj = FirebaseAuth.getInstance();
         currentUser = authenticateObj.getCurrentUser();
 
-
         if (currentUser != null) {
             signedIn = true;
             setCurrentUser();
@@ -146,6 +151,9 @@ public class MainActivity extends AppCompatActivity {
         name = view.findViewById(R.id.textUsername);
         descriptor = view.findViewById(R.id.textDescriptor);
         imageProfilePicture = view.findViewById(R.id.imageProfilePic);
+
+        Base.setMainActivity(this);
+
 
         TextView name = view.findViewById(R.id.textUsername);
         TextView descriptor = view.findViewById(R.id.textDescriptor);
@@ -303,6 +311,43 @@ public class MainActivity extends AppCompatActivity {
             Glide.with(this).load(uri).centerCrop().into(imageView);
         else
             imageView.setImageResource(R.drawable.ic_account_circle_white_140dp);
+    }
+
+    public void showPostingProgress(Event event, Bitmap croppedBitmap) {
+        ProgressBar progressPosting = findViewById(R.id.progressPosting);
+        ImageView imagePosting = findViewById(R.id.imagePost);
+        TextView textEventNamePosting = findViewById(R.id.textPostingEventName);
+        ConstraintLayout layoutPosting = findViewById(R.id.layoutPosting);
+
+        imagePosting.setImageBitmap(croppedBitmap);
+        textEventNamePosting.setText("Posting " + event.getEventName());
+        layoutPosting.setVisibility(View.VISIBLE);
+        progressPosting.setVisibility(View.VISIBLE);
+    }
+
+    public void hidePostingProgress(String errorMessage) {
+        ConstraintLayout layoutPosting = findViewById(R.id.layoutPosting);
+        ProgressBar progressPosting = findViewById(R.id.progressPosting);
+        TextView textEventNamePosting = findViewById(R.id.textPostingEventName);
+        ImageView imageDone = findViewById(R.id.imageDone);
+
+        imageDone.setVisibility(View.VISIBLE);
+        if (errorMessage == null)
+            textEventNamePosting.setText("Done!");
+        else {
+            textEventNamePosting.setText(errorMessage);
+            imageDone.setImageDrawable(getDrawable(R.drawable.ic_close_black_24dp));
+        }
+        onResume();
+        progressPosting.setVisibility(View.GONE);
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                layoutPosting.setVisibility(View.GONE);
+            }
+        }, 2750);
     }
 
 }

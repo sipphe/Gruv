@@ -43,7 +43,8 @@ public class PostedEventsAdapter extends RecyclerView.Adapter<PostedEventsAdapte
 
 
     private final SecondClickInterface listener;
-    private List<Event> eventList;
+    private Map<String, Event> eventList;
+    private List<Event> eventKeys;
     private Author thisUser;
     private Like like;
     private Context context;
@@ -51,11 +52,12 @@ public class PostedEventsAdapter extends RecyclerView.Adapter<PostedEventsAdapte
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
 
-    public PostedEventsAdapter(Context context, Activity activity, Author thisUser, List<Event> eventList, SecondClickInterface listener) {
+    public PostedEventsAdapter(Context context, Activity activity, List<Event> eventKeys, Author thisUser, Map<String, Event> eventList, SecondClickInterface listener) {
         this.context = context;
         this.activity = activity;
         this.thisUser = thisUser;
         this.eventList = eventList;
+        this.eventKeys = eventKeys;
         this.listener = listener;
     }
 
@@ -76,7 +78,7 @@ public class PostedEventsAdapter extends RecyclerView.Adapter<PostedEventsAdapte
     @Override
     public void onBindViewHolder(PostedEventsAdapter.ViewHolder viewHolder, int position) {
         // Get the data model based on position
-        Event event = eventList.get(position);
+        Event event = eventList.get(eventKeys.get(position).getEventID());
         TextView titleText = viewHolder.titleText;
         TextView textAuthor = viewHolder.textAuthor;
         TextView textDescription = viewHolder.textDescription;
@@ -237,18 +239,19 @@ public class PostedEventsAdapter extends RecyclerView.Adapter<PostedEventsAdapte
                 @Override
                 public void onClick(View v) {
                     position = getAdapterPosition();
-                    setLiked(eventList.get(position), thisUser, position);
+                    setLiked(eventList.get(eventKeys.get(position).getEventID()), thisUser, position);
                     if (!liked) {
-                        like.setEventId(eventList.get(position).getEventID());
+                        like.setEventId(eventList.get(eventKeys.get(position).getEventID()).getEventID());
                         liked = true;
-                        addLikeToDB(like, eventList.get(position));
+                        addLikeToDB(like, eventList.get(eventKeys.get(position).getEventID()));
 
                     } else {
                         liked = false;
-                        eventList.get(position).removeLike(getUserLike(eventList.get(position)));
-                        removeLikeFromDB(getUserLike(eventList.get(position)), eventList.get(position));
+                        Like likeToRemove = getUserLike(eventList.get(eventKeys.get(position).getEventID()));
+                        eventList.get(eventKeys.get(position).getEventID()).removeLike(likeToRemove);
+                        removeLikeFromDB(likeToRemove, eventList.get(eventKeys.get(position).getEventID()));
                     }
-                    setLiked(eventList.get(position), thisUser, position);
+                    setLiked(eventList.get(eventKeys.get(position).getEventID()), thisUser, position);
                 }
             });
             commentButton.setOnClickListener(new View.OnClickListener() {
@@ -256,7 +259,7 @@ public class PostedEventsAdapter extends RecyclerView.Adapter<PostedEventsAdapte
                 public void onClick(View v) {
                     position = getAdapterPosition();
                     Intent intent = new Intent(context, PostActivity.class);
-                    intent.putExtra("Event", eventList.get(position));
+                    intent.putExtra("Event", eventList.get(eventKeys.get(position).getEventID()));
                     intent.putExtra("CommentClicked", true);
                     context.startActivity(intent);
                 }
@@ -346,7 +349,7 @@ public class PostedEventsAdapter extends RecyclerView.Adapter<PostedEventsAdapte
                     }).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    setLiked(eventList.get(position), thisUser, position);
+                    setLiked(eventList.get(eventKeys.get(position).getEventID()), thisUser, position);
                 }
             });
 

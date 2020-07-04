@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddEventActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"
+        android:elevation="@dimen/four"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonBack"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="@dimen/forty"
+            android:layout_height="@dimen/forty"
+            android:paddingStart="@dimen/twenty"
+            android:paddingTop="@dimen/four"
+            app:icon="@drawable/ic_arrow_back_white_24dp"
+            app:iconGravity="textStart"
+            app:iconTint="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/progressBreadcrumbs"
+            app:layout_constraintEnd_toStartOf="@+id/main_app_toolbar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/main_app_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_marginStart="@dimen/forty_eight"
+            android:layout_marginEnd="@dimen/forty_eight"
+            android:background="@color/transparent"
+            android:backgroundTint="@color/transparent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="Add a new event"
+            app:titleTextColor="@color/white" />
+
+        <ProgressBar
+            android:id="@+id/progressBreadcrumbs"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/main_app_toolbar" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ScrollView
+        android:id="@+id/scrollViewAddEvent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layoutStep1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible">
+
+
+                <com.fenchtose.nocropper.CropperView
+                    android:id="@+id/cropper_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#ff282828"
+                    android:elevation="@dimen/zero"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:nocropper__grid_color="@color/colorAccent"
+                    app:nocropper__grid_opacity="0.8"
+                    app:nocropper__grid_thickness="0.8dp"
+                    app:nocropper__padding_color="#ff282828" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonAddPicture"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/twenty"
+                    android:text="Add a Picture"
+                    android:textColor="@color/colorAccent"
+                    app:icon="@drawable/ic_add_black_24dp"
+                    app:iconTint="@color/colorAccent"
+                    app:layout_constraintBottom_toBottomOf="@+id/cropper_view"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonCrop"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="@dimen/forty_eight"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/twenty"
+                    android:elevation="@dimen/zero"
+                    app:icon="@drawable/ic_crop_24dp"
+                    app:iconTint="@color/colorAccent"
+                    app:layout_constraintBottom_toBottomOf="@+id/cropper_view"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonRotate"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="@dimen/forty_eight"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/twenty"
+                    android:layout_marginBottom="@dimen/twenty"
+                    android:elevation="@dimen/zero"
+                    app:icon="@drawable/ic_rotate_24dp"
+                    app:iconTint="@color/colorAccent"
+                    app:layout_constraintBottom_toBottomOf="@+id/cropper_view"
+                    app:layout_constraintEnd_toStartOf="@+id/buttonAddPicture" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/twenty"
+                    app:layout_constraintTop_toBottomOf="@+id/cropper_view">
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textLayoutName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/eight"
+                        android:hint="name your event"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/textInputName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLength="50" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/buttonNext"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/twelve"
+                        android:layout_marginBottom="@dimen/twelve"
+                        android:text="@string/next_button"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textLayoutName" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layoutStep2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/fifty_six"
+                android:visibility="gone">
+
+                <DatePicker
+                    android:id="@+id/datePickerStart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/forty"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textLayoutTime"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/twenty"
+                    android:layout_marginTop="@dimen/eight"
+                    android:hint="time"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/datePickerStart">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/textTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/eight"
+                        android:editable="false"
+                        android:inputType="none"
+                        android:text="00:00" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonNext1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/twelve"
+                    android:layout_marginEnd="@dimen/twenty"
+                    android:layout_marginBottom="@dimen/twelve"
+                    android:text="@string/next_button"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textLayoutTime" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layoutStep3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/fifty_six"
+                android:visibility="gone">
+
+                <DatePicker
+                    android:id="@+id/datePickerEnd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/forty"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textLayoutTimeEnd"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/twenty"
+                    android:layout_marginTop="@dimen/eight"
+                    android:hint="time"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/datePickerEnd">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/textTimeEnd"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/eight"
+                        android:editable="false"
+                        android:inputType="none"
+                        android:text="00:00" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonSkip"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/twelve"
+                    android:layout_marginEnd="@dimen/twelve"
+                    android:layout_marginBottom="@dimen/twelve"
+                    android:text="Skip"
+                    android:textColor="@color/colorPrimary"
+                    app:layout_constraintEnd_toStartOf="@id/buttonNext2"
+                    app:layout_constraintTop_toBottomOf="@+id/textLayoutTimeEnd" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonNext2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/twelve"
+                    android:layout_marginEnd="@dimen/twenty"
+                    android:layout_marginBottom="@dimen/twelve"
+                    android:text="@string/next_button"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textLayoutTimeEnd" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layoutStep4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/fifty_six"
+                android:visibility="gone">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/twenty"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cardView2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/sixteen"
+                        app:cardCornerRadius="@dimen/four"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/constraintLayout2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/twelve"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <ImageView
+                                android:id="@+id/imagePostVerify"
+                                android:layout_width="@dimen/fifty_two"
+                                android:layout_height="@dimen/fifty_two"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/party_3"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/textEventName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/sixty_four"
+                                android:ellipsize="end"
+                                android:text="Event Name"
+                                android:textColor="@color/blackDN"
+                                android:textSize="18sp"
+                                app:layout_constraintStart_toEndOf="@+id/imagePostVerify"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/textEventStartDate"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/sixty_four"
+                                android:layout_marginTop="@dimen/eight"
+                                android:layout_marginEnd="@dimen/thirty_six"
+                                android:ellipsize="end"
+                                android:lines="1"
+                                android:text="Starts at 18:00 on November 12, 2020"
+                                android:textColor="@color/blackDN"
+                                app:layout_constraintStart_toEndOf="@+id/imagePostVerify"
+                                app:layout_constraintTop_toBottomOf="@+id/textEventName" />
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/layoutEndDate"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/sixty_four"
+                                android:layout_marginTop="@dimen/eight"
+                                app:layout_constraintStart_toEndOf="@+id/imagePostVerify"
+                                app:layout_constraintTop_toBottomOf="@+id/textEventName">
+
+                                <ImageView
+                                    android:layout_width="@dimen/thirty_two"
+                                    android:layout_height="@dimen/thirty_two"
+                                    android:src="@drawable/ic_timeline_24dp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <TextView
+                                    android:id="@+id/textEndDate"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/twenty_eight"
+                                    android:layout_marginEnd="@dimen/thirty_six"
+                                    android:ellipsize="end"
+                                    android:lines="1"
+                                    android:text="Ends at 18:00 on November 12, 2020"
+                                    android:textColor="@color/blackDN"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </androidx.cardview.widget.CardView>
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textLayoutVenue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/eight"
+                        android:hint="where is the event happening?"
+                        app:layout_constraintEnd_toEndOf="@+id/cardView2"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/cardView2">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/textVenue"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/eight"
+                            android:drawableEnd="@drawable/ic_search_black_not_always24dp"
+                            android:drawablePadding="@dimen/four"
+                            android:editable="false"
+                            android:inputType="none" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textLayoutDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/eight"
+                        android:hint="describe your event"
+                        app:layout_constraintEnd_toEndOf="@+id/cardView2"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textLayoutVenue">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/textDescription"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/eight"
+                            android:drawableEnd="@drawable/ic_mode_edit_black_24dp"
+                            android:drawablePadding="@dimen/four"
+                            android:maxLines="4" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textLayoutTicketLink"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/eight"
+                        android:hint="a link to buy tickets?"
+                        app:layout_constraintEnd_toEndOf="@+id/cardView2"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textLayoutDescription">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/textTicketLink"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/eight"
+                            android:drawableEnd="@drawable/ic_confirmation_number_black_24dp"
+                            android:drawablePadding="@dimen/four"
+                            android:maxLines="1" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <ProgressBar
+                        android:id="@+id/progressPost"
+                        android:layout_width="@dimen/twenty_eight"
+                        android:layout_height="@dimen/twenty_eight"
+                        android:layout_marginEnd="@dimen/twelve"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@+id/imageProfilePic"
+                        app:layout_constraintEnd_toStartOf="@+id/imageProfilePic"
+                        app:layout_constraintTop_toTopOf="@+id/imageProfilePic" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/imageProfilePic"
+                        android:layout_width="@dimen/thirty_two"
+                        android:layout_height="@dimen/thirty_two"
+                        android:layout_marginEnd="@dimen/twelve"
+                        android:src="@drawable/profile_pic2"
+                        app:layout_constraintBottom_toBottomOf="@+id/buttonPost"
+                        app:layout_constraintEnd_toStartOf="@+id/buttonPost"
+                        app:layout_constraintTop_toTopOf="@+id/buttonPost" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/buttonPost"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/sixteen"
+                        android:text="Post"
+                        app:layout_constraintEnd_toEndOf="@+id/textLayoutVenue"
+                        app:layout_constraintTop_toBottomOf="@+id/textLayoutTicketLink" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

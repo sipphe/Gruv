@@ -109,6 +109,8 @@ public class PostActivity extends AppCompatActivity {
     private TextView textEventEndDate;
     private TextView textDatePostedText;
     private TextView textEventEndDateText;
+    private LinearLayout chipOccurring;
+    private MaterialButton buttonTicketLink;
 
 
     @Override
@@ -195,7 +197,6 @@ public class PostActivity extends AppCompatActivity {
                 } else {
                     addLike();
                     buttonLike.setImageDrawable(getDrawable(R.drawable.sunshine));
-                    removeLike(postEvent.getAuthor());
                     liked = false;
                 }
                 setPost();
@@ -262,6 +263,20 @@ public class PostActivity extends AppCompatActivity {
                         .show();
             }
         });
+
+        buttonTicketLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openLink(postEvent.getTicketLink());
+            }
+        });
+    }
+
+    public void openLink(String url) {
+        if (!url.startsWith("http://") && !url.startsWith("https://"))
+            url = "http://" + url;
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(browserIntent);
     }
 
     public void getAuthor() {
@@ -386,10 +401,12 @@ public class PostActivity extends AppCompatActivity {
         buttonSend = findViewById(R.id.buttonSend);
         imageVerified = findViewById(R.id.imageVerified);
         chipPassed = findViewById(R.id.chipEventPassed);
+        chipOccurring = findViewById(R.id.chipEventOccurring);
         textDatePosted = findViewById(R.id.textDatePosted);
         textEventEndDate = findViewById(R.id.textEventEndDate);
         textDatePostedText = findViewById(R.id.textDatePostedText);
         textEventEndDateText = findViewById(R.id.textEventEndDateText);
+        buttonTicketLink = findViewById(R.id.buttonTicketLink);
 
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference();
@@ -434,16 +451,30 @@ public class PostActivity extends AppCompatActivity {
         textMonth.setText(postEvent.getEventDate().getMonth().toString().substring(0, 3).toUpperCase());
         textEventDescription.setText(postEvent.getEventDescription());
         textVenue.setText(postEvent.getVenue().getVenueName());
-        if (postEvent.getEventEndDate() != null) {
-            if (postEvent.getEventEndDate().isBefore(LocalDateTime.now()))
-                chipPassed.setVisibility(View.VISIBLE);
-            else
-                chipPassed.setVisibility(View.GONE);
+        if (postEvent.getAuthor().isVerified()) {
+            imageVerified.setVisibility(View.VISIBLE);
         } else {
-            if (postEvent.getEventDate().isBefore(LocalDateTime.now()))
+            imageVerified.setVisibility(View.GONE);
+        }
+        if (postEvent.getEventEndDate() != null) {
+            if (postEvent.getEventEndDate().isBefore(LocalDateTime.now())) {
                 chipPassed.setVisibility(View.VISIBLE);
-            else
+                chipOccurring.setVisibility(View.GONE);
+            } else if (postEvent.getEventDate().isBefore(LocalDateTime.now()) && postEvent.getEventEndDate().isAfter(LocalDateTime.now())) {
                 chipPassed.setVisibility(View.GONE);
+                chipOccurring.setVisibility(View.VISIBLE);
+            } else {
+                chipPassed.setVisibility(View.GONE);
+                chipOccurring.setVisibility(View.GONE);
+            }
+        } else {
+            if (postEvent.getEventDate().isBefore(LocalDateTime.now())) {
+                chipOccurring.setVisibility(View.GONE);
+                chipPassed.setVisibility(View.VISIBLE);
+            } else {
+                chipPassed.setVisibility(View.GONE);
+                chipOccurring.setVisibility(View.GONE);
+            }
         }
         if (postEvent.getLikes() != null) {
             if (postEvent.getLikes().size() == 1)
@@ -468,6 +499,12 @@ public class PostActivity extends AppCompatActivity {
             textDatePostedText.setVisibility(View.GONE);
         }
 
+        if (postEvent.getTicketLink() != null) {
+            buttonTicketLink.setVisibility(View.VISIBLE);
+        } else {
+            buttonTicketLink.setVisibility(View.GONE);
+        }
+
         if (postEvent.getEventEndDate() != null) {
             textEventEndDate.setVisibility(View.VISIBLE);
             textEventEndDateText.setVisibility(View.VISIBLE);
@@ -477,6 +514,7 @@ public class PostActivity extends AppCompatActivity {
             textEventEndDateText.setVisibility(View.GONE);
         }
     }
+
 
     private String dateString(LocalDateTime startDate) {
         String dateString = "";
@@ -591,9 +629,11 @@ public class PostActivity extends AppCompatActivity {
 
         } else {
             liked = false;
-            postEvent.removeLike(getUserLike(postEvent));
-            removeLikeFromDB(getUserLike(postEvent), postEvent);
+            Like removeLike = getUserLike(postEvent);
+            postEvent.removeLike(removeLike);
+            removeLikeFromDB(removeLike, postEvent);
         }
+
     }
 
     public Like getUserLike(Event event) {
@@ -680,14 +720,14 @@ public class PostActivity extends AppCompatActivity {
         }
 
         if (event.getLikes() == null || event.getLikes().isEmpty())
-            likeCount.setText("0");
+            likeCount.setText("0 LIKES");
         else if (event.getLikes().size() == 1)
             likeCount.setText("1 LIKE");
         else
             likeCount.setText(event.getLikes().size() + " LIKES");
     }
 
-    public void removeLike(Author author) {
+    public void removeLike(Like thisLike) {
         postEvent.removeLike(thisLike);
         if (postEvent.getLikes().size() == 1)
             likeCount.setText("1 LIKE");
